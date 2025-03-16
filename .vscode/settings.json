@@ -1,8 +1,0 @@
-{
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "explorer.confirmDragAndDrop": false,
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "workbench.colorTheme": "One Dark Pro Darker",
-  "javascript.updateImportsOnFileMove.enabled": "always"
-}

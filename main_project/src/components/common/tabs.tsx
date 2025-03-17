@@ -17,6 +17,6 @@ function MyTabs() {
       </TabPanel>
     </Tabs>
   );
-}
+}   
 
 export default MyTabs;

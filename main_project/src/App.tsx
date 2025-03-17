@@ -8,6 +8,6 @@ function App() {
       <MyTabs></MyTabs>
     </>
   );
-}
+}   
 
 export default App;

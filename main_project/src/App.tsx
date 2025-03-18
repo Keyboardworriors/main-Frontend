@@ -3,7 +3,7 @@ import Header from "./components/common/header";
 import MoodChart from "./pages/MoodChart";
 import Footer from "./components/common/footer";
 
-// 확인용
+// 테스트용
 function App() {
   return (
     <>

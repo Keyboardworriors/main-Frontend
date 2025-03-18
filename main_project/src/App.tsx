@@ -1,8 +1,17 @@
 import React from "react";
-import DiaryHome from "./pages/DiaryHome";
+import Header from "./components/common/header";
+import MoodChart from "./pages/MoodChart";
+import Footer from "./components/common/footer";
 
+// 확인용
 function App() {
-  return <DiaryHome />;
+  return (
+    <>
+      <Header />
+      <MoodChart />
+      <Footer />
+    </>
+  );
 }
 
 export default App;

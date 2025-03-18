@@ -1,22 +1,18 @@
-<<<<<<< HEAD
 import React from "react";
-import DiaryHome from "./pages/DiaryHome";
-
-function App() {
-  return <DiaryHome />;
-}
-=======
 import "./App.css";
+import Header from "./components/common/header";
 import MyTabs from "./components/common/tabs";
+import DiaryHome from "./pages/DiaryHome";
+import Footer from "./components/common/footer";
 
 function App() {
-
   return (
     <>
-      <MyTabs />
+      <Header />
+      <DiaryHome />
+      <Footer />
     </>
   );
-}   
->>>>>>> feat/#2/tabs-component
+}
 
 export default App;

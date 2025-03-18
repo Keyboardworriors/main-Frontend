@@ -1,12 +1,8 @@
-import "./App.css";
+import React from "react";
+import DiaryHome from "./pages/DiaryHome";
 
 function App() {
-
-  return (
-    <>
-      
-    </>
-  );
-}   
+  return <DiaryHome />;
+}
 
 export default App;

@@ -1,14 +1,14 @@
 import React from "react";
 import "./App.css";
 import Header from "./components/common/header";
-import DiaryHome from "./pages/DiaryHome";
+import MyTabs from "./components/common/tabs";
 import Footer from "./components/common/footer";
 
 function App() {
   return (
     <>
       <Header />
-      <DiaryHome />
+      <MyTabs />
       <Footer />
     </>
   );

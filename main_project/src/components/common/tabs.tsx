@@ -1,22 +1,28 @@
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+import DiaryHome from "../../pages/DiaryHome";
+import MoodChart from "../../pages/moodChart";
 
 function MyTabs() {
   return (
-    <Tabs defaultIndex={0} onSelect={(index) => console.log(`Selected tab: ${index}`)}>
-      <TabList>
+    <Tabs
+      className="bg-[#A6CCF2] min-h-screen pt-0 pr-4 pb-4 pl-4"
+      defaultIndex={0}
+      onSelect={(index) => console.log(`Selected tab: ${index}`)}
+    >
+      <TabList className="flex space-x-4 max-w-6xl mx-auto">
         <Tab>나의 감정일기</Tab>
         <Tab>나의 감정발자취</Tab>
       </TabList>
 
       <TabPanel>
-        <h2>감정일기 내용</h2>
+        <DiaryHome />
       </TabPanel>
       <TabPanel>
-        <h2>감정발자취 내용</h2>
+        <MoodChart />
       </TabPanel>
     </Tabs>
   );
-}   
+}
 
 export default MyTabs;

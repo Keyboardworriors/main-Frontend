@@ -7,7 +7,7 @@ const Introduce = () => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleStartClick = () => {
-    setIsAnimating(true); //애니메이션 시작
+    setIsAnimating(true);
   };
 
   return (

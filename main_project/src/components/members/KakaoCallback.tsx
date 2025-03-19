@@ -4,25 +4,23 @@ import { useNavigate } from "react-router-dom";
 
 const KakaoCallback = () => {
   const navigate = useNavigate();
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const getKakaoToken = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
 
-      console.log(code);
-
       if (code) {
         try {
-          const response = await axios.post("http://localhost:8000/oauth/kakao/callback/", {
+          const response = await axios.post(`${API_BASE_URL}/oauth/kakao/callback/`, {
             code,
           });
           const { accessToken, user } = response.data;
-          localStorage.setItem("accessToken", accessToken); //JWT 토큰
-          localStorage.setItem("user", JSON.stringify(user)); //유저 정보
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("user", JSON.stringify(user));
 
-          if (user.isFirstLogin) {
-            //응답데이터 수정
+          if (user.isRegistered) {
             navigate("/ProfileSetup");
           } else {
             navigate("/DiaryHome");

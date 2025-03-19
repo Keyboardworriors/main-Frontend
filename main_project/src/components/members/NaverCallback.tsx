@@ -4,30 +4,27 @@ import { useNavigate } from "react-router-dom";
 
 const NaverCallback = () => {
   const navigate = useNavigate();
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
 
   useEffect(() => {
     const getNaverToken = async () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code"); //네이버에서 전달된 인증 코드
-
-      console.log(code);
+      const code = urlParams.get("code");
 
       if (code) {
         try {
-          const response = await axios.post("http://localhost:8000/oauth/naver/callback/", {
-            //임시
+          const response = await axios.post(`${API_BASE_URL}/oauth/naver/callback/`, {
             code,
           });
 
           const { accessToken, user } = response.data;
-          localStorage.setItem("accessToken", accessToken); //JWT 토큰
-          localStorage.setItem("user", JSON.stringify(user)); //유저 정보
+          localStorage.setItem("accessToken", accessToken); 
+          localStorage.setItem("user", JSON.stringify(user));
 
-          if (user.isFirstLogin) {
-            //응답데이터 수정해야함
-            navigate("/ProfileSetup"); //첫 로그인시 회원 정보 작성페이지로
+          if (user.isRegistered) {
+            navigate("/ProfileSetup"); 
           } else {
-            navigate("/DiaryHome"); //첫 로그인 아니라면 다이어리 홈화면으로
+            navigate("/DiaryHome"); 
           }
         } catch (error) {
           console.error("네이버 로그인 실패", error);

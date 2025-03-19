@@ -21,24 +21,40 @@ const ChartLayout = ({ chartContent, onTabChange }: ChartLayoutProps) => {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col md:flex-row w-full">
-        <div className="flex md:flex-col border-b md:border-b-0 md:border-r border-gray-200 mb-4 md:mb-0 md:pr-4 md:mr-4">
-          {/* 탭 버튼들을 배열로부터 생성 */}
+      {/* 1200px 미만일 때 탭을 상단에 가로로 배치 */}
+      <div className="xl:hidden w-full flex justify-center mb-6 border-b border-gray-200">
+        {["주간", "월간", "연간"].map((tab) => (
+          <button
+            key={tab}
+            className={`py-3 px-8 text-center font-medium ${
+              activeTab === tab
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+            onClick={() => handleTabChange(tab as "주간" | "월간" | "연간")}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      <div className="flex w-full">
+        {/* 1200px 이상일 때만 좌측에 세로 탭 표시 */}
+        <div className="hidden xl:flex xl:flex-col border-r border-gray-200 pr-4 mr-4">
           {["주간", "월간", "연간"].map((tab) => (
             <button
               key={tab}
-              className={`py-3 px-4 text-sm font-medium text-left ${
-                // 활성화된 탭은 blue, 비활성화된 탭은 gray
+              className={`py-3 px-6 text-sm font-medium text-left whitespace-nowrap ${
                 activeTab === tab ? "text-blue-600 bg-blue-50" : "text-gray-500 hover:text-gray-700"
               }`}
-              onClick={() => handleTabChange(tab as "주간" | "월간" | "연간")} // 탭 클릭 핸들러
+              onClick={() => handleTabChange(tab as "주간" | "월간" | "연간")}
             >
-              {tab} {/* 탭 텍스트 표시 */}
+              {tab}
             </button>
           ))}
         </div>
 
-        <div className="flex-1 rounded-lg">{chartContent}</div>
+        {/* 차트 컨텐츠 영역 */}
+        <div className="flex-1 rounded-lg overflow-hidden">{chartContent}</div>
       </div>
     </div>
   );

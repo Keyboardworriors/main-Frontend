@@ -1,4 +1,3 @@
-import React from "react";
 import { DiaryLayoutProps } from "../../models/type";
 
 const DiaryLayout = ({ calendarContent, resultContent, diaryListContent }: DiaryLayoutProps) => {

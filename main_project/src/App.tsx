@@ -1,22 +1,7 @@
-<<<<<<< HEAD
-import React from "react";
-import DiaryHome from "./pages/DiaryHome";
+import AppRoutes from "./routes/routes";
 
-function App() {
-  return <DiaryHome />;
-}
-=======
-import "./App.css";
-import MyTabs from "./components/common/tabs";
-
-function App() {
-
-  return (
-    <>
-      <MyTabs />
-    </>
-  );
-}   
->>>>>>> feat/#2/tabs-component
+const App = () => {
+  return <AppRoutes />;
+};
 
 export default App;

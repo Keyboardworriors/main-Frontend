@@ -1,4 +1,3 @@
-import React from "react";
 import { HomeLayoutProps } from "../../models/type";
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Introduce = () => {
   const navigate = useNavigate();
@@ -12,17 +12,23 @@ const Introduce = () => {
 
   return (
     <motion.div
+      className="flex justify-center items-center h-screen"
       initial={{ opacity: 1, y: 0 }}
       animate={isAnimating ? { opacity: 1, y: -1000 } : {}}
       transition={{ duration: 0.8, ease: "easeInOut" }}
       onAnimationComplete={() => {
         if (isAnimating) {
-          navigate("/main_project/login");
+          navigate("/login");
         }
       }}
     >
       <section>
-        <button onClick={handleStartClick}>감정 기록 시작하기</button>
+        <button
+          onClick={handleStartClick}
+          className="px-6 py-3 bg-blue-400 text-white text-lg rounded-3xl hover:bg-blue-500"
+        >
+          감정 기록 시작하기
+        </button>
       </section>
     </motion.div>
   );

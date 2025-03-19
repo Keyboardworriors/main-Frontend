@@ -1,13 +1,11 @@
 import { useState } from "react";
 import Calendar from "react-calendar";
-import "../../styles/calendar.css";
+import "../Calendar/calendar.css";
 
 const MyCalendar = () => {
-  // useState 훅의 초기값으로 현재 날짜를 넣어줌
   const [date, setDate] = useState(new Date());
 
-  // 일기가 있는 날짜 리스트 (예제 데이터)
-  const diaryDates = [
+  const mockDiaryDates = [
     "2025-03-05",
     "2025-03-18",
     "2025-03-20",
@@ -16,7 +14,6 @@ const MyCalendar = () => {
     "2025-04-22",
   ];
 
-  // 날짜가 변경될 때 state 업데이트
   const onChangeToday = (newDate: Date) => {
     setDate(newDate);
   };
@@ -32,7 +29,6 @@ const MyCalendar = () => {
         next2Label={null}
         showNeighboringMonth={false}
         className="h-full"
-        // 날짜별로 음표 아이콘 추가
         tileContent={({ date }) => {
           // UTC 보정 적용
           const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
@@ -40,7 +36,7 @@ const MyCalendar = () => {
 
           return (
             <div style={{ position: "relative", textAlign: "center" }}>
-              {diaryDates.includes(dateString) ? (
+              {mockDiaryDates.includes(dateString) ? (
                 <img
                   src="/checkIcon.png"
                   alt="음표아이콘"

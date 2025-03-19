@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import "../../styles/calendar.css";
 
 const MyCalendar = () => {
   // useState 훅의 초기값으로 현재 날짜를 넣어줌
@@ -22,7 +22,7 @@ const MyCalendar = () => {
   };
 
   return (
-    <div>
+    <div className="w-full h-[400px] overflow-hidden flex justify-center items-center">
       <Calendar
         locale="ko"
         onChange={onChangeToday}

@@ -1,3 +1,4 @@
+/* 전체 캘린더의 스타일 설정 */
 .react-calendar {
   width: 100%;
   max-width: 700px;
@@ -7,67 +8,76 @@
   line-height: 1.125em;
 }
 
+/* 캘린더가 두 개의 뷰를 표시할 때의 스타일 설정 */
 .react-calendar--doubleView {
   width: 700px;
 }
 
+/* 두 개의 뷰 컨테이너를 가로로 배치 */
 .react-calendar--doubleView .react-calendar__viewContainer {
   display: flex;
   margin: -0.5em;
 }
 
+/* 각 뷰가 50%의 너비를 가지게 설정 */
 .react-calendar--doubleView .react-calendar__viewContainer > * {
   width: 50%;
   margin: 0.5em;
 }
 
+/* 모든 요소에 대해 box-sizing을 border-box로 설정 */
 .react-calendar,
 .react-calendar *,
 .react-calendar *:before,
 .react-calendar *:after {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
+/* 캘린더 내 버튼 스타일 설정 */
 .react-calendar button {
   margin: 0;
   border: 0;
   outline: none;
+  box-sizing: border-box;
 }
 
+/* 버튼 호버 시 커서와 테두리 색상 */
 .react-calendar button:enabled:hover {
   cursor: pointer;
-  border: 1px solid #a6ccf2;
 }
 
+/* 네비게이션 버튼의 스타일 설정 */
 .react-calendar__navigation {
   display: flex;
   height: 44px;
   margin-bottom: 1em;
 }
 
+/* 네비게이션 버튼에 대한 스타일 설정 */
 .react-calendar__navigation button {
   min-width: 44px;
   background: none;
 }
 
+/* 네비게이션 버튼 호버 시 배경색 */
 .react-calendar__navigation button:enabled:hover {
   background-color: #e6e6e6;
 }
 
+/* 요일 제목 스타일 */
 .react-calendar__month-view__weekdays {
   text-align: center;
-  text-transform: uppercase;
   font: inherit;
   font-size: 0.75em;
   font-weight: bold;
 }
 
+/* 각 요일 셀의 스타일 */
 .react-calendar__month-view__weekdays__weekday {
   padding: 0.5em;
 }
 
+/* 주 번호와 날짜 셀 */
 .react-calendar__month-view__weekNumbers .react-calendar__tile {
   display: flex;
   align-items: center;
@@ -77,84 +87,62 @@
   font-weight: bold;
 }
 
+/* 주말(토요일, 일요일) 날짜의 텍스트 색상 */
 .react-calendar__month-view__days__day--weekend {
   color: #d10000;
 }
 
-.react-calendar__month-view__days__day--neighboringMonth,
-.react-calendar__decade-view__years__year--neighboringDecade,
-.react-calendar__century-view__decades__decade--neighboringCentury {
-  color: #a6ccf2;
-}
-
+/* 연도 보기에서 각 날짜 셀 스타일 */
 .react-calendar__year-view .react-calendar__tile,
 .react-calendar__decade-view .react-calendar__tile,
 .react-calendar__century-view .react-calendar__tile {
   padding: 2em 0.5em;
 }
 
+/* 각 날짜 셀의 기본 스타일 */
 .react-calendar__tile {
   max-width: 100%;
-  padding: 12px 6.6667px;
+  padding: 10px 6.6667px;
   background: none;
-  border: 1px solid transparent; /* 기본 테두리를 투명하게 설정 */
+  border: 2px solid transparent; /* 기본 테두리를 투명하게 설정 */
   text-align: center;
   font: inherit;
   font-size: 0.833em;
   box-sizing: border-box;
 }
 
-.react-calendar__tile:disabled {
-  background-color: #f0f0f0;
-  color: #ababab;
-}
-
+/* 활성 날짜 셀 호버 시 테두리 색상 변경 */
 .react-calendar__tile:enabled:hover,
 .react-calendar__tile:enabled:focus {
-  background: none;
-  border-color: #a6ccf2; /* 테두리 색상만 변경 */
-  border-radius: 8px;
-}
-
-.react-calendar__month-view__days__day--neighboringMonth:disabled,
-.react-calendar__decade-view__years__year--neighboringDecade:disabled,
-.react-calendar__century-view__decades__decade--neighboringCentury:disabled {
-  /* color: #cdcdcd; */
-}
-
-.react-calendar__tile--now {
   background: none;
   border: 2px solid #a6ccf2;
   border-radius: 8px;
 }
 
+/* 오늘 날짜 셀의 스타일 */
+.react-calendar__tile--now {
+  background: #a6ccf2;
+  border-radius: 8px;
+}
+
+/* 오늘 날짜 셀 호버 시 스타일 */
 .react-calendar__tile--now:enabled:hover,
 .react-calendar__tile--now:enabled:focus {
-  background: ##e6e6e6;
-}
-
-.react-calendar__tile--hasActive {
   background: #a6ccf2;
-}
-
-.react-calendar__tile--hasActive:enabled:hover,
-.react-calendar__tile--hasActive:enabled:focus {
-  background: none;
-  border: 1px solid #a6ccf2;
   border-radius: 8px;
 }
 
+/* 선택된 날짜 셀의 스타일 */
 .react-calendar__tile--active {
   background: none;
-  border: 1px solid #a6ccf2;
+  border: 2px solid #a6ccf2;
   border-radius: 8px;
 }
 
+/* 선택된 날짜 셀 호버 시 배경색 변경 */
 .react-calendar__tile--active:enabled:hover,
 .react-calendar__tile--active:enabled:focus {
-  background: #a6ccf2;
-}
-
-.react-calendar--selectRange .react-calendar__tile--hover {
-  background-color: #e6e6e6;
+  background: none;
+  border: 2px solid #a6ccf2;
+  border-radius: 8px;
 }

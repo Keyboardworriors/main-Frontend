@@ -1,14 +1,12 @@
 import React from "react";
 import HomeLayout from "../components/layouts/HomeLayout";
 import DiaryLayout from "../components/layouts/DiaryLayout";
-import MyTabs from "../components/common/tabs";
 import MyCalendar from "../components/common/Calendar";
 
 const DiaryHome = () => {
   return (
     <>
       <HomeLayout>
-        <MyTabs />
         <DiaryLayout
           calendarContent={<MyCalendar />}
           resultContent={<div>캘린더 결과 섹션</div>}

@@ -10,9 +10,19 @@ function MyTabs() {
       defaultIndex={0}
       onSelect={(index) => console.log(`Selected tab: ${index}`)}
     >
-      <TabList className="flex space-x-4 max-w-6xl mx-auto">
-        <Tab>나의 감정일기</Tab>
-        <Tab>나의 감정발자취</Tab>
+      <TabList className="flex max-w-[1130px] mx-auto">
+        <Tab
+          className="px-4 py-2 text-gray-700 hover:text-black focus:outline-none"
+          selectedClassName="text-black font-bold bg-white rounded-t-lg"
+        >
+          나의 감정일기
+        </Tab>
+        <Tab
+          className="px-4 py-2 text-gray-700 hover:text-black focus:outline-none"
+          selectedClassName="text-black font-bold bg-white rounded-t-lg"
+        >
+          나의 감정발자취
+        </Tab>
       </TabList>
 
       <TabPanel>

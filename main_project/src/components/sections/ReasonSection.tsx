@@ -15,11 +15,10 @@ const ReasonSection = () => {
         <div className="w-1 h-14 bg-gray-400 mt-6"></div>
       </div>
 
-      {/* 반응형: 데스크탑에서는 가로 정렬(md:flex-row), 모바일에서는 세로 정렬(flex-col) */}
       <div className="flex flex-col md:flex-row justify-center items-center mt-12 gap-20">
         {reasons.map((reason, index) => (
           <div key={index} className="flex flex-col items-center text-center w-64">
-            <div className="w-60 h-60 bg-gray-300 rounded-full"></div> {/* 원형 아이콘 자리 */}
+            <div className="w-60 h-60 bg-gray-300 rounded-full"></div>
             <p className="mt-6 text-lg font-semibold text-gray-700">{reason.title}</p>
             <p className="mt-2 text-gray-600">{reason.description}</p>
           </div>

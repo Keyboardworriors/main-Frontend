@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Calendar from "react-calendar";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
 import "../Calendar/calendar.css";
 
 const MyCalendar = () => {
@@ -14,25 +16,28 @@ const MyCalendar = () => {
     "2025-04-22",
   ];
 
-  const onChangeToday = (newDate: Date) => {
-    setDate(newDate);
+  const onChangeToday = (newDate: Date | null) => {
+    if (newDate instanceof Date) {
+      setDate(newDate);
+    }
   };
 
   return (
     <div className="w-full h-[400px] overflow-hidden flex justify-center items-center">
       <Calendar
-        locale="ko"
-        onChange={onChangeToday}
+        onChange={(value) => {
+          if (value instanceof Date) {
+            onChangeToday(value);
+          }
+        }}
         value={date}
+        locale="ko"
         calendarType="gregory"
         prev2Label={null}
         next2Label={null}
         showNeighboringMonth={false}
-        className="h-full"
         tileContent={({ date }) => {
-          // UTC 보정 적용
-          const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-          const dateString = offsetDate.toISOString().split("T")[0]; // YYYY-MM-DD 형식 변환
+          const dateString = dayjs(date).format("YYYY-MM-DD");
 
           return (
             <div style={{ position: "relative", textAlign: "center" }}>

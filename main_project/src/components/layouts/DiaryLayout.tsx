@@ -8,7 +8,7 @@ const DiaryLayout = ({ calendarContent, resultContent, diaryListContent }: Diary
         <div className="bg-gray-100 rounded-lg w-full md:w-1/2 h-80">{calendarContent}</div>
         <div className="bg-[#D6E9FF] rounded-lg w-full md:w-1/2 h-80">{resultContent}</div>
       </div>
-      <div className="bg-white rounded-lg p-6 w-full border border-gray-200">
+      <div className="bg-white rounded-lg p-6 w-full border border-gray-300 h-full">
         {diaryListContent}
       </div>
     </div>

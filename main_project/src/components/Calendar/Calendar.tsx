@@ -4,8 +4,13 @@ import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import "../Calendar/calendar.css";
 
-const MyCalendar = () => {
-  const [date, setDate] = useState(new Date());
+export interface MyCalendarProps {
+  selectedDate: Date | null;
+  onDateSelect: (date: Date) => void;
+}
+
+const MyCalendar: React.FC<MyCalendarProps> = ({ selectedDate, onDateSelect }) => {
+  const [date, setDate] = useState<Date | null>(selectedDate || new Date());
 
   const mockDiaryDates = [
     "2025-03-05",
@@ -19,6 +24,7 @@ const MyCalendar = () => {
   const onChangeToday = (newDate: Date | null) => {
     if (newDate instanceof Date) {
       setDate(newDate);
+      onDateSelect(newDate);
     }
   };
 

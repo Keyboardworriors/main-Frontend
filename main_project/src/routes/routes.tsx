@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "../components/members/Login";
+import Login from "../components/members/login";
 import Introduce from "../pages/introduce";
 import NaverCallback from "../components/members/NaverCallback";
 import ProfileSetup from "../pages/ProfileSetup";

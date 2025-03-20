@@ -93,10 +93,10 @@ export enum PeriodType {
 
 //mood 추가해야함
 export enum Mood {
-  HAPPY = "happy",
-  SAD = "sad",
-  ANGRY = "angry",
-  NEUTRAL = "neutral",
-  EXCITED = "excited",
-  STRESSED = "stressed",
+  HAPPY = "HAPPY",
+  SAD = "SAD",
+  ANGRY = "ANGRY",
+  NEUTRAL = "NEUTRAL",
+  EXCITED = "EXCITED",
+  STRESSED = "STRESSED",
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import HomeLayout from "../components/layouts/HomeLayout";
 import DiaryLayout from "../components/layouts/DiaryLayout";
-import MyCalendar from "../components/common/Calendar";
+import MyCalendar from "../components/Calendar/Calendar";
 
 const DiaryHome = () => {
   return (

@@ -4,7 +4,7 @@ const ProfileSetup = () => {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    navigate("/main_project/DiaryHome"); // 정보 입력 후 다이어리 홈으로 이동
+    navigate("/api/diary"); 
   };
 
   return (

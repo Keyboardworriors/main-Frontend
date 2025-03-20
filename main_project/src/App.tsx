@@ -1,11 +1,16 @@
+import React from "react";
 import "./App.css";
-import AppRoutes from "./routes/routes";
+import Header from "./components/common/header";
+import MyTabs from "./components/common/tabs";
+import Footer from "./components/common/footer";
 
 function App() {
   return (
-    <div>
-      <AppRoutes />
-    </div>
+    <>
+      <Header />
+      <MyTabs />
+      <Footer />
+    </>
   );
 }
 

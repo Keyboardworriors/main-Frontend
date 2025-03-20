@@ -43,11 +43,27 @@ export interface HomeLayoutProps {
 }
 
 // 다이어리 섹션 레이아웃
-export interface DiaryLayoutProps {
+export type DiaryLayoutProps = {
   calendarContent: ReactNode;
   resultContent: ReactNode;
   diaryListContent: ReactNode;
-}
+};
+
+//소개페이지 레이아웃
+export type IntroLayoutProps = {
+  children: React.ReactNode;
+};
+
+export type FeatureSectionProps = {
+  title: string;
+  description: string;
+  imageOnLeft?: boolean;
+};
+
+export type Reason = {
+  title: string;
+  description: string;
+};
 
 // 차트 임시
 export interface EmotionData {

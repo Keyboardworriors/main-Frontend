@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 
+/* 인터페이스 */
 export interface User {
   id: string;
   nickname: string;
@@ -63,6 +64,32 @@ export type Reason = {
   title: string;
   description: string;
 };
+
+// 차트 임시
+export interface EmotionData {
+  label: string;
+  value: number;
+  color: string;
+}
+
+// 차트 컴포넌트 props
+export interface ChartComponentProps {
+  periodType: PeriodType;
+}
+
+// 차트 레이아웃 props
+export interface ChartLayoutProps {
+  chartContent: React.ReactNode;
+  onTabChange?: (tab: PeriodType) => void;
+}
+
+/* enum */
+// 차트페이지 기간 타입
+export enum PeriodType {
+  WEEKLY = "주간",
+  MONTHLY = "월간",
+  YEARLY = "연간",
+}
 
 //mood 추가해야함
 export enum Mood {

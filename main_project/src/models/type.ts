@@ -65,6 +65,13 @@ export type Reason = {
   description: string;
 };
 
+//회원정보입력 관련 타입
+export type Genre = "Electronic" | "Pop" | "Ballad" | "K-pop" | "Jazz" | "Rock" | "Classic" | "Hip-hop" | "Country";
+
+export interface GenreSelectorProps {
+  selectedGenres: Genre[];
+  onGenreClick: (genre: Genre) => void;
+}
 // 차트 임시
 export interface EmotionData {
   label: string;
@@ -90,6 +97,21 @@ export enum PeriodType {
   MONTHLY = "월간",
   YEARLY = "연간",
 }
+
+export interface ProfileImageUploaderProps {
+  profileImage: string;
+  onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface InputFieldProps {
+  type: string;
+  value: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  disabled?: boolean;
+}
+
+
 
 //mood 추가해야함
 export enum Mood {

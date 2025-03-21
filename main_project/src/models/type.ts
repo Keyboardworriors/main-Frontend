@@ -46,7 +46,6 @@ export interface HomeLayoutProps {
 export type DiaryLayoutProps = {
   calendarContent: ReactNode;
   resultContent: ReactNode;
-  diaryListContent: ReactNode;
 };
 
 //소개페이지 레이아웃
@@ -66,7 +65,16 @@ export type Reason = {
 };
 
 //회원정보입력 관련 타입
-export type Genre = "Electronic" | "Pop" | "Ballad" | "K-pop" | "Jazz" | "Rock" | "Classic" | "Hip-hop" | "Country";
+export type Genre =
+  | "Electronic"
+  | "Pop"
+  | "Ballad"
+  | "K-pop"
+  | "Jazz"
+  | "Rock"
+  | "Classic"
+  | "Hip-hop"
+  | "Country";
 
 export interface GenreSelectorProps {
   selectedGenres: Genre[];
@@ -110,8 +118,6 @@ export interface InputFieldProps {
   placeholder?: string;
   disabled?: boolean;
 }
-
-
 
 //mood 추가해야함
 export enum Mood {

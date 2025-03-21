@@ -4,17 +4,24 @@ import DiaryLayout from "../components/layouts/DiaryLayout";
 import MyCalendar from "../components/Calendar/Calendar";
 import DiaryView from "./DiaryView";
 
-const DiaryHome = () => {
+interface DiaryHomeProps {
+  searchQuery?: string;
+  onClearSearch: () => void;
+}
+
+const DiaryHome = ({ searchQuery = "", onClearSearch }: DiaryHomeProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const handleDateSelect = (date: Date | null) => {
+    setSelectedDate(date);
+    onClearSearch();
+  };
 
   return (
     <HomeLayout>
       <DiaryLayout
-        calendarContent={
-          <MyCalendar selectedDate={selectedDate} onDateSelect={(date) => setSelectedDate(date)} />
-        }
-        resultContent={<DiaryView selectedDate={selectedDate} />}
-        diaryListContent={<div>다이어리 리스트 섹션</div>}
+        calendarContent={<MyCalendar selectedDate={selectedDate} onDateSelect={handleDateSelect} />}
+        resultContent={<DiaryView selectedDate={selectedDate} searchQuery={searchQuery} />}
       />
     </HomeLayout>
   );

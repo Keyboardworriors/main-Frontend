@@ -6,36 +6,47 @@ import "../Calendar/calendar.css";
 
 export interface MyCalendarProps {
   selectedDate: Date | null;
-  onDateSelect: (date: Date) => void;
+  onDateSelect: (date: Date | null) => void;
 }
 
-const MyCalendar: React.FC<MyCalendarProps> = ({ selectedDate, onDateSelect }) => {
+const MyCalendar = ({ selectedDate, onDateSelect }: MyCalendarProps) => {
   const [date, setDate] = useState<Date | null>(selectedDate || new Date());
 
   const mockDiaryDates = [
-    "2025-03-05",
+    "2025-03-16",
+    "2025-03-17",
     "2025-03-18",
+    "2025-03-19",
     "2025-03-20",
+    "2025-03-21",
+    "2025-03-22",
+    "2025-03-23",
+    "2025-03-24",
     "2025-03-25",
-    "2025-04-12",
-    "2025-04-22",
+    "2025-03-28",
+    "2025-04-01",
+    "2025-04-05",
+    "2025-04-10",
+    "2025-04-15",
+    "2025-04-20",
   ];
 
-  const onChangeToday = (newDate: Date | null) => {
+  const handleDateChange = (newDate: Date | null) => {
     if (newDate instanceof Date) {
-      setDate(newDate);
-      onDateSelect(newDate);
+      if (date && dayjs(date).format("YYYY-MM-DD") === dayjs(newDate).format("YYYY-MM-DD")) {
+        setDate(null);
+        onDateSelect(null);
+      } else {
+        setDate(newDate);
+        onDateSelect(newDate);
+      }
     }
   };
 
   return (
-    <div className="w-full h-[400px] overflow-hidden flex justify-center items-center">
+    <div className="w-full h-[374px] overflow-hidden flex justify-center items-center">
       <Calendar
-        onChange={(value) => {
-          if (value instanceof Date) {
-            onChangeToday(value);
-          }
-        }}
+        onChange={(value) => value instanceof Date && handleDateChange(value)}
         value={date}
         locale="ko"
         calendarType="gregory"
@@ -44,16 +55,15 @@ const MyCalendar: React.FC<MyCalendarProps> = ({ selectedDate, onDateSelect }) =
         showNeighboringMonth={false}
         tileContent={({ date }) => {
           const dateString = dayjs(date).format("YYYY-MM-DD");
-
           return (
             <div style={{ position: "relative", textAlign: "center" }}>
-              {mockDiaryDates.includes(dateString) ? (
+              {mockDiaryDates.includes(dateString) && (
                 <img
                   src="/checkIcon.png"
                   alt="음표아이콘"
                   className="absolute top-[-25px] right-[-2px] w-[15px] h-[15px]"
                 />
-              ) : null}
+              )}
             </div>
           );
         }}

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { PeriodType, EmotionData, ChartComponentProps } from "../../models/type";
-import { PERIOD_TYPES, EMOTION_COLORS } from "../../models/constants";
+// import { PERIOD_TYPES, EMOTION_COLORS } from "../../models/constants";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

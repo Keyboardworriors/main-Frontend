@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import HomeLayout from "../components/layouts/HomeLayout";
 import ChartLayout from "../components/layouts/ChartLayout";
 import ChartComponent from "../components/common/Chart";

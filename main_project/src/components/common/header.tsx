@@ -1,4 +1,3 @@
-import React from "react";
 import feelodyLogo from "../../assets/logo/logo_feelody_wh.png";
 
 const Header = () => {

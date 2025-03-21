@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PeriodType, ChartLayoutProps } from "../../models/type";
 import { PERIOD_TYPES } from "../../models/constants";
 

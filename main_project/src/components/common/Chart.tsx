@@ -2,20 +2,20 @@ import { useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { PeriodType, EmotionData, ChartComponentProps } from "../../models/type";
-// import { PERIOD_TYPES, EMOTION_COLORS } from "../../models/constants";
+import { useModalStore } from "../../store/modal";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ChartComponent = ({ periodType }: ChartComponentProps) => {
   const [emotionData, setEmotionData] = useState<EmotionData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { openModal, closeModal } = useModalStore();
 
   // Chart.js 필수 데이터 형식
   const chartData = {
     labels: emotionData.map((item) => item.label),
     datasets: [
       {
-        // 조각별
         data: emotionData.map((item) => item.value),
         backgroundColor: emotionData.map((item) => item.color),
       },
@@ -26,7 +26,6 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    // 범례 설정
     plugins: {
       legend: {
         position: "bottom" as const,
@@ -37,7 +36,6 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
           },
         },
       },
-      // 툴팁 설정
       tooltip: {
         callbacks: {
           label: function (context: any) {
@@ -96,14 +94,17 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
 
   useEffect(() => {
     setLoading(true);
+    openModal("loading", { message: "차트를 분석중이에요" });
+
     const newData = generateDummyData(periodType);
 
     // API 연결 후 삭제 예정
     setTimeout(() => {
       setEmotionData(newData);
       setLoading(false);
-    }, 500);
-  }, [periodType]);
+      closeModal();
+    }, 1500);
+  }, [periodType, openModal, closeModal]);
 
   const getMostFrequentEmotion = () => {
     if (emotionData.length === 0) return "";
@@ -112,6 +113,7 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
     return sortedData[0].label;
   };
 
+  // 기존 렌더링 코드 유지
   return (
     <div className="w-full">
       <h2 className="text-xl font-bold mb-6">

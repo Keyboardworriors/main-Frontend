@@ -1,13 +1,17 @@
+import React from "react";
+import "./App.css";
 import Header from "./components/common/header";
-import AppRoutes from "./routes/routes";
+import MyTabs from "./components/common/tabs";
+import Footer from "./components/common/footer";
 
-const App = () => {
+function App() {
   return (
     <>
-  <Header />
-  <AppRoutes />
-  </>
-  )
-};
+      <Header />
+      <MyTabs />
+      <Footer />
+    </>
+  );
+}
 
 export default App;

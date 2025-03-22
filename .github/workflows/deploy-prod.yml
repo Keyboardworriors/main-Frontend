@@ -20,15 +20,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: 의존성 설치
-        run: npm install
+        run: |
+          cd main_project
+          npm install
 
       - name: React 프로젝트 빌드
-        run: npm run build
+        run: |
+          cd main_project
+          npm run build
 
       - name: S3 기존 파일들 삭제 후 새로 업로드
         run: |
           aws s3 rm --recursive s3://prod-feelody-web
-          aws s3 cp ./dist s3://prod-feelody-web --recursive
+          aws s3 cp ./main_project/dist s3://prod-feelody-web --recursive
 
-      - name: Cloudfront 캐시 무효화
+      - name: cloudfront 캐시 무효화
         run: aws cloudfront create-invalidation --distribution-id E26D48U2H6Q45B --paths "/*"

@@ -1,6 +1,6 @@
 import { Genre, GenreSelectorProps } from "../../models/profile";
 
-const GENRES: Genre[] = [
+const GENRES: readonly Genre[] = [
   "Electronic",
   "Pop",
   "Ballad",
@@ -10,9 +10,9 @@ const GENRES: Genre[] = [
   "Classic",
   "Hip-hop",
   "Country",
-] as const
+] as const;
 
-const GenreSelector: React.FC<GenreSelectorProps> = ({ selectedGenres, onGenreClick }) => {
+function GenreSelector({ selectedGenres, onGenreClick }: GenreSelectorProps) {
   return (
     <div className="grid grid-cols-3 gap-6 mt-4">
       {GENRES.map((genre) => (
@@ -29,6 +29,6 @@ const GenreSelector: React.FC<GenreSelectorProps> = ({ selectedGenres, onGenreCl
       ))}
     </div>
   );
-};
+}
 
 export default GenreSelector;

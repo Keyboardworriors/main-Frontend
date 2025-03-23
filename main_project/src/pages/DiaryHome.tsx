@@ -3,6 +3,7 @@ import HomeLayout from "../components/layouts/HomeLayout";
 import DiaryLayout from "../components/layouts/DiaryLayout";
 import MyCalendar from "../components/Calendar/Calendar";
 import DiaryView from "./DiaryView";
+import DiaryWrite from "./DiaryWrite";
 
 interface DiaryHomeProps {
   searchQuery?: string;
@@ -11,18 +12,40 @@ interface DiaryHomeProps {
 
 const DiaryHome = ({ searchQuery = "", onClearSearch }: DiaryHomeProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isWriteMode, setIsWriteMode] = useState(false);
 
   const handleDateSelect = (date: Date | null) => {
     setSelectedDate(date);
+    setIsWriteMode(false);
     onClearSearch();
+  };
+
+  const handleWriteClick = () => {
+    setIsWriteMode(true);
+  };
+
+  const handleCancelWrite = () => {
+    setIsWriteMode(false);
   };
 
   return (
     <HomeLayout>
-      <DiaryLayout
-        calendarContent={<MyCalendar selectedDate={selectedDate} onDateSelect={handleDateSelect} />}
-        resultContent={<DiaryView selectedDate={selectedDate} searchQuery={searchQuery} />}
-      />
+      {isWriteMode && selectedDate ? (
+        <DiaryWrite selectedDate={selectedDate} onCancel={handleCancelWrite} />
+      ) : (
+        <DiaryLayout
+          calendarContent={
+            <MyCalendar selectedDate={selectedDate} onDateSelect={handleDateSelect} />
+          }
+          resultContent={
+            <DiaryView
+              selectedDate={selectedDate}
+              searchQuery={searchQuery}
+              onWriteClick={handleWriteClick}
+            />
+          }
+        />
+      )}
     </HomeLayout>
   );
 };

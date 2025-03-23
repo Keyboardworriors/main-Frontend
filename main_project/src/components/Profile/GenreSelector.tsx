@@ -1,4 +1,4 @@
-import { Genre, GenreSelectorProps } from "../../models/type";
+import { Genre, GenreSelectorProps } from "../../models/profile";
 
 const GENRES: Genre[] = [
   "Electronic",
@@ -10,7 +10,7 @@ const GENRES: Genre[] = [
   "Classic",
   "Hip-hop",
   "Country",
-];
+] as const
 
 const GenreSelector: React.FC<GenreSelectorProps> = ({ selectedGenres, onGenreClick }) => {
   return (

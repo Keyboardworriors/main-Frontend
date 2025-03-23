@@ -1,4 +1,7 @@
-import { Reason } from "../../models/type";
+type Reason = {
+  title: string;
+  description: string;
+};
 
 const reasons: Reason[] = [
   { title: "이유 1", description: "감정 분석 AI 기반" },

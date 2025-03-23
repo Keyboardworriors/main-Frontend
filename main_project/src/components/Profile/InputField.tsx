@@ -1,4 +1,4 @@
-import { InputFieldProps } from "../../models/type";
+import { InputFieldProps } from "../../models/profile";
 
 const InputField: React.FC<InputFieldProps> = ({
   type,

@@ -1,4 +1,5 @@
-import { Diary, Mood } from "../models/type";
+import { Diary } from "../models/diary";
+import { Mood } from "../models/diary";
 
 export const mockDiaries: Diary[] = [
   {
@@ -8,7 +9,7 @@ export const mockDiaries: Diary[] = [
     content:
       "오늘은 날씨가 너무 좋아서 한강공원에 산책을 다녀왔다. 벚꽃이 피기 시작하는 모습이 정말 예뻤다. 봄이 오는 것을 온몸으로 느낄 수 있었다.",
     created_at: "2025-03-25T14:30:00",
-    mood: Mood.HAPPY,
+    moods: [Mood.Happiness, Mood.Excitement],
     rec_music: {
       video_id: "1",
       title: "봄날",
@@ -24,7 +25,7 @@ export const mockDiaries: Diary[] = [
     content:
       "집에서 넷플릭스 보면서 편안하게 쉬었다. 가끔은 이렇게 아무것도 하지 않는 것도 좋은 것 같다.",
     created_at: "2025-03-24T20:00:00",
-    mood: Mood.NEUTRAL,
+    moods: [Mood.Satisfaction, Mood.Relief],
     rec_music: {
       video_id: "2",
       title: "Sunday Morning",
@@ -40,7 +41,7 @@ export const mockDiaries: Diary[] = [
     content:
       "오랜만에 대학교 친구들을 만났다. 다들 각자의 자리에서 열심히 살고 있어서 보기 좋았다. 우리도 어느덧 다 어른이 되었네.",
     created_at: "2025-03-23T19:00:00",
-    mood: Mood.EXCITED,
+    moods: [Mood.Excitement, Mood.Nostalgia, Mood.Happiness],
     rec_music: {
       video_id: "3",
       title: "우리가 맞이할 새로운 시작",
@@ -56,7 +57,7 @@ export const mockDiaries: Diary[] = [
     content:
       "프로젝트 데드라인이 다가오는데 아직 해결하지 못한 문제들이 많다. 주말에도 일해야 할 것 같아 걱정이다.",
     created_at: "2025-03-22T22:15:00",
-    mood: Mood.STRESSED,
+    moods: [Mood.Anxiety, Mood.Frustration],
     rec_music: {
       video_id: "4",
       title: "힘내",
@@ -71,7 +72,7 @@ export const mockDiaries: Diary[] = [
     title: "새로운 취미",
     content: "오늘부터 수영을 배우기 시작했다. 처음이라 많이 서툴지만, 운동을 하고 나니 상쾌하다.",
     created_at: "2025-03-28T18:30:00",
-    mood: Mood.HAPPY,
+    moods: [Mood.Happiness, Mood.Confidence],
     rec_music: {
       video_id: "5",
       title: "Swim Good",
@@ -86,7 +87,7 @@ export const mockDiaries: Diary[] = [
     title: "오늘의 일기",
     content: "오늘은 정말 좋은 날씨였다. 공원에서 산책을 하고 커피를 마시며 즐거운 시간을 보냈다.",
     created_at: "2025-03-20T10:00:00",
-    mood: Mood.HAPPY,
+    moods: [Mood.Happiness, Mood.Satisfaction],
     rec_music: {
       video_id: "1",
       title: "행복한 노래",
@@ -101,7 +102,7 @@ export const mockDiaries: Diary[] = [
     title: "힘든 하루",
     content: "오늘은 업무가 많아서 스트레스를 많이 받았다. 하지만 이겨낼 수 있을 거야.",
     created_at: "2025-03-19T20:30:00",
-    mood: Mood.STRESSED,
+    moods: [Mood.Anxiety, Mood.Hope],
     rec_music: {
       video_id: "2",
       title: "힐링 음악",
@@ -116,7 +117,7 @@ export const mockDiaries: Diary[] = [
     title: "즐거운 주말",
     content: "친구들과 함께 영화를 보고 맛있는 음식을 먹었다. 정말 즐거운 하루였다.",
     created_at: "2025-03-18T15:45:00",
-    mood: Mood.EXCITED,
+    moods: [Mood.Excitement, Mood.Happiness, Mood.Satisfaction],
     rec_music: {
       video_id: "3",
       title: "즐거운 노래",
@@ -131,7 +132,7 @@ export const mockDiaries: Diary[] = [
     title: "평온한 하루",
     content: "집에서 책을 읽고 음악을 들으며 평화로운 시간을 보냈다.",
     created_at: "2025-03-17T14:20:00",
-    mood: Mood.NEUTRAL,
+    moods: [Mood.Satisfaction, Mood.Relief],
     rec_music: {
       video_id: "4",
       title: "평화로운 음악",
@@ -146,7 +147,7 @@ export const mockDiaries: Diary[] = [
     title: "우울한 날",
     content: "오늘은 왠지 우울한 기분이 든다. 하지만 이 또한 지나갈 거야.",
     created_at: "2025-03-16T21:15:00",
-    mood: Mood.SAD,
+    moods: [Mood.Depression, Mood.Hope],
     rec_music: {
       video_id: "5",
       title: "위로의 노래",
@@ -162,7 +163,7 @@ export const mockDiaries: Diary[] = [
     content:
       "오늘은 봄비가 내렸다. 창밖의 빗소리를 들으며 책을 읽었다. 비가 내리는 소리가 마음에 평화를 가져다주었다.",
     created_at: "2025-04-15T15:30:00",
-    mood: Mood.NEUTRAL,
+    moods: [Mood.Satisfaction, Mood.Emotion],
     rec_music: {
       video_id: "6",
       title: "Rain",
@@ -177,7 +178,7 @@ export const mockDiaries: Diary[] = [
     title: "새로운 시작",
     content: "새로운 직장에서의 첫 날이었다. 긴장되기도 했지만, 새로운 환경에서의 도전이 기대된다.",
     created_at: "2025-04-10T20:00:00",
-    mood: Mood.EXCITED,
+    moods: [Mood.Excitement, Mood.Tension, Mood.Hope],
     rec_music: {
       video_id: "7",
       title: "New Beginning",
@@ -193,7 +194,7 @@ export const mockDiaries: Diary[] = [
     content:
       "친구들과 함께 벚꽃 구경을 다녀왔다. 예쁜 벚꽃과 함께 사진도 많이 찍었다. 봄의 시작이 정말 좋다.",
     created_at: "2025-04-05T14:20:00",
-    mood: Mood.HAPPY,
+    moods: [Mood.Happiness, Mood.Excitement, Mood.Emotion],
     rec_music: {
       video_id: "8",
       title: "Cherry Blossom",
@@ -208,7 +209,7 @@ export const mockDiaries: Diary[] = [
     title: "4월의 시작",
     content: "4월이 시작되었다. 이번 달에는 새로운 목표를 세우고 달성해보자.",
     created_at: "2025-04-01T09:00:00",
-    mood: Mood.HAPPY,
+    moods: [Mood.Happiness, Mood.Hope],
     rec_music: {
       video_id: "9",
       title: "April",
@@ -223,7 +224,7 @@ export const mockDiaries: Diary[] = [
     title: "힘든 하루",
     content: "오늘은 업무가 많아서 스트레스를 많이 받았다. 하지만 이겨낼 수 있을 거야.",
     created_at: "2025-04-20T22:15:00",
-    mood: Mood.STRESSED,
+    moods: [Mood.Anxiety, Mood.Hope],
     rec_music: {
       video_id: "10",
       title: "힘내",

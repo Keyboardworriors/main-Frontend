@@ -1,7 +1,7 @@
 import { mockDiaries } from "../mock/diaryData";
 import DiaryList from "./DiaryList";
 import { formatDate, getTargetDateOrToday } from "../utils/date";
-import { SearchResult } from "../models/type";
+import { SearchResult } from "../models/search";
 
 interface DiaryViewProps {
   selectedDate: Date | null;
@@ -39,7 +39,7 @@ const DiaryView = ({
         </div>
 
         <p className="text-xs text-gray-500 text-right mt-2">
-          {targetDiary.date} | {targetDiary.mood}
+          {targetDiary.date} | {targetDiary.moods.join(", ")}
         </p>
 
         <p className="text-base font-semibold mt-3">{targetDiary.title}</p>

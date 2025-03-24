@@ -1,4 +1,4 @@
-import { HomeLayoutProps } from "../../models/type";
+import { HomeLayoutProps } from "../../models/layoutProps";
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (

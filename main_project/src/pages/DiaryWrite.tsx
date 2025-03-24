@@ -2,16 +2,11 @@ import React, { useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { formatDate } from "../utils/date";
+import { DiaryContent } from "../models/diary";
 
 interface DiaryWriteProps {
   selectedDate: Date;
   onCancel: () => void;
-}
-
-interface DiaryContent {
-  title: string;
-  content: string;
-  emotion?: string;
 }
 
 const editorConfig = {
@@ -28,6 +23,7 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   const [diaryContent, setDiaryContent] = useState<DiaryContent>({
     title: "",
     content: "",
+    moods: [],
   });
 
   const editor = useEditor({

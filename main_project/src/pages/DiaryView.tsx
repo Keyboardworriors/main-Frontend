@@ -1,6 +1,6 @@
-import dayjs from "dayjs";
 import { mockDiaries } from "../mock/diaryData";
 import DiaryList from "./DiaryList";
+import { formatDate, getTargetDateOrToday } from "../utils/date";
 
 interface DiaryViewProps {
   selectedDate: Date | null;
@@ -8,26 +8,9 @@ interface DiaryViewProps {
   onWriteClick: () => void;
 }
 
-const DiaryView = ({ selectedDate, searchQuery = "", onWriteClick }: DiaryViewProps) => {
-  const formatDate = (date: Date): string => {
-    return dayjs(date).format("YYYY-MM-DD");
-  };
-
-  // 선택된 날짜 또는 오늘 날짜의 일기 찾기
-  const getTargetDate = () => {
-    if (selectedDate) return selectedDate;
-    return new Date(); // 선택된 날짜가 없으면 오늘 날짜 사용
-  };
-
-  const formattedDate = formatDate(getTargetDate());
-  const targetDiary = mockDiaries.find((diary) => diary.date === formattedDate);
-
-  console.log("Selected Date:", selectedDate);
-  console.log("Formatted Date:", formattedDate);
-  console.log("Found Diary:", targetDiary);
-  console.log(
-    "Available Dates:",
-    mockDiaries.map((d) => d.date),
+const DiaryView = ({ selectedDate, searchQuery = "" }: DiaryViewProps) => {
+  const targetDiary = mockDiaries.find(
+    (diary) => diary.date === formatDate(getTargetDateOrToday(selectedDate)),
   );
 
   // 일기 내용 렌더링

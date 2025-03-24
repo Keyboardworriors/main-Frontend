@@ -13,10 +13,20 @@ interface DiaryHomeProps {
 
 const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: DiaryHomeProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isWriteMode, setIsWriteMode] = useState(false);
 
   const handleDateSelect = (date: Date | null) => {
     setSelectedDate(date);
+    setIsWriteMode(false);
     onClearSearch();
+  };
+
+  const handleWriteClick = () => {
+    setIsWriteMode(true);
+  };
+
+  const handleCancelWrite = () => {
+    setIsWriteMode(false);
   };
 
   return (

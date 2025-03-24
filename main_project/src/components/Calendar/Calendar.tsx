@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Calendar from "react-calendar";
-import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import "../Calendar/calendar.css";
+import { formatDate, getToday } from "../../utils/date";
 
 export interface MyCalendarProps {
   selectedDate: Date | null;
@@ -10,7 +10,7 @@ export interface MyCalendarProps {
 }
 
 const MyCalendar = ({ selectedDate, onDateSelect }: MyCalendarProps) => {
-  const [date, setDate] = useState<Date | null>(selectedDate || new Date());
+  const [date, setDate] = useState<Date | null>(selectedDate || getToday());
 
   const mockDiaryDates = [
     "2025-03-16",
@@ -33,7 +33,7 @@ const MyCalendar = ({ selectedDate, onDateSelect }: MyCalendarProps) => {
 
   const handleDateChange = (newDate: Date | null) => {
     if (newDate instanceof Date) {
-      if (date && dayjs(date).format("YYYY-MM-DD") === dayjs(newDate).format("YYYY-MM-DD")) {
+      if (date && formatDate(date) === formatDate(newDate)) {
         setDate(null);
         onDateSelect(null);
       } else {
@@ -54,7 +54,7 @@ const MyCalendar = ({ selectedDate, onDateSelect }: MyCalendarProps) => {
         next2Label={null}
         showNeighboringMonth={false}
         tileContent={({ date }) => {
-          const dateString = dayjs(date).format("YYYY-MM-DD");
+          const dateString = formatDate(date);
           return (
             <div style={{ position: "relative", textAlign: "center" }}>
               {mockDiaryDates.includes(dateString) && (

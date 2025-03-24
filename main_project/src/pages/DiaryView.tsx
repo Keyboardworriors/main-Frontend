@@ -1,24 +1,20 @@
-import dayjs from "dayjs";
 import { mockDiaries } from "../mock/diaryData";
 import DiaryList from "./DiaryList";
 import { SearchResult } from "../models/type";
+import { formatDate, getTargetDateOrToday } from "../utils/date";
+
+const targetDiary = mockDiaries.find((diary) => diary.date === formatDate(getTargetDate()));
 
 interface DiaryViewProps {
   selectedDate: Date | null;
-  isSearchMode?: boolean;
-  searchResults: SearchResult[];
+  searchQuery?: string;
+  onWriteClick: () => void;
 }
 
-const DiaryView = ({ selectedDate, isSearchMode = false, searchResults = [] }: DiaryViewProps) => {
-  const formatDate = (date: Date): string => dayjs(date).format("YYYY-MM-DD");
-
-  // 선택된 날짜 또는 오늘 날짜의 일기 찾기
-  const getTargetDate = () => {
-    if (selectedDate) return selectedDate;
-    return new Date(); // 선택된 날짜가 없으면 오늘 날짜 사용
-  };
-
-  const targetDiary = mockDiaries.find((diary) => diary.date === formatDate(getTargetDate()));
+const DiaryView = ({ selectedDate, searchQuery = "" }: DiaryViewProps) => {
+  const targetDiary = mockDiaries.find(
+    (diary) => diary.date === formatDate(getTargetDateOrToday(selectedDate)),
+  );
 
   // 일기 내용 렌더링
   const renderDiaryContent = () => {
@@ -26,11 +22,13 @@ const DiaryView = ({ selectedDate, isSearchMode = false, searchResults = [] }: D
 
     return (
       <div className="w-full max-w-md">
-        <img
-          src={targetDiary.rec_music.thumbnail}
-          alt="추천 음악"
-          className="w-16 h-16 object-cover rounded-full mx-auto mb-2 border border-gray-200"
-        />
+        {targetDiary.rec_music.thumbnail && (
+          <img
+            src={targetDiary.rec_music.thumbnail}
+            alt="추천 음악"
+            className="w-16 h-16 object-cover rounded-full mx-auto mb-2 border border-gray-200"
+          />
+        )}
         <div className="text-center">
           <p className="text-sm font-semibold text-gray-700">{targetDiary.rec_music.title}</p>
           <p className="text-xs text-gray-600">{targetDiary.rec_music.artist}</p>

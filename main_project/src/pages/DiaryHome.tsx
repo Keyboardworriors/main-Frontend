@@ -4,6 +4,7 @@ import DiaryLayout from "../components/layouts/DiaryLayout";
 import MyCalendar from "../components/Calendar/Calendar";
 import DiaryView from "./DiaryView";
 import { SearchResult } from "../models/type";
+import DiaryWrite from "./DiaryWrite";
 
 interface DiaryHomeProps {
   searchQuery: string;
@@ -17,7 +18,6 @@ const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: Diar
 
   const handleDateSelect = (date: Date | null) => {
     setSelectedDate(date);
-    setIsWriteMode(false);
     onClearSearch();
   };
 
@@ -31,16 +31,23 @@ const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: Diar
 
   return (
     <HomeLayout>
-      <DiaryLayout
-        calendarContent={<MyCalendar selectedDate={selectedDate} onDateSelect={handleDateSelect} />}
-        resultContent={
-          <DiaryView
-            selectedDate={selectedDate}
-            isSearchMode={searchQuery !== ""}
-            searchResults={searchResults}
-          />
-        }
-      />
+      {isWriteMode && selectedDate ? (
+        <DiaryWrite selectedDate={selectedDate} onCancel={handleCancelWrite} />
+      ) : (
+        <DiaryLayout
+          calendarContent={
+            <MyCalendar selectedDate={selectedDate} onDateSelect={handleDateSelect} />
+          }
+          resultContent={
+            <DiaryView
+              selectedDate={selectedDate}
+              isSearchMode={searchQuery !== ""}
+              searchResults={searchResults}
+              onWriteClick={handleWriteClick}
+            />
+          }
+        />
+      )}
     </HomeLayout>
   );
 };

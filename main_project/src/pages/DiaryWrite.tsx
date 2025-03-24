@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import dayjs from "dayjs";
-import "dayjs/locale/ko";
-
-dayjs.locale("ko");
+import { formatDate } from "../utils/date";
 
 interface DiaryWriteProps {
   selectedDate: Date;
@@ -43,7 +40,7 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
     },
   });
 
-  const formattedDate = dayjs(selectedDate).format("YYYY년 MM월 DD일 dddd");
+  const formattedDate = formatDate(selectedDate);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDiaryContent((prev) => ({

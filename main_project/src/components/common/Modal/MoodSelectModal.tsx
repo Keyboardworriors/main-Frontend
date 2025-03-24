@@ -9,6 +9,7 @@ interface MoodSelectModalProps {
   isAnalysisFailed?: boolean;
   analyzedMood?: string;
   isDirectSelect?: boolean;
+  onSave: () => void;
 }
 
 const MoodSelectModal = ({
@@ -19,18 +20,29 @@ const MoodSelectModal = ({
   isAnalysisFailed = false,
   analyzedMood,
   isDirectSelect = false,
+  onSave,
 }: MoodSelectModalProps) => {
   const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
 
   const handleMoodSelect = (mood: string) => {
     if (selectedMoods.includes(mood)) {
-      setSelectedMoods(selectedMoods.filter((m) => m !== mood));
+      if (selectedMoods.length > 1) {
+        setSelectedMoods(selectedMoods.filter((m) => m !== mood));
+        onSelect(mood);
+      }
     } else if (selectedMoods.length < 3) {
       setSelectedMoods([...selectedMoods, mood]);
       onSelect(mood);
-      // Todo: 감정 키워드 저장 후 모달 닫기 -> 일기 중간 작성 컴포넌트 추가 필요
-      onClose();
     }
+  };
+
+  const handleSave = () => {
+    if (selectedMoods.length === 0) {
+      alert("최소 1개의 감정을 선택해주세요.");
+      return;
+    }
+    onSave();
+    onClose();
   };
 
   return (
@@ -55,7 +67,7 @@ const MoodSelectModal = ({
 
         <div className="min-h-[200px] sm:h-[240px]">
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-base sm:text-lg text-gray-600 font-semibold">감정 키워드</h2>
+            <h2 className="text-base sm:text-lg text-gray-600 font-semibold">감정 키워드 선택</h2>
             <span className="text-xs sm:text-sm text-gray-500">
               {selectedMoods.length}/3 개의 감정을 선택했어요.
             </span>
@@ -80,7 +92,7 @@ const MoodSelectModal = ({
 
         <div className="flex justify-end">
           <button
-            onClick={onClose}
+            onClick={handleSave}
             className="px-6 sm:px-7 md:px-8 py-2 sm:py-2.5 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] 
                       transition-colors text-xs sm:text-sm font-medium"
           >

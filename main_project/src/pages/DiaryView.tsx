@@ -1,6 +1,6 @@
 import { mockDiaries } from "../mock/diaryData";
 import DiaryList from "./DiaryList";
-import { formatDate, getTargetDateOrToday } from "../utils/date";
+import { formatDate, formatDateKorean, getTargetDateOrToday } from "../utils/date";
 import { SearchResult } from "../models/search";
 
 interface DiaryViewProps {
@@ -20,7 +20,6 @@ const DiaryView = ({
     (diary) => diary.date === formatDate(getTargetDateOrToday(selectedDate)),
   );
 
-  // 일기 내용 렌더링
   const renderDiaryContent = () => {
     if (!targetDiary) return null;
 
@@ -38,17 +37,28 @@ const DiaryView = ({
           <p className="text-xs text-gray-600">{targetDiary.rec_music.artist}</p>
         </div>
 
-        <p className="text-xs text-gray-500 text-right mt-2">
-          {targetDiary.date} | {targetDiary.moods.join(", ")}
-        </p>
+        <div className="flex justify-between items-start mb-4 mt-8 ">
+          <div className="text-sm text-[#4A7196] font-semibold">
+            {formatDateKorean(getTargetDateOrToday(selectedDate))}
+          </div>
+          <div className="flex gap-2">
+            {targetDiary.moods.map((mood, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 bg-[#4A7196] text-white rounded-full text-xs font-medium shadow-sm"
+              >
+                {mood}
+              </span>
+            ))}
+          </div>
+        </div>
 
-        <p className="text-base font-semibold mt-3">{targetDiary.title}</p>
+        <p className="text-base font-semibold mt-3 mb-1">{targetDiary.title}</p>
         <p className="text-sm text-gray-700">{targetDiary.content}</p>
       </div>
     );
   };
 
-  // 작성하기 버튼 렌더링
   const renderWriteButton = () => (
     <div className="w-full flex items-center justify-center">
       <button

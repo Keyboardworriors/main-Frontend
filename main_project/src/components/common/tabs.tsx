@@ -4,7 +4,8 @@ import DiaryHome from "../../pages/DiaryHome";
 import MoodChart from "../../pages/moodChart";
 import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaUser, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
-import { User, SearchResult } from "../../models/type";
+import { User } from "../../models/diary";
+import { SearchResult } from "../../models/search";
 
 function MyTabs() {
   const [showSearch, setShowSearch] = useState(false);

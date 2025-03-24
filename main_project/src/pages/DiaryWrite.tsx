@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { formatDate } from "../utils/date";
-import { DiaryContent } from "../models/diary";
+import { DiaryContent, Mood } from "../models/diary";
+import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
 
 interface DiaryWriteProps {
   selectedDate: Date;
@@ -25,6 +26,10 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
     content: "",
     moods: [],
   });
+  const [isMoodModalOpen, setIsMoodModalOpen] = useState(false);
+  const [isAnalysisFailed, setIsAnalysisFailed] = useState(false);
+  const [analyzedMood, setAnalyzedMood] = useState<string>();
+  const [isDirectSelect, setIsDirectSelect] = useState(false);
 
   const editor = useEditor({
     ...editorConfig,
@@ -46,13 +51,45 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   };
 
   const handleEmotionSelect = () => {
-    // Todo:감정 선택 로직 구현 예정
-    console.log("감정 선택");
+    setIsAnalysisFailed(false);
+    setAnalyzedMood(undefined);
+    setIsDirectSelect(true);
+    setIsMoodModalOpen(true);
   };
 
-  const handleEmotionAnalysis = () => {
-    // Todo:감정 분석 로직 구현 예정
-    console.log("감정 분석");
+  const handleEmotionAnalysis = async () => {
+    try {
+      const response = await fetch("api/diary/recommendation-keyword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: diaryContent.title,
+          content: diaryContent.content,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("감정 분석에 실패했습니다.");
+      }
+
+      const data = await response.json();
+      setAnalyzedMood(data.mood);
+      setIsAnalysisFailed(false);
+    } catch {
+      setIsAnalysisFailed(true);
+      setAnalyzedMood(undefined);
+    }
+    setIsDirectSelect(false);
+    setIsMoodModalOpen(true);
+  };
+
+  const handleMoodSelect = (mood: string) => {
+    setDiaryContent((prev) => ({
+      ...prev,
+      moods: [...prev.moods, mood as Mood],
+    }));
   };
 
   return (
@@ -95,6 +132,16 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
           감정 분석
         </button>
       </div>
+
+      <MoodSelectModal
+        isOpen={isMoodModalOpen}
+        onClose={() => setIsMoodModalOpen(false)}
+        onSelect={handleMoodSelect}
+        moods={Object.values(Mood)}
+        isAnalysisFailed={isAnalysisFailed}
+        analyzedMood={analyzedMood}
+        isDirectSelect={isDirectSelect}
+      />
     </div>
   );
 };

@@ -27,9 +27,9 @@ const NaverCallback = () => {
         localStorage.setItem("user", JSON.stringify(user));
 
         if (user.isRegistered) {
-          navigate("/ProfileSetup"); 
+          navigate("/members/register"); 
         } else {
-          navigate("/DiaryHome");
+          navigate("/Diary/");
         }
       } catch (error) {
         console.error("네이버 로그인 실패", error);

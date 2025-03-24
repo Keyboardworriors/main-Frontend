@@ -2,31 +2,31 @@ import { useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { PeriodType, EmotionData, ChartComponentProps } from "../../models/type";
-// import { PERIOD_TYPES, EMOTION_COLORS } from "../../models/constants";
+import { useModalStore } from "../../store/modal";
 
+// Chart.js 필수 컴포넌트 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ChartComponent = ({ periodType }: ChartComponentProps) => {
   const [emotionData, setEmotionData] = useState<EmotionData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { openModal, closeModal } = useModalStore();
 
-  // Chart.js 필수 데이터 형식
-  const chartData = {
+  // 감정 데이터 기반 Chart.js 데이터 생성 함수
+  const createChartData = () => ({
     labels: emotionData.map((item) => item.label),
     datasets: [
       {
-        // 조각별
         data: emotionData.map((item) => item.value),
         backgroundColor: emotionData.map((item) => item.color),
       },
     ],
-  };
+  });
 
-  // Chart.js 옵션 객체
+  // Chart.js 옵션 설정
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    // 범례 설정
     plugins: {
       legend: {
         position: "bottom" as const,
@@ -37,18 +37,15 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
           },
         },
       },
-      // 툴팁 설정
       tooltip: {
         callbacks: {
-          label: function (context: any) {
-            return `${context.label}: ${context.raw}회`;
-          },
+          label: (context: any) => `${context.label}: ${context.raw}회`,
         },
       },
     },
   };
 
-  // 테스트용 더미 데이터
+  // 테스트용 더미 데이터 생성 함수
   const generateDummyData = (type: PeriodType) => {
     const colors = [
       "#FF6384",
@@ -63,6 +60,7 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
       "#87BC45",
     ];
 
+    // 기간 유형별 데이터 반환
     if (type === PeriodType.WEEKLY) {
       return [
         { label: "행복", value: 12, color: colors[0] },
@@ -94,23 +92,68 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
     }
   };
 
-  useEffect(() => {
-    setLoading(true);
-    const newData = generateDummyData(periodType);
-
-    // API 연결 후 삭제 예정
-    setTimeout(() => {
-      setEmotionData(newData);
-      setLoading(false);
-    }, 500);
-  }, [periodType]);
-
+  // 가장 빈번한 감정 찾기
   const getMostFrequentEmotion = () => {
     if (emotionData.length === 0) return "";
-
     const sortedData = [...emotionData].sort((a, b) => b.value - a.value);
     return sortedData[0].label;
   };
+
+  // 감정 데이터 아이템 렌더링 함수
+  const renderEmotionItem = (emotion: EmotionData) => (
+    <div key={emotion.label} className="flex items-center p-2 rounded-md transition">
+      <span className="w-4 h-4 mr-2 rounded-full" style={{ backgroundColor: emotion.color }}></span>
+      <span className="text-gray-700">
+        {emotion.label}: {emotion.value}회
+      </span>
+    </div>
+  );
+
+  // 차트 렌더링 함수
+  const renderChart = () => (
+    <div className="w-full xl:col-span-2 h-72 md:h-80 relative p-5 bg-white rounded-lg">
+      {!loading && <Doughnut data={createChartData()} options={chartOptions} />}
+    </div>
+  );
+
+  // 감정 요약 카드 렌더링 함수
+  const renderEmotionSummary = () => {
+    if (loading) return null;
+
+    return (
+      <div className="mt-6 xl:mt-0 bg-gray-50 p-6 rounded-lg max-w-full">
+        <h3 className="text-lg font-medium mb-4">나의 감정 요약</h3>
+        <p className="text-sm text-gray-600 mb-4">
+          {periodType} 동안 가장 많이 느낀 감정은 <strong>{getMostFrequentEmotion()}</strong>
+          입니다.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-2 gap-3 text-sm">
+          {emotionData.map(renderEmotionItem)}
+        </div>
+      </div>
+    );
+  };
+
+  // 기간 변경시 데이터 로드
+  useEffect(() => {
+    setLoading(true);
+
+    // 차트 로딩 모달 표시
+    openModal("loading", {
+      message: "차트를 분석중이에요",
+      modalPurpose: "chart",
+    });
+
+    // API 연결 후에는 실제 데이터 패치 로직으로 대체 예정
+    const newData = generateDummyData(periodType);
+
+    // API 응답 시뮬레이션
+    setTimeout(() => {
+      setEmotionData(newData);
+      setLoading(false);
+      closeModal();
+    }, 1500);
+  }, [periodType, openModal, closeModal]);
 
   return (
     <div className="w-full">
@@ -119,39 +162,8 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
         <span className="bg-[#A6CCF2] text-white px-2 py-1 rounded-md text-sm">{periodType}</span>
       </h2>
       <div className="flex flex-col xl:grid xl:grid-cols-3 xl:gap-8 mb-6">
-        <div className="w-full xl:col-span-2 h-72 md:h-80 relative p-5 bg-white rounded-lg">
-          {loading ? (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-gray-500">데이터 로딩 중...</p>
-            </div>
-          ) : (
-            <Doughnut data={chartData} options={chartOptions} />
-          )}
-        </div>
-
-        {/* 감정 키워드 요약 정보 */}
-        {!loading && (
-          <div className="mt-6 xl:mt-0 bg-gray-50 p-6 rounded-lg max-w-full">
-            <h3 className="text-lg font-medium mb-4">나의 감정 요약</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              {periodType} 동안 가장 많이 느낀 감정은 <strong>{getMostFrequentEmotion()}</strong>
-              입니다.
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-2 gap-3 text-sm">
-              {emotionData.map((emotion) => (
-                <div key={emotion.label} className="flex items-center p-2 rounded-md transition">
-                  <span
-                    className="w-4 h-4 mr-2 rounded-full"
-                    style={{ backgroundColor: emotion.color }}
-                  ></span>
-                  <span className="text-gray-700">
-                    {emotion.label}: {emotion.value}회
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {renderChart()}
+        {renderEmotionSummary()}
       </div>
     </div>
   );

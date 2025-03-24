@@ -1,11 +1,4 @@
-import { Mood } from "./diary";
-
-export interface Chart {
-  moods: Mood[];
-  count: number;
-}
-
-export interface EmotionData {
+export interface MoodData {
   label: string;
   value: number;
   color: string;

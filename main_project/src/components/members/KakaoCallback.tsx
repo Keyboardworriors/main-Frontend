@@ -24,9 +24,9 @@ const KakaoCallback = () => {
         localStorage.setItem("user", JSON.stringify(user));
 
         if (user.isRegistered) {
-          navigate("/ProfileSetup");
+          navigate("/members/register");
         } else {
-          navigate("/DiaryHome");
+          navigate("/diary/");
         }
       } catch (error) {
         console.error("카카오 로그인 실패", error);

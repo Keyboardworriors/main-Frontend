@@ -10,7 +10,7 @@ interface ConfirmModalProps {
   isDanger?: boolean;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({
+const ConfirmModal = ({
   isOpen,
   onClose,
   message,
@@ -18,8 +18,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   confirmText = "확인",
   cancelText = "취소",
   isDanger = false,
-}) => {
-  // 버튼 렌더링 함수 (임시로 해놓음)
+}: ConfirmModalProps) => {
+  // 버튼 렌더링 함수
   const renderButtons = () => (
     <div className="flex justify-end mt-6 space-x-3">
       <button

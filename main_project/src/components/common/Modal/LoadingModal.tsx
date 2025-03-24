@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import BaseModal from "./BaseModal";
 
 interface LoadingModalProps {
@@ -5,7 +6,7 @@ interface LoadingModalProps {
   message: string;
 }
 
-const LoadingModal: React.FC<LoadingModalProps> = ({ isOpen, message }) => {
+const LoadingModal = ({ isOpen, message }: LoadingModalProps) => {
   const renderMusicNotes = () => (
     <div className="flex items-center justify-center h-28">
       <div
@@ -81,11 +82,19 @@ const LoadingModal: React.FC<LoadingModalProps> = ({ isOpen, message }) => {
           <path d="M10 4L18 7" stroke="#A6CCF2" strokeWidth="2" strokeLinecap="round" />
         </svg>
       </div>
+    </div>
+  );
 
-      <style jsx global>{`
+  // 애니메이션 스타일을 더 효율적으로 관리하기 위한 useEffect
+  useEffect(() => {
+    // 이미 동일한 ID의 스타일이 있는지 확인
+    const styleId = "loading-animation-style";
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement("style");
+      style.id = styleId;
+      style.innerHTML = `
         @keyframes floatAnimation {
-          0%,
-          100% {
+          0%, 100% {
             transform: translateY(0);
             opacity: 0.8;
           }
@@ -94,13 +103,24 @@ const LoadingModal: React.FC<LoadingModalProps> = ({ isOpen, message }) => {
             opacity: 1;
           }
         }
-      `}</style>
-    </div>
-  );
+      `;
+      document.head.appendChild(style);
+    }
+
+    // 컴포넌트가 최초로 렌더링될 때만 스타일 추가
+    // 중복 스타일 추가와 제거 방지를 위해 ID로 관리
+    return () => {
+      const existingStyle = document.getElementById(styleId);
+      // ID로 스타일 요소를 찾아서 마지막 인스턴스가 언마운트 될 때만 제거
+      if (existingStyle && document.querySelectorAll(`[data-modal-type="loading"]`).length <= 1) {
+        document.head.removeChild(existingStyle);
+      }
+    };
+  }, []);
 
   return (
     <BaseModal isOpen={isOpen} hideCloseButton={true}>
-      <div className="flex flex-col items-center py-6">
+      <div className="flex flex-col items-center py-6" data-modal-type="loading">
         <h2 className="text-3xl font-bold text-center mb-8" style={{ color: "#646464" }}>
           {message}
         </h2>

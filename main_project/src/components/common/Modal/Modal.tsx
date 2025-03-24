@@ -3,10 +3,9 @@ import LoadingModal from "./LoadingModal";
 import ConfirmModal from "./ConfirmModal";
 import ProfileModal from "./ProfileModal";
 
-const Modal: React.FC = () => {
+const Modal = () => {
   const { isOpen, type, data, closeModal } = useModalStore();
 
-  // 로딩 모달 메시지 가져오기 함수
   const getLoadingMessage = () => {
     // 메시지가 직접 제공된 경우 우선 사용
     if (data?.message) return data.message;
@@ -26,7 +25,6 @@ const Modal: React.FC = () => {
     }
   };
 
-  // 확인 모달 설정 가져오기
   const getConfirmSettings = () => {
     // 기본 설정
     const defaultSettings = {
@@ -56,6 +54,7 @@ const Modal: React.FC = () => {
     return defaultSettings;
   };
 
+  // 타입에 따른 적절한 모달 컴포넌트 렌더링
   switch (type) {
     case "loading":
       return <LoadingModal isOpen={isOpen} message={getLoadingMessage()} />;
@@ -80,7 +79,7 @@ const Modal: React.FC = () => {
         <ProfileModal isOpen={isOpen} onClose={closeModal} user={data?.user || { nickname: "" }} />
       );
 
-    // 다른 모달 타입은 추후 구현 예정
+    // 다른 모달 타입에 대한 처리는 추후 구현 예정
     default:
       return null;
   }

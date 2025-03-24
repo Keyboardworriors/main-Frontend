@@ -8,12 +8,7 @@ interface BaseModalProps {
   hideCloseButton?: boolean;
 }
 
-const BaseModal: React.FC<BaseModalProps> = ({
-  isOpen,
-  onClose,
-  children,
-  hideCloseButton = false,
-}) => {
+const BaseModal = ({ isOpen, onClose, children, hideCloseButton = false }: BaseModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousOverflowStyle = useRef<string | null>(null);
 

@@ -1,29 +1,28 @@
 import { useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, TooltipItem } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { PeriodType, EmotionData, ChartComponentProps } from "../../models/chart";
+import { PeriodType, MoodData, ChartComponentProps } from "../../models/chart";
 import { useModalStore } from "../../store/modal";
+import { Mood } from "../../models/diary";
+import { MOOD_COLORS } from "../../models/constants";
 
-// Chart.js 필수 컴포넌트 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ChartComponent = ({ periodType }: ChartComponentProps) => {
-  const [emotionData, setEmotionData] = useState<EmotionData[]>([]);
+  const [moodData, setMoodData] = useState<MoodData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { openModal, closeModal } = useModalStore();
 
-  // 감정 데이터 기반 Chart.js 데이터 생성 함수
   const createChartData = () => ({
-    labels: emotionData.map((item) => item.label),
+    labels: moodData.map((item) => item.label),
     datasets: [
       {
-        data: emotionData.map((item) => item.value),
-        backgroundColor: emotionData.map((item) => item.color),
+        data: moodData.map((item) => item.value),
+        backgroundColor: moodData.map((item) => item.color),
       },
     ],
   });
 
-  // Chart.js 옵션 설정
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -47,98 +46,79 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
 
   // 테스트용 더미 데이터 생성 함수
   const generateDummyData = (type: PeriodType) => {
-    const colors = [
-      "#FF6384",
-      "#36A2EB",
-      "#FFCE56",
-      "#4BC0C0",
-      "#9966FF",
-      "#FF9F40",
-      "#8AC249",
-      "#EA5545",
-      "#F46A9B",
-      "#87BC45",
-    ];
-
     // 기간 유형별 데이터 반환
     if (type === PeriodType.WEEKLY) {
       return [
-        { label: "행복", value: 12, color: colors[0] },
-        { label: "슬픔", value: 5, color: colors[1] },
-        { label: "불안", value: 8, color: colors[2] },
-        { label: "분노", value: 3, color: colors[3] },
-        { label: "평온", value: 7, color: colors[4] },
+        { label: Mood.Happiness, value: 12, color: MOOD_COLORS[Mood.Happiness] },
+        { label: Mood.Sadness, value: 5, color: MOOD_COLORS[Mood.Sadness] },
+        { label: Mood.Anxiety, value: 8, color: MOOD_COLORS[Mood.Anxiety] },
+        { label: Mood.Anger, value: 3, color: MOOD_COLORS[Mood.Anger] },
+        { label: Mood.Hope, value: 7, color: MOOD_COLORS[Mood.Hope] },
       ];
     } else if (type === PeriodType.MONTHLY) {
       return [
-        { label: "행복", value: 45, color: colors[0] },
-        { label: "슬픔", value: 23, color: colors[1] },
-        { label: "불안", value: 30, color: colors[2] },
-        { label: "분노", value: 15, color: colors[3] },
-        { label: "평온", value: 38, color: colors[4] },
-        { label: "지루함", value: 20, color: colors[5] },
+        { label: Mood.Happiness, value: 45, color: MOOD_COLORS[Mood.Happiness] },
+        { label: Mood.Sadness, value: 23, color: MOOD_COLORS[Mood.Sadness] },
+        { label: Mood.Anxiety, value: 30, color: MOOD_COLORS[Mood.Anxiety] },
+        { label: Mood.Anger, value: 15, color: MOOD_COLORS[Mood.Anger] },
+        { label: Mood.Hope, value: 38, color: MOOD_COLORS[Mood.Hope] },
+        { label: Mood.Restlessness, value: 20, color: MOOD_COLORS[Mood.Restlessness] },
       ];
     } else {
       return [
-        { label: "행복", value: 210, color: colors[0] },
-        { label: "슬픔", value: 145, color: colors[1] },
-        { label: "불안", value: 175, color: colors[2] },
-        { label: "분노", value: 80, color: colors[3] },
-        { label: "평온", value: 230, color: colors[4] },
-        { label: "지루함", value: 120, color: colors[5] },
-        { label: "설렘", value: 95, color: colors[6] },
-        { label: "후회", value: 65, color: colors[7] },
+        { label: Mood.Happiness, value: 210, color: MOOD_COLORS[Mood.Happiness] },
+        { label: Mood.Sadness, value: 145, color: MOOD_COLORS[Mood.Sadness] },
+        { label: Mood.Anxiety, value: 175, color: MOOD_COLORS[Mood.Anxiety] },
+        { label: Mood.Anger, value: 80, color: MOOD_COLORS[Mood.Anger] },
+        { label: Mood.Hope, value: 230, color: MOOD_COLORS[Mood.Hope] },
+        { label: Mood.Restlessness, value: 120, color: MOOD_COLORS[Mood.Restlessness] },
+        { label: Mood.Excitement, value: 95, color: MOOD_COLORS[Mood.Excitement] },
+        { label: Mood.Regret, value: 65, color: MOOD_COLORS[Mood.Regret] },
       ];
     }
   };
 
-  // 가장 빈번한 감정 찾기
-  const getMostFrequentEmotion = () => {
-    if (emotionData.length === 0) return "";
-    const sortedData = [...emotionData].sort((a, b) => b.value - a.value);
+  const getMostFrequentMood = () => {
+    if (moodData.length === 0) return "";
+    const sortedData = [...moodData].sort((a, b) => b.value - a.value);
     return sortedData[0].label;
   };
 
-  // 감정 데이터 아이템 렌더링 함수
-  const renderEmotionItem = (emotion: EmotionData) => (
-    <div key={emotion.label} className="flex items-center p-2 rounded-md transition">
-      <span className="w-4 h-4 mr-2 rounded-full" style={{ backgroundColor: emotion.color }}></span>
+  const renderMoodItem = (mood: MoodData) => (
+    <div key={mood.label} className="flex items-center py-1 px-2 rounded-md transition">
+      <span className="w-3 h-3 mr-2 rounded-full" style={{ backgroundColor: mood.color }}></span>
       <span className="text-gray-700">
-        {emotion.label}: {emotion.value}회
+        {mood.label}: {mood.value}회
       </span>
     </div>
   );
 
-  // 차트 렌더링 함수
   const renderChart = () => (
     <div className="w-full xl:col-span-2 h-72 md:h-80 relative p-5 bg-white rounded-lg">
       {!loading && <Doughnut data={createChartData()} options={chartOptions} />}
     </div>
   );
 
-  // 감정 요약 카드 렌더링 함수
-  const renderEmotionSummary = () => {
+  const renderMoodSummary = () => {
     if (loading) return null;
 
     return (
       <div className="mt-6 xl:mt-0 bg-gray-50 p-6 rounded-lg max-w-full">
         <h3 className="text-lg font-medium mb-4">나의 감정 요약</h3>
-        <p className="text-sm text-gray-600 mb-4">
-          {periodType} 동안 가장 많이 느낀 감정은 <strong>{getMostFrequentEmotion()}</strong>
+        <p className="text-sm text-gray-600 mb-3">
+          {periodType} 동안 가장 많이 느낀 감정은 <strong>{getMostFrequentMood()}</strong>
           입니다.
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-2 gap-3 text-sm">
-          {emotionData.map(renderEmotionItem)}
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-2 gap-y-1 gap-x-2 text-sm">
+          {moodData.map(renderMoodItem)}
         </div>
       </div>
     );
   };
 
-  // 기간 변경시 데이터 로드
   useEffect(() => {
     setLoading(true);
 
-    // 차트 로딩 모달 표시
     openModal("loading", {
       message: "차트를 분석중이에요",
       modalPurpose: "chart",
@@ -147,9 +127,8 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
     // API 연결 후에는 실제 데이터 패치 로직으로 대체 예정
     const newData = generateDummyData(periodType);
 
-    // API 응답 시뮬레이션
     setTimeout(() => {
-      setEmotionData(newData);
+      setMoodData(newData);
       setLoading(false);
       closeModal();
     }, 1500);
@@ -163,7 +142,7 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
       </h2>
       <div className="flex flex-col xl:grid xl:grid-cols-3 xl:gap-8 mb-6">
         {renderChart()}
-        {renderEmotionSummary()}
+        {renderMoodSummary()}
       </div>
     </div>
   );

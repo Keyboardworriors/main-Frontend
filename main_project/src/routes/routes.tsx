@@ -3,8 +3,8 @@ import Login from "../components/members/login";
 import Introduce from "../pages/introduce";
 import NaverCallback from "../components/members/NaverCallback";
 import ProfileSetup from "../pages/ProfileSetup";
-import DiaryHome from "../pages/DiaryHome";
 import KakaoCallback from "../components/members/KakaoCallback";
+import MyTabs from "../components/common/tabs";
 
 const AppRoutes = () => {
   return (
@@ -15,7 +15,7 @@ const AppRoutes = () => {
         <Route path="/oauth/naver/callback" element={<NaverCallback />} />
         <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
         <Route path="/members/register" element={<ProfileSetup />} />
-        <Route path="/diary/" element={<DiaryHome />} />
+        <Route path="/diary" element={<MyTabs />} />
       </Routes>
     </Router>
   );

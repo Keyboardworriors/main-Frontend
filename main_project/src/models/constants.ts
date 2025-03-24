@@ -1,4 +1,4 @@
-import { PeriodType } from "./type";
+import { PeriodType } from "./chart";
 
 // 차트 탭
 export const PERIOD_TYPES = [PeriodType.WEEKLY, PeriodType.MONTHLY, PeriodType.YEARLY];

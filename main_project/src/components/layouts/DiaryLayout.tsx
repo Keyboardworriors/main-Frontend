@@ -1,4 +1,4 @@
-import { DiaryLayoutProps } from "../../models/type";
+import { DiaryLayoutProps } from "../../models/layoutProps";
 
 const DiaryLayout = ({ calendarContent, resultContent }: DiaryLayoutProps) => {
   return (

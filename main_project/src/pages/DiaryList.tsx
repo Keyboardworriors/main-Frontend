@@ -1,4 +1,4 @@
-import { SearchResult } from "../models/type";
+import { SearchResult } from "../models/search";
 
 interface DiaryListProps {
   diaries: SearchResult[];

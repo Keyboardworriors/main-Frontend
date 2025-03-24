@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, TooltipItem } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { PeriodType, EmotionData, ChartComponentProps } from "../../models/type";
+import { PeriodType, EmotionData, ChartComponentProps } from "../../models/chart";
 import { useModalStore } from "../../store/modal";
 
 // Chart.js 필수 컴포넌트 등록
@@ -39,7 +39,7 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => `${context.label}: ${context.raw}회`,
+          label: (context: TooltipItem<"doughnut">) => `${context.label}: ${context.raw}회`,
         },
       },
     },

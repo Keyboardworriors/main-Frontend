@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PeriodType, ChartLayoutProps } from "../../models/type";
+import { PeriodType, ChartLayoutProps } from "../../models/chart";
 import { PERIOD_TYPES } from "../../models/constants";
 
 const ChartLayout = ({ chartContent, onTabChange }: ChartLayoutProps) => {

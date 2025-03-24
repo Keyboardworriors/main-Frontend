@@ -1,17 +1,21 @@
 import { mockDiaries } from "../mock/diaryData";
 import DiaryList from "./DiaryList";
-import { SearchResult } from "../models/type";
 import { formatDate, getTargetDateOrToday } from "../utils/date";
-
-const targetDiary = mockDiaries.find((diary) => diary.date === formatDate(getTargetDate()));
+import { SearchResult } from "../models/type";
 
 interface DiaryViewProps {
   selectedDate: Date | null;
-  searchQuery?: string;
+  isSearchMode?: boolean;
+  searchResults: SearchResult[];
   onWriteClick: () => void;
 }
 
-const DiaryView = ({ selectedDate, searchQuery = "" }: DiaryViewProps) => {
+const DiaryView = ({
+  selectedDate,
+  isSearchMode = false,
+  searchResults = [],
+  onWriteClick,
+}: DiaryViewProps) => {
   const targetDiary = mockDiaries.find(
     (diary) => diary.date === formatDate(getTargetDateOrToday(selectedDate)),
   );
@@ -48,9 +52,7 @@ const DiaryView = ({ selectedDate, searchQuery = "" }: DiaryViewProps) => {
   const renderWriteButton = () => (
     <div className="w-full flex items-center justify-center">
       <button
-        onClick={() => {
-          // TODO: 일기 작성 기능 구현
-        }}
+        onClick={onWriteClick}
         className="border border-black py-1 px-2 text-xs rounded-full active:scale-95 transition-transform duration-150 cursor-pointer"
       >
         + 감정 기록 작성하기

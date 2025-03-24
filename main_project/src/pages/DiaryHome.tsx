@@ -3,7 +3,7 @@ import HomeLayout from "../components/layouts/HomeLayout";
 import DiaryLayout from "../components/layouts/DiaryLayout";
 import MyCalendar from "../components/Calendar/Calendar";
 import DiaryView from "./DiaryView";
-import { SearchResult } from "../models/type";
+import { SearchResult } from "../models/search";
 import DiaryWrite from "./DiaryWrite";
 
 interface DiaryHomeProps {

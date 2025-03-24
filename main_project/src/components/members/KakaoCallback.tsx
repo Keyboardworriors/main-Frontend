@@ -28,10 +28,15 @@ const KakaoCallback = () => {
 
         setAuth(accessToken, refreshToken, user);
 
-        user.is_active ? navigate("/diary/") : navigate("/members/register");
+        if (user.is_active) {
+          navigate("/diary/");
+        } else {
+          navigate("/profile-setup", { state: { mode: "create" } });
+        }
       } catch (error) {
         console.error("카카오 로그인 실패", error);
         alert("카카오 로그인 중 오류가 발생했습니다.");
+        navigate("/login");
       }
     };
 

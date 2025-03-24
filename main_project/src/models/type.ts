@@ -11,11 +11,24 @@ export interface User {
 }
 
 export interface Music {
-  VideoId: string;
+  video_id: string;
   title: string;
   artist: string;
   thumbnail: string;
   embedUrl: string;
+}
+
+export interface SearchResult {
+  diary_id: number;
+  title: string;
+  content: string;
+  created_at: string;
+  rec_music: Music;
+  moods: string[];
+}
+
+export interface SearchResponse {
+  diary_list: SearchResult[];
 }
 
 export interface Diary {

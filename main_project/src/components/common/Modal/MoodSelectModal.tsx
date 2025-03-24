@@ -55,7 +55,7 @@ const MoodSelectModal = ({
 
         <div className="min-h-[200px] sm:h-[240px]">
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-base sm:text-lg text-gray-600 font-semibold">감정 키워드 선택</h2>
+            <h2 className="text-base sm:text-lg text-gray-600 font-semibold">감정 키워드</h2>
             <span className="text-xs sm:text-sm text-gray-500">
               {selectedMoods.length}/3 개의 감정을 선택했어요.
             </span>

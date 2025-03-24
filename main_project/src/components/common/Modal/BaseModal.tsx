@@ -17,24 +17,20 @@ const BaseModal: React.FC<BaseModalProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const previousOverflowStyle = useRef<string | null>(null);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && onClose) onClose();
-    };
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node) && onClose) {
-        onClose();
-      }
-    };
-
-    if (onClose) {
-      document.addEventListener("keydown", handleKeyDown);
-      document.addEventListener("mousedown", handleClickOutside);
+  // 모달 외부 클릭 핸들러
+  const handleClickOutside = (e: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node) && onClose) {
+      onClose();
     }
+  };
 
+  // 키보드 Escape 키 핸들러
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Escape" && onClose) onClose();
+  };
+
+  // 스크롤바 관리 함수
+  const manageScrollbar = () => {
     // 현재 스크롤바 상태 저장 및 스크롤 방지
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     previousOverflowStyle.current = document.body.style.overflow;
@@ -44,22 +40,42 @@ const BaseModal: React.FC<BaseModalProps> = ({
       document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
     document.body.style.overflow = "hidden";
+  };
 
+  // 스크롤바 상태 복원 함수
+  const restoreScrollbar = () => {
+    document.body.style.overflow = previousOverflowStyle.current || "";
+    document.body.style.paddingRight = "";
+  };
+
+  // 모달 열릴 때 이벤트 리스너 등록 및 스크롤바 관리
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // 이벤트 리스너 등록
+    if (onClose) {
+      document.addEventListener("keydown", handleKeyDown);
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    // 스크롤바 관리
+    manageScrollbar();
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거 및 스크롤바 복원
     return () => {
       if (onClose) {
         document.removeEventListener("keydown", handleKeyDown);
         document.removeEventListener("mousedown", handleClickOutside);
       }
-
-      document.body.style.overflow = previousOverflowStyle.current || "";
-      document.body.style.paddingRight = "";
+      restoreScrollbar();
     };
   }, [isOpen, onClose]);
 
+  // 모달이 닫혀있으면 아무것도 렌더링하지 않음
   if (!isOpen) return null;
 
+  // 모달 컨테이너 요소 찾기
   const modalContainer = document.getElementById("modal-container");
-
   if (!modalContainer) return null;
 
   return createPortal(

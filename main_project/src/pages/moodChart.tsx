@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import HomeLayout from "../components/layouts/HomeLayout";
 import ChartLayout from "../components/layouts/ChartLayout";
 import ChartComponent from "../components/common/Chart";
-import { PeriodType } from "../models/type";
+import { PeriodType } from "../models/chart";
 
 const MoodChart = () => {
   const [activeTab, setActiveTab] = useState<PeriodType>(PeriodType.WEEKLY);

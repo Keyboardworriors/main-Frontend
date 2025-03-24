@@ -4,7 +4,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { formatDateKorean } from "../utils/date";
 import { DiaryContent, Mood } from "../models/diary";
 import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
-import DiaryView from "../components/diary/DiaryContent";
+import DiaryContentPreview from "./DiaryContent";
 
 interface DiaryWriteProps {
   selectedDate: Date;
@@ -141,7 +141,11 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
 
   if (isSaved) {
     return (
-      <DiaryView selectedDate={selectedDate} diaryContent={diaryContent} onEdit={handleEdit} />
+      <DiaryContentPreview
+        selectedDate={selectedDate}
+        diaryContent={diaryContent}
+        onEdit={handleEdit}
+      />
     );
   }
 

@@ -1,13 +1,13 @@
-import { formatDateKorean } from "../../utils/date";
-import { DiaryContent as DiaryContentType } from "../../models/diary";
+import { formatDateKorean } from "../utils/date";
+import { DiaryContent as DiaryContentType } from "../models/diary";
 
-type DiaryViewProps = {
+type DiaryContentPreviewProps = {
   selectedDate: Date;
   diaryContent: DiaryContentType;
   onEdit: () => void;
 };
 
-const DiaryView = ({ selectedDate, diaryContent, onEdit }: DiaryViewProps) => {
+const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryContentPreviewProps) => {
   const formattedDate = formatDateKorean(selectedDate);
 
   return (
@@ -41,7 +41,7 @@ const DiaryView = ({ selectedDate, diaryContent, onEdit }: DiaryViewProps) => {
 
         <div className="w-full md:w-[40%] flex flex-col justify-between md:pl-2.5 md:pt-10 mt-4 md:mt-0">
           <div>
-            <h3 className="text-base text-gray-600 font-semibold mb-3">선택한 감정 키워드</h3>
+            <h3 className="text-base text-gray-600 font-semibold mb-3">감정 키워드</h3>
             <div className="flex flex-wrap gap-2">
               {diaryContent.moods.map((mood, index) => (
                 <span
@@ -77,4 +77,4 @@ const DiaryView = ({ selectedDate, diaryContent, onEdit }: DiaryViewProps) => {
   );
 };
 
-export default DiaryView;
+export default DiaryContentPreview;

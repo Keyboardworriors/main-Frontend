@@ -36,7 +36,7 @@ export interface Diary {
   date: string;
   title: string;
   content: string;
-  created_At: string;
+  created_at: string;
   mood: Mood;
   rec_music: Music;
 }

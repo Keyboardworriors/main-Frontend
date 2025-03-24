@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import HomeLayout from "../components/layouts/HomeLayout";
 import ProfileImageUploader from "../components/Profile/ProfileImageUploader";
 import GenreSelector from "../components/Profile/GenreSelector";
 import InputField from "../components/Profile/InputField";
 import useFetchUserData from "../hooks/useFetchUserData";
 import useProfileSetup from "../hooks/useProfileSetup";
 import { Genre } from "../models/profile";
+import ProfileLayout from "../components/layouts/ProfileLayout";
 
 const ProfileSetup = () => {
   const { email, profileImage, setProfileImage } = useFetchUserData();
@@ -33,8 +33,9 @@ const ProfileSetup = () => {
   };
 
   return (
-    <HomeLayout>
-      <div className="flex flex-col items-center bg-white p-8 max-w-xl mx-auto">
+    <>
+    <ProfileLayout>
+      <div className="min-h-full flex flex-col items-center p-8 max-w-xl mx-auto">
         <h1 className="text-3xl font-semibold text-gray-700 mt-5">회원 정보를 작성해주세요</h1>
         <p className="text-gray-500 text-sm mt-2">필수 입력 값은 반드시 작성해주세요</p>
 
@@ -61,7 +62,7 @@ const ProfileSetup = () => {
           placeholder="한 줄 소개"
         />
 
-        <div className="flex gap-4 mt-6">
+        <div className="flex gap-4 mt-8">
           <button
             onClick={handleSubmit}
             className="px-6 py-3 bg-blue-500 text-white rounded-3xl hover:bg-blue-600"
@@ -76,7 +77,8 @@ const ProfileSetup = () => {
           </button>
         </div>
       </div>
-    </HomeLayout>
+    </ProfileLayout>
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Genre } from "../models/type";
+import { Genre } from "../models/profile";
 
 const useProfileSetup = (
   profileImage: string,

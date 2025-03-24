@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeLayout from "../components/layouts/HomeLayout";
-import { Genre } from "../models/type";
 import ProfileImageUploader from "../components/Profile/ProfileImageUploader";
 import GenreSelector from "../components/Profile/GenreSelector";
 import InputField from "../components/Profile/InputField";
 import useFetchUserData from "../hooks/useFetchUserData";
 import useProfileSetup from "../hooks/useProfileSetup";
+import { Genre } from "../models/profile";
 
 const ProfileSetup = () => {
   const { email, profileImage, setProfileImage } = useFetchUserData();

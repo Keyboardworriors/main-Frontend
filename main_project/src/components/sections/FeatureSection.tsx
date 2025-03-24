@@ -1,4 +1,8 @@
-import { FeatureSectionProps } from "../../models/type";
+type FeatureSectionProps = {
+  title: string;
+  description: string;
+  imageOnLeft?: boolean;
+};
 
 const sections: FeatureSectionProps[] = [
   { title: "필로디의 차별적 기술 1", description: "필로디 소개 1", imageOnLeft: true },

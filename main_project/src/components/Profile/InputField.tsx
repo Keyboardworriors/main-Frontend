@@ -1,12 +1,6 @@
-import { InputFieldProps } from "../../models/type";
+import { InputFieldProps } from "../../models/profile";
 
-const InputField: React.FC<InputFieldProps> = ({
-  type,
-  value,
-  onChange,
-  placeholder,
-  disabled,
-}) => {
+function InputField({ type, value, onChange, placeholder, disabled }: InputFieldProps) {
   return (
     <input
       type={type}
@@ -18,6 +12,6 @@ const InputField: React.FC<InputFieldProps> = ({
         ${type === "email" ? "bg-gray-300 text-gray-600" : "bg-white"}`}
     />
   );
-};
+}
 
 export default InputField;

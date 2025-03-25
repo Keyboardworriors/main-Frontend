@@ -46,7 +46,6 @@ const MyPage = () => {
           <p className="text-2xl font-semibold ml-12">{userProfile.nickname}</p>
         </div>
 
-        {/* 정보 표시 */}
         <div className="grid grid-cols-2 gap-y-4 gap-x-30 text-gray-700 max-w-2xl mx-auto">
           <div className="font-medium text-right">이메일</div>
           <div className="text-left">{userProfile.email}</div>
@@ -60,7 +59,6 @@ const MyPage = () => {
           <div className="text-left break-words">{userProfile.bio || "-"}</div>
         </div>
 
-        {/* 버튼 영역 */}
         <div className="flex flex-col justify-center items-center">
           <button
             onClick={() => navigate("/members/register", { state: { mode: "edit" } })}

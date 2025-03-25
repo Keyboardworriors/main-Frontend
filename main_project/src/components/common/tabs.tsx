@@ -81,7 +81,7 @@ function MyTabs() {
           className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"
           selectedClassName="text-black font-bold bg-white rounded-t-lg"
         >
-          나의 감정발자취¬
+          나의 감정발자취
         </Tab>
         <div className="flex items-center gap-2 ml-auto">
           {showSearch ? (

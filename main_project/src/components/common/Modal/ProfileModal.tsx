@@ -1,4 +1,5 @@
 import BaseModal from "./BaseModal";
+import { FaHeart, FaPen } from "react-icons/fa";
 
 interface User {
   nickname: string;
@@ -13,70 +14,45 @@ interface ProfileModalProps {
   user: User;
 }
 
-const ProfileModal = ({ isOpen, onClose, user }: ProfileModalProps) => {
-  // 장르 태그 렌더링 함수
-  const renderGenreTag = (genre: string, index: number) => (
-    <span
-      key={index}
-      className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm mr-2 mb-2"
-    >
-      {genre}
-    </span>
-  );
-
-  // 프로필 헤더 렌더링 함수
-  const renderProfileHeader = () => (
-    <div className="flex items-center mb-6">
-      <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden mr-4">
-        {user.profileImage ? (
-          <img
-            src={user.profileImage}
-            alt={`${user.nickname}의 프로필`}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-blue-100 text-blue-500">
-            {user.nickname?.slice(0, 1).toUpperCase() || "U"}
-          </div>
-        )}
-      </div>
-      <h2 className="text-2xl font-bold text-gray-800">{user.nickname || "사용자"}</h2>
-    </div>
-  );
-
-  // 프로필 소개 렌더링 함수
-  const renderProfileIntro = () => (
-    <div className="mb-6">
-      <h3 className="text-lg font-medium mb-2">한 줄 소개</h3>
-      <p className="text-gray-600 bg-gray-50 p-4 rounded-lg">
-        {user.introduction || "소개글이 없습니다."}
-      </p>
-    </div>
-  );
-
-  // 음악 장르 섹션 렌더링 함수
-  const renderMusicGenres = () => (
-    <div className="mb-4">
-      <h3 className="text-lg font-medium mb-2">선호하는 음악 장르</h3>
-      <div className="flex flex-wrap">
-        {user.preferredGenres && user.preferredGenres.length > 0 ? (
-          user.preferredGenres.map(renderGenreTag)
-        ) : (
-          <p className="text-gray-500">선호하는 음악 장르가 없습니다.</p>
-        )}
-      </div>
-    </div>
-  );
-
+function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
-      <div className="py-2">
-        {renderProfileHeader()}
-        {renderProfileIntro()}
-        {renderMusicGenres()}
+      <div className="relative flex justify-center items-center min-h-[400px] px-8 max-w-5xl">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
+          aria-label="닫기"
+        >
+          ✕
+        </button>
+        <div className="flex flex-col justify-center gap-6 text-gray-800 mr-12">
+          <h2 className="text-4xl font-bold mb-10">{user.nickname || "닉네임"}</h2>
+
+          <div className="flex items-center text-lg">
+            <FaHeart className="mr-4 text-gray-500" />
+            <span>{user.preferredGenres?.join(", ") || "-"}</span>
+          </div>
+
+          <div className="flex items-center text-base">
+            <FaPen className="mr-4 text-gray-500" />
+            <span>{user.introduction || "-"}</span>
+          </div>
+        </div>
+
+        <div className="w-32 h-32 rounded-full border border-blue-300 overflow-hidden bg-blue-100 flex items-center justify-center text-blue-500 text-4xl ml-30">
+          {user.profileImage ? (
+            <img
+              src={user.profileImage}
+              alt="프로필 이미지"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span>{user.nickname?.charAt(0).toUpperCase() || "U"}</span>
+          )}
+        </div>
       </div>
     </BaseModal>
   );
-};
+}
 
 export default ProfileModal;

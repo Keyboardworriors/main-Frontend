@@ -11,13 +11,21 @@ import ProfileModal from "./Modal/ProfileModal";
 
 function MyTabs() {
   const navigate = useNavigate();
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [tabIndex, setTabIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [searchState, setSearchState] = useState<{
+    showSearch: boolean;
+    query: string;
+    isSearching: boolean;
+    results: SearchResult[];
+  }>({
+    showSearch: false,
+    query: "",
+    isSearching: false,
+    results: [],
+  });
 
   // 임시 사용자 데이터
   const user: User = {
@@ -37,14 +45,16 @@ function MyTabs() {
   };
 
   const clearSearch = () => {
-    setSearchQuery("");
-    setShowSearch(false);
-    setIsSearching(false);
-    setSearchResults([]);
+    setSearchState({
+      showSearch: false,
+      query: "",
+      isSearching: false,
+      results: [],
+    });
   };
 
   const handleSearchInputRef = (element: HTMLInputElement | null) => {
-    if (element && showSearch) {
+    if (element && searchState.showSearch) {
       element.focus();
     }
   };
@@ -61,15 +71,33 @@ function MyTabs() {
   }, []);
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchQuery.trim()) {
-      setIsSearching(true);
-      // TODO: API 연동 후 실제 검색 구현
-      setIsSearching(false);
+    if (e.key === "Enter" && searchState.query.trim()) {
+      setSearchState({ ...searchState, isSearching: true });
+      setTabIndex(0);
+      try {
+        // TODO: API 연동 후 실제 검색 구현
+        // const response = await fetch(...);
+        // const results = await response.json();
+        // setSearchState({ ...searchState, results });
+      } catch (error) {
+        console.error("검색 중 오류 발생:", error);
+        // 에러 처리 로직 추가
+      } finally {
+        setSearchState({ ...searchState, isSearching: false });
+      }
     }
   };
 
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchState({ ...searchState, query: e.target.value });
+  };
+
   return (
-    <Tabs className="bg-[#A6CCF2] min-h-screen flex flex-col" defaultIndex={0}>
+    <Tabs
+      className="bg-[#A6CCF2] min-h-screen flex flex-col"
+      selectedIndex={tabIndex}
+      onSelect={(index) => setTabIndex(index)}
+    >
       <TabList className="flex max-w-[1130px] w-full mx-auto pt-0 pr-4 pl-7 items-center">
         <Tab
           className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"
@@ -84,17 +112,17 @@ function MyTabs() {
           나의 감정발자취
         </Tab>
         <div className="flex items-center gap-2 ml-auto">
-          {showSearch ? (
+          {searchState.showSearch ? (
             <div className="relative flex items-center">
               <input
                 ref={handleSearchInputRef}
                 type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchState.query}
+                onChange={handleSearchInputChange}
                 onKeyPress={handleSearch}
                 placeholder="일기를 검색해보세요!"
                 className="px-4 py-2 bg-white rounded-full focus:outline-none text-gray-700 text-sm placeholder:text-sm placeholder-gray-500 w-40 md:w-64"
-                disabled={isSearching}
+                disabled={searchState.isSearching}
               />
               <button
                 onClick={clearSearch}
@@ -106,7 +134,7 @@ function MyTabs() {
             </div>
           ) : (
             <button
-              onClick={() => setShowSearch(true)}
+              onClick={() => setSearchState({ ...searchState, showSearch: true })}
               className="p-2 text-gray-700 hover:text-black focus:outline-none cursor-pointer"
               aria-label="검색창 열기"
             >
@@ -154,11 +182,11 @@ function MyTabs() {
         </div>
       </TabList>
 
-      <div className="w-full max-w-[1130px] mx-auto">
+      <div className="w-full max-w-[1130px] mx-auto px-4 sm:px-6 lg:px-8">
         <TabPanel>
           <DiaryHome
-            searchQuery={searchQuery}
-            searchResults={searchResults}
+            searchQuery={searchState.query}
+            searchResults={searchState.results}
             onClearSearch={clearSearch}
           />
         </TabPanel>

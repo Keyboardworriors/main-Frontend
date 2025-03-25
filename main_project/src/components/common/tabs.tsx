@@ -11,23 +11,13 @@ import ProfileModal from "./Modal/ProfileModal";
 
 function MyTabs() {
   const navigate = useNavigate();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [searchState, setSearchState] = useState<{
-    showSearch: boolean;
-    query: string;
-    isSearching: boolean;
-    results: SearchResult[];
-  }>({
-    showSearch: false,
-    query: "",
-    isSearching: false,
-    results: [],
-  });
-
-  // 임시 사용자 데이터
   const user: User = {
     nickname: "김민정",
     email: "hong@example.com",
@@ -36,68 +26,41 @@ function MyTabs() {
     favorite_genre: "팝, 록, 힙합",
     is_active: true,
   };
-
   const modalUser = {
     nickname: user.nickname,
     profileImage: user.profile_image,
     introduction: user.introduce,
     preferredGenres: user.favorite_genre?.split(",") || [],
   };
-
   const clearSearch = () => {
-    setSearchState({
-      showSearch: false,
-      query: "",
-      isSearching: false,
-      results: [],
-    });
+    setSearchQuery("");
+    setShowSearch(false);
+    setIsSearching(false);
+    setSearchResults([]);
   };
-
   const handleSearchInputRef = (element: HTMLInputElement | null) => {
-    if (element && searchState.showSearch) {
+    if (element && showSearch) {
       element.focus();
     }
   };
-
   const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setShowDropdown(false);
     }
   };
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchState.query.trim()) {
-      setSearchState({ ...searchState, isSearching: true });
-      setTabIndex(0);
-      try {
-        // TODO: API 연동 후 실제 검색 구현
-        // const response = await fetch(...);
-        // const results = await response.json();
-        // setSearchState({ ...searchState, results });
-      } catch (error) {
-        console.error("검색 중 오류 발생:", error);
-        // 에러 처리 로직 추가
-      } finally {
-        setSearchState({ ...searchState, isSearching: false });
-      }
+    if (e.key === "Enter" && searchQuery.trim()) {
+      setIsSearching(true);
+      // TODO: API 연동 후 실제 검색 구현
+      setIsSearching(false);
     }
   };
-
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchState({ ...searchState, query: e.target.value });
-  };
-
   return (
-    <Tabs
-      className="bg-[#A6CCF2] min-h-screen flex flex-col"
-      selectedIndex={tabIndex}
-      onSelect={(index) => setTabIndex(index)}
-    >
+    <Tabs className="bg-[#A6CCF2] min-h-screen flex flex-col" defaultIndex={0}>
       <TabList className="flex max-w-[1130px] w-full mx-auto pt-0 pr-4 pl-7 items-center">
         <Tab
           className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"
@@ -112,17 +75,17 @@ function MyTabs() {
           나의 감정발자취
         </Tab>
         <div className="flex items-center gap-2 ml-auto">
-          {searchState.showSearch ? (
+          {showSearch ? (
             <div className="relative flex items-center">
               <input
                 ref={handleSearchInputRef}
                 type="text"
-                value={searchState.query}
-                onChange={handleSearchInputChange}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleSearch}
                 placeholder="일기를 검색해보세요!"
                 className="px-4 py-2 bg-white rounded-full focus:outline-none text-gray-700 text-sm placeholder:text-sm placeholder-gray-500 w-40 md:w-64"
-                disabled={searchState.isSearching}
+                disabled={isSearching}
               />
               <button
                 onClick={clearSearch}
@@ -134,14 +97,13 @@ function MyTabs() {
             </div>
           ) : (
             <button
-              onClick={() => setSearchState({ ...searchState, showSearch: true })}
+              onClick={() => setShowSearch(true)}
               className="p-2 text-gray-700 hover:text-black focus:outline-none cursor-pointer"
               aria-label="검색창 열기"
             >
               <FaSearch size={18} />
             </button>
           )}
-
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
@@ -150,7 +112,6 @@ function MyTabs() {
               <FaUserCircle size={20} />
               <span className="text-sm hidden md:inline">{user.nickname}</span>
             </button>
-
             {showDropdown && (
               <div className="absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg py-2 z-50 border-2 border-[#A6CCF2]">
                 <button
@@ -181,12 +142,11 @@ function MyTabs() {
           </div>
         </div>
       </TabList>
-
-      <div className="w-full max-w-[1130px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1130px] mx-auto">
         <TabPanel>
           <DiaryHome
-            searchQuery={searchState.query}
-            searchResults={searchState.results}
+            searchQuery={searchQuery}
+            searchResults={searchResults}
             onClearSearch={clearSearch}
           />
         </TabPanel>
@@ -202,5 +162,4 @@ function MyTabs() {
     </Tabs>
   );
 }
-
 export default MyTabs;

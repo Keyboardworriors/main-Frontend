@@ -1,5 +1,4 @@
 export interface User {
-  id: string;
   nickname: string;
   email: string;
   profile_image: string; //url
@@ -11,7 +10,7 @@ export interface User {
 export interface DiaryContent {
   title: string;
   content: string;
-  moods: Mood[]; // 최소 1개, 최대 3개
+  moods: Mood[];
 }
 
 export interface Diary {
@@ -20,7 +19,7 @@ export interface Diary {
   title: string;
   content: string;
   created_at: string;
-  moods: Mood[]; // 최소 1개, 최대 3개
+  moods: Mood[];
   rec_music: Music;
 }
 

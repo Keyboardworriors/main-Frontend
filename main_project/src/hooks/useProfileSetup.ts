@@ -7,7 +7,7 @@ const useProfileSetup = (
   nickname: string,
   selectedGenres: Genre[],
   bio: string,
-  mode: "create" | "edit"
+  mode: "create" | "edit",
 ) => {
   const navigate = useNavigate();
 
@@ -18,34 +18,25 @@ const useProfileSetup = (
     }
 
     try {
-      if (mode === "create") {
-        // 최초 회원 정보 등록
-        const createData = {
-          profile_image: profileImage,
-          nickname,
-          genres: selectedGenres,
-          bio,
-        };
+      const requestData = {
+        profile_image: profileImage,
+        nickname,
+        favorite_genre: selectedGenres,
+        introduce: bio,
+      };
 
-        await axiosFetcher.post("/members/mypage/", createData);
+      if (mode === "create") {
+        await axiosFetcher.post("/members/mypage/", requestData);
         alert("프로필 설정이 완료되었습니다.");
         navigate("/diary");
       } else {
-        // 회원 정보 수정 (API 명세서 기준)
-        const patchData = {
-          nickname,
-          introduce: bio,
-          favorite_genre: selectedGenres,
-        };
-
-        await axiosFetcher.patch("/members/mypage/", patchData);
+        await axiosFetcher.patch("/members/mypage/", requestData);
         alert("프로필이 수정되었습니다.");
-        navigate("/mypage");
+        navigate("/members/mypage/");
       }
     } catch (error) {
       console.error("프로필 저장 실패", error);
-      alert("프로필 저장 중 오류가 발생했습니다.");
-      navigate("/members/mypage/")
+      alert("프로필 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -53,4 +44,3 @@ const useProfileSetup = (
 };
 
 export default useProfileSetup;
-

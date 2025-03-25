@@ -9,7 +9,6 @@ import { Genre } from "../models/profile";
 import ProfileLayout from "../components/layouts/ProfileLayout";
 import { axiosFetcher } from "../api/axiosFetcher";
 
-// mode 타입 선언
 type ProfileSetupProps = {
   mode: "create" | "edit";
 };
@@ -21,16 +20,16 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
   const [bio, setBio] = useState<string>("");
   const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
 
-  // edit 모드일 때 기존 프로필 정보 가져오기
   useEffect(() => {
     if (mode === "edit") {
       const fetchProfile = async () => {
         try {
           const res = await axiosFetcher.get("/members/mypage");
-          const { nickname, bio, genres, profile_image } = res;
+          const { nickname, introduce, favorite_genre, profile_image } = res;
+
           setNickname(nickname);
-          setBio(bio);
-          setSelectedGenres(genres);
+          setBio(introduce);
+          setSelectedGenres(favorite_genre);
           setProfileImage(profile_image);
         } catch (error) {
           console.error("프로필 불러오기 실패", error);
@@ -41,13 +40,7 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
     }
   }, [mode, setProfileImage]);
 
-  const { handleSubmit } = useProfileSetup(
-    profileImage,
-    nickname,
-    selectedGenres,
-    bio,
-    mode
-  );
+  const { handleSubmit } = useProfileSetup(profileImage, nickname, selectedGenres, bio, mode);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -60,9 +53,7 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
 
   const handleGenreClick = (genre: Genre) => {
     setSelectedGenres((prev) =>
-      prev.includes(genre)
-        ? prev.filter((g) => g !== genre)
-        : [...prev, genre]
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre],
     );
   };
 
@@ -76,10 +67,7 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
 
         <div className="w-0.5 h-20 bg-gray-400 my-4"></div>
 
-        <ProfileImageUploader
-          profileImage={profileImage}
-          onImageChange={handleImageChange}
-        />
+        <ProfileImageUploader profileImage={profileImage} onImageChange={handleImageChange} />
 
         <InputField type="email" value={email} disabled />
 
@@ -91,10 +79,7 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
         />
 
         <p className="mt-10 font-semibold text-gray-700">관심있는 음악 장르 선택</p>
-        <GenreSelector
-          selectedGenres={selectedGenres}
-          onGenreClick={handleGenreClick}
-        />
+        <GenreSelector selectedGenres={selectedGenres} onGenreClick={handleGenreClick} />
 
         <InputField
           type="text"

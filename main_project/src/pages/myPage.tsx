@@ -4,6 +4,8 @@ import { Genre } from "../models/profile";
 import mockUserProfile from "../mock/userProfile";
 import Header from "../components/common/header";
 import HomeLayout from "../components/layouts/HomeLayout";
+import { useAuthStore } from "../store/useAuthStore";
+import { axiosFetcher } from "../api/axiosFetcher";
 
 interface UserProfile {
   nickname: string;
@@ -28,6 +30,26 @@ const MyPage = () => {
 
     fetchUserProfile();
   }, []);
+
+  const handleDeleteAccount = async () => {
+    const confirmed = confirm("정말로 탈퇴하시겠습니까?");
+    if (!confirmed) return;
+
+    try {
+      const { refreshToken } = useAuthStore.getState();
+
+      await axiosFetcher.delete("/members/mypage/", {
+        data: { refresh_token: refreshToken },
+      });
+
+      alert("회원 탈퇴가 완료되었습니다.");
+      useAuthStore.getState().clearAuth()
+      navigate("/"); // 홈으로 이동
+    } catch (error) {
+      console.error("회원 탈퇴 실패", error);
+      alert("회원 탈퇴 중 오류가 발생했습니다.");
+    }
+  };
 
   if (!userProfile) return <div>로딩 중...</div>;
 
@@ -69,7 +91,7 @@ const MyPage = () => {
 
           <button
             className="mt-10 text-sm text-gray-400 hover:underline"
-            onClick={() => alert("회원 탈퇴 기능은 준비 중입니다.")}
+            onClick={handleDeleteAccount}
           >
             회원 탈퇴하기
           </button>

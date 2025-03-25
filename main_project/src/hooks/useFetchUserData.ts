@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { User } from "../models/type";
+import { axiosFetcher } from "../api/axiosFetcher";
+import { useAuthStore } from "../store/useAuthStore";
 
 const useFetchUserData = () => {
   const [email, setEmail] = useState<string>("");
   const [profileImage, setProfileImage] = useState<string>("");
+  const { setAuth } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("/api/members/register");
         const {
           access_token,
           refresh_token,
           user,
-        }: { access_token: string; refresh_token: string; user: User } = response.data;
+        } = await axiosFetcher.get("/api/members/register");
 
-        localStorage.setItem("access_token", access_token);
-        localStorage.setItem("refresh_token", refresh_token);
+        // Zustand store + localStorage 업데이트
+        setAuth(access_token, refresh_token, user);
 
         setEmail(user.email);
         setProfileImage(user.profile_image);
@@ -31,7 +31,7 @@ const useFetchUserData = () => {
     };
 
     fetchUserData();
-  }, [navigate]); 
+  }, [navigate, setAuth]);
 
   return { email, profileImage, setProfileImage };
 };

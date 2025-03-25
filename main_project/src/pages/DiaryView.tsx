@@ -1,6 +1,6 @@
 import { mockDiaries } from "../mock/diaryData";
 import DiaryList from "./DiaryList";
-import { formatDate, getTargetDateOrToday } from "../utils/date";
+import { formatDate, formatDateKorean, getTargetDateOrToday } from "../utils/date";
 import { SearchResult } from "../models/search";
 
 interface DiaryViewProps {
@@ -20,12 +20,33 @@ const DiaryView = ({
     (diary) => diary.date === formatDate(getTargetDateOrToday(selectedDate)),
   );
 
-  // 일기 내용 렌더링
   const renderDiaryContent = () => {
     if (!targetDiary) return null;
 
     return (
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md h-full flex flex-col">
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={() => {
+              /* TODO: 삭제 기능 구현 */
+            }}
+            className="text-gray-500 hover:text-red-500 transition-colors cursor-pointer"
+            aria-label="삭제"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
         {targetDiary.rec_music.thumbnail && (
           <img
             src={targetDiary.rec_music.thumbnail}
@@ -38,17 +59,30 @@ const DiaryView = ({
           <p className="text-xs text-gray-600">{targetDiary.rec_music.artist}</p>
         </div>
 
-        <p className="text-xs text-gray-500 text-right mt-2">
-          {targetDiary.date} | {targetDiary.moods.join(", ")}
-        </p>
+        <div className="flex justify-between items-start mb-4 mt-8">
+          <div className="text-sm text-[#4A7196] font-semibold">
+            {formatDateKorean(getTargetDateOrToday(selectedDate))}
+          </div>
+          <div className="flex gap-2">
+            {targetDiary.moods.map((mood, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 bg-[#4A7196] text-white rounded-full text-xs font-medium shadow-sm"
+              >
+                {mood}
+              </span>
+            ))}
+          </div>
+        </div>
 
-        <p className="text-base font-semibold mt-3">{targetDiary.title}</p>
-        <p className="text-sm text-gray-700">{targetDiary.content}</p>
+        <div className="flex-1 overflow-y-auto">
+          <p className="text-base font-semibold mt-1 mb-1">{targetDiary.title}</p>
+          <p className="text-sm text-gray-700">{targetDiary.content}</p>
+        </div>
       </div>
     );
   };
 
-  // 작성하기 버튼 렌더링
   const renderWriteButton = () => (
     <div className="w-full flex items-center justify-center">
       <button
@@ -66,7 +100,9 @@ const DiaryView = ({
         {isSearchMode ? (
           <DiaryList diaries={searchResults} />
         ) : targetDiary ? (
-          renderDiaryContent()
+          <div className="w-full h-full flex items-center justify-center">
+            {renderDiaryContent()}
+          </div>
         ) : (
           renderWriteButton()
         )}

@@ -5,6 +5,7 @@ export interface User {
   profile_image: string; //url
   introduce: string;
   favorite_genre: string;
+  is_active: boolean;
 }
 
 export interface DiaryContent {

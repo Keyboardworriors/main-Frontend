@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Genre } from "../models/profile";
+import { axiosFetcher } from "../api/axiosFetcher";
 
 const useProfileSetup = (
   profileImage: string,
@@ -24,8 +24,8 @@ const useProfileSetup = (
     };
 
     try {
-      const response = await axios.post("/api/profile-setup", requestData);
-      if (response.status === 200) {
+      const res = await axiosFetcher.post("/profile-setup", requestData);
+      if (res) {
         alert("프로필 설정이 완료되었습니다.");
         navigate("/diary");
       }

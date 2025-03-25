@@ -4,12 +4,12 @@ import ConfirmModal from "./ConfirmModal";
 import ProfileModal from "./ProfileModal";
 import SongSelectModal from "./SongSelectModal";
 import SongAnalysisErrorModal from "./SongAnalysisErrorModal";
+import CustomConfirmModal from "./CustomConfirmModal";
 
 const Modal = () => {
   const { isOpen, type, data, closeModal } = useModalStore();
 
   const getLoadingMessage = () => {
-    // 메시지가 직접 제공된 경우 우선 사용
     if (data?.message) return data.message;
 
     // modalPurpose에 따른 기본 메시지 제공
@@ -23,7 +23,7 @@ const Modal = () => {
       case "saving":
         return "기록을 저장중이에요";
       default:
-        return "로딩 중...";
+        return "로딩 중 이예요";
     }
   };
 
@@ -56,13 +56,12 @@ const Modal = () => {
     return defaultSettings;
   };
 
-  // 타입에 따른 적절한 모달 컴포넌트 렌더링
+  // 타입에 따른 모달 컴포넌트 렌더링
   switch (type) {
     case "loading":
       return <LoadingModal isOpen={isOpen} message={getLoadingMessage()} />;
 
     case "confirm":
-      // 노래 분석 에러 모달
       if (data?.modalPurpose === "songAnalysisError") {
         return (
           <SongAnalysisErrorModal
@@ -96,8 +95,19 @@ const Modal = () => {
       return <SongSelectModal />;
 
     case "moodSelect":
-      // 구현 중
       return null;
+
+    case "customConfirm": // 전역 컨펌창
+      return (
+        <CustomConfirmModal
+          title={data?.title || ""}
+          message={data?.message || ""}
+          confirmText={data?.confirmText}
+          cancelText={data?.cancelText}
+          onConfirm={data?.onConfirm || (() => {})}
+          isDanger={data?.isDanger}
+        />
+      );
 
     default:
       return null;

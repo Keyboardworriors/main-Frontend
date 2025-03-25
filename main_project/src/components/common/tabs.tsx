@@ -18,6 +18,7 @@ function MyTabs() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
 
   // 임시 사용자 데이터
   const user: User = {
@@ -63,13 +64,18 @@ function MyTabs() {
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim()) {
       setIsSearching(true);
+      setTabIndex(0);
       // TODO: API 연동 후 실제 검색 구현
       setIsSearching(false);
     }
   };
 
   return (
-    <Tabs className="bg-[#A6CCF2] min-h-screen flex flex-col" defaultIndex={0}>
+    <Tabs
+      className="bg-[#A6CCF2] min-h-screen flex flex-col"
+      selectedIndex={tabIndex}
+      onSelect={(index) => setTabIndex(index)}
+    >
       <TabList className="flex max-w-[1130px] w-full mx-auto pt-0 pr-4 pl-7 items-center">
         <Tab
           className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"

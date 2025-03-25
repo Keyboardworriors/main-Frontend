@@ -18,8 +18,6 @@ function MyTabs() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  // 임시 사용자 데이터
   const user: User = {
     nickname: "김민정",
     email: "hong@example.com",
@@ -28,38 +26,32 @@ function MyTabs() {
     favorite_genre: "팝, 록, 힙합",
     is_active: true,
   };
-
   const modalUser = {
     nickname: user.nickname,
     profileImage: user.profile_image,
     introduction: user.introduce,
     preferredGenres: user.favorite_genre?.split(",") || [],
   };
-
   const clearSearch = () => {
     setSearchQuery("");
     setShowSearch(false);
     setIsSearching(false);
     setSearchResults([]);
   };
-
   const handleSearchInputRef = (element: HTMLInputElement | null) => {
     if (element && showSearch) {
       element.focus();
     }
   };
-
   const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setShowDropdown(false);
     }
   };
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim()) {
       setIsSearching(true);
@@ -67,7 +59,6 @@ function MyTabs() {
       setIsSearching(false);
     }
   };
-
   return (
     <Tabs className="bg-[#A6CCF2] min-h-screen flex flex-col" defaultIndex={0}>
       <TabList className="flex max-w-[1130px] w-full mx-auto pt-0 pr-4 pl-7 items-center">
@@ -113,7 +104,6 @@ function MyTabs() {
               <FaSearch size={18} />
             </button>
           )}
-
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
@@ -122,7 +112,6 @@ function MyTabs() {
               <FaUserCircle size={20} />
               <span className="text-sm hidden md:inline">{user.nickname}</span>
             </button>
-
             {showDropdown && (
               <div className="absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg py-2 z-50 border-2 border-[#A6CCF2]">
                 <button
@@ -153,7 +142,6 @@ function MyTabs() {
           </div>
         </div>
       </TabList>
-
       <div className="w-full max-w-[1130px] mx-auto">
         <TabPanel>
           <DiaryHome
@@ -174,5 +162,4 @@ function MyTabs() {
     </Tabs>
   );
 }
-
 export default MyTabs;

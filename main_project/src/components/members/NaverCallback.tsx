@@ -30,16 +30,20 @@ const NaverCallback = () => {
 
         setAuth(accessToken, refreshToken, user);
 
-        user.is_active ? navigate("/diary/") : navigate("/members/register");
+        if (user.is_active) {
+          navigate("/diary/");
+        } else {
+          navigate("/profile-setup", { state: { mode: "create" } });
+        }
       } catch (error) {
         console.error("네이버 로그인 실패", error);
         alert("네이버 로그인 중 오류가 발생했습니다.");
+        navigate("/login");
       }
     };
 
     getNaverToken();
   }, [navigate, setAuth]);
-
   return <div>네이버 로그인 처리 중...</div>;
 };
 

@@ -1,5 +1,6 @@
 import { formatDateKorean } from "../utils/date";
 import { DiaryContent as DiaryContentType } from "../models/diary";
+import { useModalStore } from "../store/modal";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
@@ -9,6 +10,16 @@ type DiaryContentPreviewProps = {
 
 const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryContentPreviewProps) => {
   const formattedDate = formatDateKorean(selectedDate);
+  const { openModal } = useModalStore();
+
+  const handleFeelodyClick = () => {
+    openModal("songSelect", {
+      songs: [], // API 연동 후 실제 음악 데이터로 교체
+      onConfirm: () => {
+        // 음악 선택 완료 후 처리 로직
+      },
+    });
+  };
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -55,7 +66,10 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
           </div>
 
           <div className="flex justify-end mt-4 md:mt-8">
-            <button className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2">
+            <button
+              onClick={handleFeelodyClick}
+              className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
+            >
               <span>필로디</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

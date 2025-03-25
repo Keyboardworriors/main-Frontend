@@ -20,7 +20,7 @@ const IntroHeader = () => {
   return (
     <header
       className={`fixed top-0 left-0 w-full flex justify-center items-center bg-[#A6CCF2] transition-all duration-300 ${
-        isScrolled ? "h-[300px]" : "h-[400px]"
+        isScrolled ? "h-[250px]" : "h-[400px]"
       }`}
     >
       <div
@@ -31,7 +31,7 @@ const IntroHeader = () => {
         <img
           src={feelodyLogo}
           alt="Feelody logo"
-          className="transition-all duration-300 ease-in-out w-[600px] h-auto"
+          className="transition-all duration-300 ease-in-out w-full h-auto"
         />
       </div>
     </header>

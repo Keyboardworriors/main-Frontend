@@ -13,9 +13,11 @@ const KakaoCallback = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
 
+      console.log("code:", code);
+
       if (!code) {
         alert("인증 코드를 받아오는데 실패했습니다. 다시 시도해주세요.");
-        navigate("/login");
+        // navigate("/login");
         return;
       }
 
@@ -31,12 +33,12 @@ const KakaoCallback = () => {
         if (user.is_active) {
           navigate("/diary/");
         } else {
-          navigate("/profile-setup", { state: { mode: "create" } });
+          navigate("/members/register", { state: { mode: "create" } });
         }
       } catch (error) {
         console.error("카카오 로그인 실패", error);
         alert("카카오 로그인 중 오류가 발생했습니다.");
-        navigate("/login");
+        // navigate("/login");
       }
     };
 

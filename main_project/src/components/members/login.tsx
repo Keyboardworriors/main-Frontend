@@ -32,7 +32,7 @@ const Login = () => {
             </button>
             <button
               onClick={() => (window.location.href = kakaoLoginUrl)}
-              className="flex items-center justify-center gap-2 bg-[#FEE500] text-black font-semibold py-2 px-4 rounded-full hover:bg-yellow-300 transition"
+              className="flex items-center justify-center gap-2 bg-[#FEE500] text-black font-semibold py-2 px-4 rounded-full hover:bg-yellow-400 transition"
             >
               <img src={KakaoLogo} alt="카카오 아이콘" className="w-4 h-4" />
               카카오 로그인

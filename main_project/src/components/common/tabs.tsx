@@ -6,16 +6,18 @@ import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaUser, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { User } from "../../models/diary";
 import { SearchResult } from "../../models/search";
+import { useNavigate } from "react-router-dom";
+import ProfileModal from "./Modal/ProfileModal";
 
 function MyTabs() {
+  const navigate = useNavigate();
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // 임시 사용자 데이터
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const user: User = {
     nickname: "김민정",
     email: "hong@example.com",
@@ -24,31 +26,32 @@ function MyTabs() {
     favorite_genre: "팝, 록, 힙합",
     is_active: true,
   };
-
+  const modalUser = {
+    nickname: user.nickname,
+    profileImage: user.profile_image,
+    introduction: user.introduce,
+    preferredGenres: user.favorite_genre?.split(",") || [],
+  };
   const clearSearch = () => {
     setSearchQuery("");
     setShowSearch(false);
     setIsSearching(false);
     setSearchResults([]);
   };
-
   const handleSearchInputRef = (element: HTMLInputElement | null) => {
     if (element && showSearch) {
       element.focus();
     }
   };
-
   const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setShowDropdown(false);
     }
   };
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim()) {
       setIsSearching(true);
@@ -56,7 +59,6 @@ function MyTabs() {
       setIsSearching(false);
     }
   };
-
   return (
     <Tabs className="bg-[#A6CCF2] min-h-screen flex flex-col" defaultIndex={0}>
       <TabList className="flex max-w-[1130px] w-full mx-auto pt-0 pr-4 pl-7 items-center">
@@ -70,7 +72,7 @@ function MyTabs() {
           className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"
           selectedClassName="text-black font-bold bg-white rounded-t-lg"
         >
-          나의 감정발자취¬
+          나의 감정발자취
         </Tab>
         <div className="flex items-center gap-2 ml-auto">
           {showSearch ? (
@@ -102,7 +104,6 @@ function MyTabs() {
               <FaSearch size={18} />
             </button>
           )}
-
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
@@ -111,22 +112,17 @@ function MyTabs() {
               <FaUserCircle size={20} />
               <span className="text-sm hidden md:inline">{user.nickname}</span>
             </button>
-
             {showDropdown && (
               <div className="absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg py-2 z-50 border-2 border-[#A6CCF2]">
                 <button
-                  onClick={() => {
-                    // TODO: 프로필 페이지로 이동 구현
-                  }}
+                  onClick={() => setIsProfileOpen(true)}
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
                 >
                   <FaUser size={14} />
                   <span>프로필</span>
                 </button>
                 <button
-                  onClick={() => {
-                    // TODO: 마이페이지로 이동 구현
-                  }}
+                  onClick={() => navigate("/members/mypage/")}
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
                 >
                   <FaUserCircle size={14} />
@@ -146,7 +142,6 @@ function MyTabs() {
           </div>
         </div>
       </TabList>
-
       <div className="w-full max-w-[1130px] mx-auto">
         <TabPanel>
           <DiaryHome
@@ -159,8 +154,12 @@ function MyTabs() {
           <MoodChart />
         </TabPanel>
       </div>
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        user={modalUser}
+      />
     </Tabs>
   );
 }
-
 export default MyTabs;

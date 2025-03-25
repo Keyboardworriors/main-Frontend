@@ -19,7 +19,6 @@ const ConfirmModal = ({
   cancelText = "취소",
   isDanger = false,
 }: ConfirmModalProps) => {
-  // 버튼 렌더링 함수
   const renderButtons = () => (
     <div className="flex justify-end mt-6 space-x-3">
       <button
@@ -32,7 +31,7 @@ const ConfirmModal = ({
         onClick={onConfirm}
         className={`px-4 py-2 rounded-md transition-colors ${
           isDanger
-            ? "bg-red-500 text-white hover:bg-red-600"
+            ? "bg-pink-500 text-white hover:bg-red-600"
             : "bg-blue-500 text-white hover:bg-blue-600"
         }`}
       >

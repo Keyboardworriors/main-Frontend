@@ -60,8 +60,8 @@ const BaseModal = ({ isOpen, onClose, children, hideCloseButton = false }: BaseM
   if (!modalContainer) return null;
 
   return createPortal(
-    <div className="rounded-xl p-7 bg-white w-full p-10 inset-0 flex justify-center pointer-events-auto">
-      <div className="bg-white w-full absolute inset-0 bg-white rounded-xl"></div>
+    <div className="rounded-xl bg-white w-full h-full p-10 inset-0 flex justify-center items-center pointer-events-auto">
+      <div className="bg-white w-full absolute inset-0 rounded-xl"></div>
       <div
         ref={modalRef}
         className="relative flex flex-col items-center z-10"

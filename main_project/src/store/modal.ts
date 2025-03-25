@@ -1,29 +1,28 @@
 import { create } from "zustand";
-import { User, Emotion, Song } from "../models/type";
+import { User, Mood } from "../models/diary";
 
 // 모달 타입 정의
 export type ModalType =
-  | "loading" // 모든 로딩 모달을 하나의 타입으로 통합
-  | "confirm" // 확인 모달 (withdraw, saveDiary 등 용도별 구분은 데이터로)
+  | "loading" // 로딩 모달
+  | "confirm" // 컨펌 모달 (일기삭제할꺼냐, 탈퇴할꺼냐 등등)
   | "profile" // 프로필 모달
-  | "emotionSelect" // 감정 키워드 선택 모달 (추후 구현)
-  | "songSelect"
+  | "moodSelect" // 감정 키워드 선택 모달
+  | "songSelect" // 분석된 노래 선택 모달
   | null;
 
 // 모달 데이터 타입 정의
 export interface ModalData {
   message?: string; // 모달에 표시할 메시지
-  modalPurpose?: "chart" | "emotion" | "melody" | "saving" | "withdraw" | "saveDiary"; // 모달 세부 용도
+  modalPurpose?: "chart" | "mood" | "melody" | "saving" | "withdraw" | "saveDiary"; // 모달 세부 용도 (필요한거 추가하시면 됨)
   user?: User; // 사용자 정보 (프로필 모달용)
-  emotions?: Emotion[]; // 감정 정보 (감정 관련 모달용)
-  songs?: Song[]; // 노래 정보 (노래 관련 모달용)
+  moods?: Mood[]; // 감정 정보 (감정 선택 모달용)
+  songs?: Song[]; // 노래 정보 (노래 선택 모달용)
   confirmText?: string; // 확인 버튼 텍스트
   cancelText?: string; // 취소 버튼 텍스트
-  isDanger?: boolean; // 위험한 작업 여부 (빨간색 버튼)
+  isDanger?: boolean; // 위험한 작업 여부 (절대 되돌릴수없다 뭐 이런내용)
   onConfirm?: () => void; // 확인 버튼 클릭 핸들러
   onCancel?: () => void; // 취소 버튼 클릭 핸들러
   onRetry?: () => void; // 재시도 버튼 클릭 핸들러
-  [key: string]: any; // 추가 속성을 위한 인덱스
 }
 
 // 모달 스토어 상태 타입 정의

@@ -5,7 +5,7 @@ import Footer from "./components/common/footer";
 import Modal from "./components/common/Modal/Modal";
 import AppRoutes from "./routes/routes";
 
-function App() {
+const App = () => {
   return (
     <>
       <Modal />
@@ -15,6 +15,6 @@ function App() {
       <AppRoutes />
     </>
   );
-}
+};
 
 export default App;

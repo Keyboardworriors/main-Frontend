@@ -21,12 +21,12 @@ function MyTabs() {
 
   // 임시 사용자 데이터
   const user: User = {
-    id: "1",
     nickname: "김민정",
     email: "hong@example.com",
     profile_image: "",
     introduce: "안녕하세요, 김민정입니다.",
     favorite_genre: "팝, 록, 힙합",
+    is_active: true,
   };
 
   const modalUser = {
@@ -81,7 +81,7 @@ function MyTabs() {
           className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"
           selectedClassName="text-black font-bold bg-white rounded-t-lg"
         >
-          나의 감정발자취
+          나의 감정발자취¬
         </Tab>
         <div className="flex items-center gap-2 ml-auto">
           {showSearch ? (

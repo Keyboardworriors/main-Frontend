@@ -2,6 +2,8 @@ import { useModalStore } from "../../../store/modal";
 import LoadingModal from "./LoadingModal";
 import ConfirmModal from "./ConfirmModal";
 import ProfileModal from "./ProfileModal";
+import SongSelectModal from "./SongSelectModal";
+import SongAnalysisErrorModal from "./SongAnalysisErrorModal";
 
 const Modal = () => {
   const { isOpen, type, data, closeModal } = useModalStore();
@@ -14,7 +16,7 @@ const Modal = () => {
     switch (data?.modalPurpose) {
       case "chart":
         return "차트를 분석중이에요";
-      case "emotion":
+      case "mood":
         return "감정을 분석중이에요";
       case "melody":
         return "추천 필로디를 찾고 있어요";
@@ -34,7 +36,7 @@ const Modal = () => {
       isDanger: data?.isDanger || false,
     };
 
-    // modalPurpose에 따른 특별 설정
+    // modalPurpose에 따른 설정
     if (data?.modalPurpose === "withdraw") {
       return {
         message: "기록을 중단하시겠습니까?",
@@ -59,27 +61,44 @@ const Modal = () => {
     case "loading":
       return <LoadingModal isOpen={isOpen} message={getLoadingMessage()} />;
 
-    case "confirm": {
-      const settings = getConfirmSettings();
-      return (
-        <ConfirmModal
-          isOpen={isOpen}
-          onClose={closeModal}
-          onConfirm={data?.onConfirm || (() => {})}
-          message={settings.message}
-          confirmText={settings.confirmText}
-          cancelText={settings.cancelText}
-          isDanger={settings.isDanger}
-        />
-      );
-    }
+    case "confirm":
+      // 노래 분석 에러 모달
+      if (data?.modalPurpose === "songAnalysisError") {
+        return (
+          <SongAnalysisErrorModal
+            isOpen={isOpen}
+            onClose={closeModal}
+            onRetry={data?.onRetry}
+            message={data?.message}
+          />
+        );
+      } else {
+        const settings = getConfirmSettings();
+        return (
+          <ConfirmModal
+            isOpen={isOpen}
+            onClose={closeModal}
+            onConfirm={data?.onConfirm || (() => {})}
+            message={settings.message}
+            confirmText={settings.confirmText}
+            cancelText={settings.cancelText}
+            isDanger={settings.isDanger}
+          />
+        );
+      }
 
     case "profile":
       return (
         <ProfileModal isOpen={isOpen} onClose={closeModal} user={data?.user || { nickname: "" }} />
       );
 
-    // 다른 모달 타입에 대한 처리는 추후 구현 예정
+    case "songSelect":
+      return <SongSelectModal />;
+
+    case "moodSelect":
+      // 구현 중
+      return null;
+
     default:
       return null;
   }

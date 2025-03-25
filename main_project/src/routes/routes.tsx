@@ -18,13 +18,12 @@ const AppRoutes = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Introduce />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/oauth/naver/callback" element={<NaverCallback />} />
-        <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
+        <Route path="/login/" element={<Login />} />
+        <Route path="/oauth/naver/callback/" element={<NaverCallback />} />
+        <Route path="/oauth/kakao/callback/" element={<KakaoCallback />} />
         <Route path="/members/register" element={<ProfileSetupWrapper />} />
-        <Route path="/profile-setup" element={<ProfileSetupWrapper />} />
-        <Route path="/diary" element={<MyTabs />} />
-        <Route path="/members/mypage" element={<MyPage />} />
+        <Route path="/diary/" element={<MyTabs />} />
+        <Route path="/members/mypage/" element={<MyPage />} />
       </Routes>
     </Router>
   );

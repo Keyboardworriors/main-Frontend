@@ -6,14 +6,18 @@ import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaUser, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { User } from "../../models/diary";
 import { SearchResult } from "../../models/search";
+import { useNavigate } from "react-router-dom";
+import ProfileModal from "./Modal/ProfileModal";
 
 function MyTabs() {
+  const navigate = useNavigate();
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // 임시 사용자 데이터
   const user: User = {
@@ -23,6 +27,13 @@ function MyTabs() {
     introduce: "안녕하세요, 김민정입니다.",
     favorite_genre: "팝, 록, 힙합",
     is_active: true,
+  };
+
+  const modalUser = {
+    nickname: user.nickname,
+    profileImage: user.profile_image,
+    introduction: user.introduce,
+    preferredGenres: user.favorite_genre?.split(",") || [],
   };
 
   const clearSearch = () => {
@@ -115,18 +126,14 @@ function MyTabs() {
             {showDropdown && (
               <div className="absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg py-2 z-50 border-2 border-[#A6CCF2]">
                 <button
-                  onClick={() => {
-                    // TODO: 프로필 페이지로 이동 구현
-                  }}
+                  onClick={() => setIsProfileOpen(true)}
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
                 >
                   <FaUser size={14} />
                   <span>프로필</span>
                 </button>
                 <button
-                  onClick={() => {
-                    // TODO: 마이페이지로 이동 구현
-                  }}
+                  onClick={() => navigate("/members/mypage/")}
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
                 >
                   <FaUserCircle size={14} />
@@ -159,6 +166,11 @@ function MyTabs() {
           <MoodChart />
         </TabPanel>
       </div>
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        user={modalUser}
+      />
     </Tabs>
   );
 }

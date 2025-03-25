@@ -85,9 +85,7 @@ const LoadingModal = ({ isOpen, message }: LoadingModalProps) => {
     </div>
   );
 
-  // 애니메이션 스타일을 더 효율적으로 관리하기 위한 useEffect
   useEffect(() => {
-    // 이미 동일한 ID의 스타일이 있는지 확인
     const styleId = "loading-animation-style";
     if (!document.getElementById(styleId)) {
       const style = document.createElement("style");
@@ -107,11 +105,8 @@ const LoadingModal = ({ isOpen, message }: LoadingModalProps) => {
       document.head.appendChild(style);
     }
 
-    // 컴포넌트가 최초로 렌더링될 때만 스타일 추가
-    // 중복 스타일 추가와 제거 방지를 위해 ID로 관리
     return () => {
       const existingStyle = document.getElementById(styleId);
-      // ID로 스타일 요소를 찾아서 마지막 인스턴스가 언마운트 될 때만 제거
       if (existingStyle && document.querySelectorAll(`[data-modal-type="loading"]`).length <= 1) {
         document.head.removeChild(existingStyle);
       }

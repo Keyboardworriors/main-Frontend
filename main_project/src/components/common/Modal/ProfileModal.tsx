@@ -13,7 +13,7 @@ interface ProfileModalProps {
   user: User;
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, user }) => {
+const ProfileModal = ({ isOpen, onClose, user }: ProfileModalProps) => {
   // 장르 태그 렌더링 함수
   const renderGenreTag = (genre: string, index: number) => (
     <span

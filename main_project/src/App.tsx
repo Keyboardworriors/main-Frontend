@@ -4,7 +4,7 @@ import MyTabs from "./components/common/tabs";
 import Footer from "./components/common/footer";
 import Modal from "./components/common/Modal/Modal";
 
-function App() {
+const App = () => {
   return (
     <>
       <Modal />
@@ -13,6 +13,6 @@ function App() {
       <Footer />
     </>
   );
-}
+};
 
 export default App;

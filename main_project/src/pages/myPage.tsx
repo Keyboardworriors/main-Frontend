@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Genre } from "../models/profile";
 import mockUserProfile from "../mock/userProfile";
-import Header from "../components/common/header";
 import HomeLayout from "../components/layouts/HomeLayout";
 import { useAuthStore } from "../store/useAuthStore";
 import { axiosFetcher } from "../api/axiosFetcher";
@@ -38,7 +37,7 @@ const MyPage = () => {
     try {
       const { refreshToken } = useAuthStore.getState();
 
-      await axiosFetcher.delete("/members/mypage/", {
+      await axiosFetcher.delete("members/mypage/", {
         data: { refresh_token: refreshToken },
       });
 
@@ -55,7 +54,6 @@ const MyPage = () => {
 
   return (
     <>
-      <Header />
       <HomeLayout>
         <h2 className="text-lg font-semibold mb-6">My Page</h2>
 

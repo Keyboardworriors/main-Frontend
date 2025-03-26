@@ -24,7 +24,7 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
     if (mode === "edit") {
       const fetchProfile = async () => {
         try {
-          const res = await axiosFetcher.get("/members/mypage");
+          const res = await axiosFetcher.get("api/members/mypage");
           const { nickname, introduce, favorite_genre, profile_image } = res;
 
           setNickname(nickname);
@@ -96,7 +96,7 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
             {mode === "edit" ? "수정 완료" : "작성 완료"}
           </button>
           <button
-            onClick={() => navigate(mode === "edit" ? "/mypage" : "/")}
+            onClick={() => navigate(mode === "edit" ? "/members/mypage" : "/")}
             className="px-6 py-3 bg-gray-300 text-gray-700 rounded-3xl hover:bg-gray-400"
           >
             취소

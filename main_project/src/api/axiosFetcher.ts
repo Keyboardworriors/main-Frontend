@@ -17,7 +17,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
     (config) => {
       const { accessToken } = useAuthStore.getState();
       if (accessToken && config.headers) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+        config.headers.Authorization = `Bearer ${accessToken}`; 
       }
       return config;
     },
@@ -30,22 +30,21 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
       const originalRequest = error.config;
       const { refreshToken, setAuth, clearAuth } = useAuthStore.getState();
 
-      if (
-        error.response?.status === 401 &&
-        !originalRequest._retry &&
-        refreshToken
-      ) {
+      if (error.response?.status === 401 && !originalRequest._retry && refreshToken) {
         originalRequest._retry = true;
         try {
-          const res = await axios.post(`${getApiBaseUrl()}/members/token/refresh/`, {
-            refresh: refreshToken,
-          });
+          const res = await axios.post(
+            `${getApiBaseUrl()}/members/token/refresh/`,
+            {
+              refresh: refreshToken,
+            }
+          );
 
           const newAccessToken = res.data.access;
           const { user } = useAuthStore.getState();
           setAuth(newAccessToken, refreshToken, user!);
 
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`; 
           return instance(originalRequest);
         } catch (refreshError) {
           clearAuth();
@@ -60,8 +59,10 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
   return instance;
 };
 
+// 인스턴스 생성
 const apiInstance = createAxiosInstance(getApiBaseUrl());
 
+// axiosFetcher 정의
 export const axiosFetcher = {
   get: async <T = any>(
     path: string,
@@ -103,7 +104,10 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  delete: async <T = any>(path: string, config?: AxiosRequestConfig): Promise<T> => {
+  delete: async <T = any>(
+    path: string,
+    config?: AxiosRequestConfig & { data?: any }
+  ): Promise<T> => {
     const response: AxiosResponse<T> = await apiInstance.delete(path, config);
     return response.data;
   },

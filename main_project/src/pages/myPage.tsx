@@ -4,6 +4,7 @@ import { Genre } from "../models/profile";
 import mockUserProfile from "../mock/userProfile";
 import Header from "../components/common/header";
 import HomeLayout from "../components/layouts/HomeLayout";
+import { useModalStore } from "../store/modal";
 
 interface UserProfile {
   nickname: string;
@@ -16,64 +17,103 @@ interface UserProfile {
 const MyPage = () => {
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 변수 추가
+  const { openModal, closeModal } = useModalStore();
 
+  // 회원 탈퇴 처리 로직 여기에 추가
+  const handleWithdraw = () => {
+    console.log("회원 탈퇴 처리");
+    navigate("/login");
+  };
+
+  // 회원 탈퇴 컨펌 모달 추가
+  const showWithdrawModal = () => {
+    openModal("customConfirm", {
+      title: "기록을 중단하시겠습니까?",
+      message: "모든 데이터가 삭제되며 이 작업은 되돌릴 수 없어요",
+      confirmText: "탈퇴하기",
+      cancelText: "취소하기",
+      isDanger: true,
+      onConfirm: handleWithdraw,
+    });
+  };
+
+  // 데이터 로딩 시 로딩 모달 표시 추가
   useEffect(() => {
+    openModal("loading", {
+      message: "프로필 정보를 불러오는 중이에요",
+      modalPurpose: "profileLoading",
+    });
+
     const fetchUserProfile = async () => {
       try {
+        // 실제 API 호출을 시뮬레이션하는 지연 시간 추가 (API 연결 시 삭제 요망)
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
         setUserProfile(mockUserProfile);
       } catch (error) {
         console.error("마이페이지 정보 불러오기 실패", error);
+      } finally {
+        // 데이터 로딩 완료 후 로딩 상태 해제 및 모달 닫기 추가
+        setIsLoading(false);
+        closeModal();
       }
     };
 
     fetchUserProfile();
   }, []);
 
-  if (!userProfile) return <div>로딩 중...</div>;
-
   return (
     <>
       <Header />
       <HomeLayout>
-        <h2 className="text-lg font-semibold mb-6">My Page</h2>
+        {!isLoading && userProfile ? (
+          // 로딩이 완료되고 데이터가 있을 때만 컨텐츠 표시
+          <>
+            <h2 className="text-lg font-semibold mb-6">My Page</h2>
 
-        <div className="flex flex-row items-center justify-center gap-6 mb-8">
-          <img
-            src={userProfile.profile_image || "/default-profile.png"}
-            alt="프로필 이미지"
-            className="w-30 h-30 rounded-full object-cover border border-[#A6CCF2]"
-          />
-          <p className="text-2xl font-semibold ml-12">{userProfile.nickname}</p>
-        </div>
+            <div className="flex flex-row items-center justify-center gap-6 mb-8">
+              <img
+                src={userProfile.profile_image || "/default-profile.png"}
+                alt="프로필 이미지"
+                className="w-30 h-30 rounded-full object-cover border border-[#A6CCF2]"
+              />
+              <p className="text-2xl font-semibold ml-12">{userProfile.nickname}</p>
+            </div>
 
-        <div className="grid grid-cols-2 gap-y-4 gap-x-30 text-gray-700 max-w-2xl mx-auto">
-          <div className="font-medium text-right">이메일</div>
-          <div className="text-left">{userProfile.email}</div>
+            <div className="grid grid-cols-2 gap-y-4 gap-x-30 text-gray-700 max-w-2xl mx-auto">
+              <div className="font-medium text-right">이메일</div>
+              <div className="text-left">{userProfile.email}</div>
 
-          <div className="font-medium text-right">선호하는 음악 장르</div>
-          <div className="text-left">
-            {userProfile.genres.length > 0 ? userProfile.genres.join(", ") : "-"}
-          </div>
+              <div className="font-medium text-right">선호하는 음악 장르</div>
+              <div className="text-left">
+                {userProfile.genres.length > 0 ? userProfile.genres.join(", ") : "-"}
+              </div>
 
-          <div className="font-medium text-right">한 줄 소개</div>
-          <div className="text-left break-words">{userProfile.bio || "-"}</div>
-        </div>
+              <div className="font-medium text-right">한 줄 소개</div>
+              <div className="text-left break-words">{userProfile.bio || "-"}</div>
+            </div>
 
-        <div className="flex flex-col justify-center items-center">
-          <button
-            onClick={() => navigate("/members/register", { state: { mode: "edit" } })}
-            className="mt-16 px-6 py-3 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
-          >
-            수정하기
-          </button>
+            <div className="flex flex-col justify-center items-center">
+              <button
+                onClick={() => navigate("/members/register", { state: { mode: "edit" } })}
+                className="mt-16 px-6 py-3 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
+              >
+                수정하기
+              </button>
 
-          <button
-            className="mt-10 text-sm text-gray-400 hover:underline"
-            onClick={() => alert("회원 탈퇴 기능은 준비 중입니다.")}
-          >
-            회원 탈퇴하기
-          </button>
-        </div>
+              <button
+                className="mt-10 text-sm text-gray-400 hover:underline"
+                onClick={showWithdrawModal}
+              >
+                회원 탈퇴하기
+              </button>
+            </div>
+          </>
+        ) : (
+          // 로딩 중일 때 빈 컨테이너를 임의로 height 설정
+          <div className="flex justify-center items-center w-full h-[55vh]"></div>
+        )}
       </HomeLayout>
     </>
   );

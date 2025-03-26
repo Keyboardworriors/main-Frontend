@@ -46,7 +46,7 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
               },
             });
           } else {
-            // 분석 실패 시 에러 모달 - Modal.tsx에 설정된 값 사용
+            // 분석 실패 시 에러 모달
             openModal("songAnalysisError", {
               onRetry: retryMelodyAnalysis,
               onSaveWithoutMusic: () => {
@@ -60,7 +60,7 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
           console.error("음악 추천 중 오류 발생:", error);
           closeModal();
 
-          // 에러 발생 시 에러 모달 표시 - Modal.tsx에 설정된 값 사용
+          // 에러 발생 시 에러 모달 표시
           openModal("songAnalysisError", {
             onRetry: retryMelodyAnalysis,
             onSaveWithoutMusic: () => {
@@ -94,19 +94,13 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
       await new Promise((resolve) => setTimeout(resolve, 2000)); // API 연동 시 삭제 요망
       // ===== 실제 API 연동 코드 추가 =====
 
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // API 연동 시 삭제 요망
-      // ===== 실제 API 연동 코드 추가 =====
-
       closeModal();
 
       const isSuccess = Math.random() > 0.5; // API 연동 시 삭제 요망
 
       if (isSuccess) {
         // ===== 분석 성공 시 노래 선택 모달 표시 =====
-        // ===== 분석 성공 시 노래 선택 모달 표시 =====
         openModal("songSelect", {
-          // API 연동 시 아래 주석 해제 및 수정
-          // songs: recommendedSongs, // API 응답에서 받은 추천 음악 목록
           // API 연동 시 아래 주석 해제 및 수정
           // songs: recommendedSongs, // API 응답에서 받은 추천 음악 목록
           onConfirm: () => {
@@ -115,7 +109,7 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
           },
         });
       } else {
-        // ===== 분석 실패 시 에러 모달 표시 - Modal.tsx에 설정된 값 사용 =====
+        // ===== 분석 실패 시 에러 모달 표시 =====
         openModal("songAnalysisError", {
           onRetry: retryMelodyAnalysis,
           onSaveWithoutMusic: () => {
@@ -129,7 +123,7 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
       console.error("음악 추천 중 오류 발생:", error);
       closeModal();
 
-      // 에러 발생 시 노래 분석 에러 모달 표시 - Modal.tsx에 설정된 값 사용
+      // 에러 발생 시 노래 분석 에러 모달 표시
       openModal("songAnalysisError", {
         onRetry: retryMelodyAnalysis,
         onSaveWithoutMusic: () => {
@@ -190,7 +184,6 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
               onClick={handleMelodyRecommendation}
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
-              <span>{buttonText}</span>
               <span>{buttonText}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

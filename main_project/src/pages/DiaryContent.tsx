@@ -2,8 +2,6 @@ import { formatDateKorean } from "../utils/date";
 import { DiaryContent as DiaryContentType } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { useState } from "react";
-import { useModalStore } from "../store/modal";
-import { useState } from "react";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
@@ -101,7 +99,6 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
 
       closeModal();
 
-      const isSuccess = Math.random() > 0.5; // API 연동 시 삭제 요망
       const isSuccess = Math.random() > 0.5; // API 연동 시 삭제 요망
 
       if (isSuccess) {

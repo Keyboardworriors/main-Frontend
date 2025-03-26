@@ -2,6 +2,7 @@ import { mockDiaries } from "../mock/diaryData";
 import DiaryList from "./DiaryList";
 import { formatDate, formatDateKorean, getTargetDateOrToday } from "../utils/date";
 import { SearchResult } from "../models/search";
+import { useModalStore } from "../store/modal"; // 모달 스토어 추가
 
 interface DiaryViewProps {
   selectedDate: Date | null;
@@ -16,9 +17,18 @@ const DiaryView = ({
   searchResults = [],
   onWriteClick,
 }: DiaryViewProps) => {
+  const { openModal } = useModalStore(); // useModalStore 추가
+
   const targetDiary = mockDiaries.find(
     (diary) => diary.date === formatDate(getTargetDateOrToday(selectedDate)),
   );
+
+  // 일기 삭제 핸들러 추가
+  const handleDeleteDiary = () => {
+    // 실제 삭제 로직 구현
+    console.log("일기 삭제:", targetDiary?.id);
+    // API 호출이나 삭제 상태 업데이트 등
+  };
 
   const renderDiaryContent = () => {
     if (!targetDiary) return null;
@@ -28,7 +38,15 @@ const DiaryView = ({
         <div className="flex justify-end mb-2">
           <button
             onClick={() => {
-              /* TODO: 삭제 기능 구현 */
+              // 컨펌 모달 코드 추가
+              openModal("customConfirm", {
+                title: "기록을 삭제할까요?",
+                message: "삭제하고 나면 되돌릴 수 없어요!",
+                confirmText: "삭제하기",
+                cancelText: "취소하기",
+                isDanger: true,
+                onConfirm: handleDeleteDiary,
+              });
             }}
             className="text-gray-500 hover:text-red-500 transition-colors cursor-pointer"
             aria-label="삭제"

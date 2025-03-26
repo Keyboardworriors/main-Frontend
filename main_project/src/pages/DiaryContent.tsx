@@ -1,6 +1,6 @@
 import { formatDateKorean } from "../utils/date";
 import { DiaryContent as DiaryContentType } from "../models/diary";
-import { useModalStore } from "../store/modal";
+import { useModalStore } from "../store/modal"; // 모달 스토어 추가
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
@@ -10,15 +10,57 @@ type DiaryContentPreviewProps = {
 
 const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryContentPreviewProps) => {
   const formattedDate = formatDateKorean(selectedDate);
-  const { openModal } = useModalStore();
+  const { openModal, closeModal } = useModalStore(); // 모달 스토어 추가
 
-  const handleFeelodyClick = () => {
-    openModal("songSelect", {
-      songs: [], // API 연동 후 실제 음악 데이터로 교체
-      onConfirm: () => {
-        // 음악 선택 완료 후 처리 로직
-      },
-    });
+  // 필로디 버튼 클릭 핸들러 추가
+  const handleMelodyRecommendation = async () => {
+    try {
+      // 로딩 모달 표시 추가
+      openModal("loading", {
+        message: "추천 필로디 🎵",
+        modalPurpose: "melody",
+      });
+
+      // API 호출 대신 테스트용 지연 (실제 API 연결 시 삭제 요망)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // 여기에 실제 API 호출 코드 들어감
+
+      // 로딩 모달 닫기 추가
+      closeModal();
+
+      const isSuccess = Math.random() > 0.3; // 70% 확률로 성공하는 페이크 코드 추가 (API 연결 시 삭제요망)
+
+      if (isSuccess) {
+        // 노래 선택 모달 열기
+        openModal("songSelect", {
+          // songs: data.rec_music, <- 실제 데이터 사용 시
+          onConfirm: () => {
+            console.log("노래 선택 완료");
+            // 여기에 선택된 노래와 일기를 업데이트하는 로직을 추가
+          },
+        });
+      } else {
+        // 노래 분석 실패 시 에러 모달 열기 추가
+        openModal("confirm", {
+          modalPurpose: "songAnalysisError",
+          onRetry: () => {
+            handleMelodyRecommendation();
+          },
+        });
+      }
+    } catch (error) {
+      console.error("음악 추천 중 오류 발생:", error);
+      closeModal();
+
+      // 에러 발생 시 노래 분석 에러 모달 열기 추가
+      openModal("confirm", {
+        modalPurpose: "songAnalysisError",
+        onRetry: () => {
+          handleMelodyRecommendation();
+        },
+      });
+    }
   };
 
   return (
@@ -66,8 +108,9 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
           </div>
 
           <div className="flex justify-end mt-4 md:mt-8">
+            {/* 필로디 버튼 클릭 핸들러 추가 */}
             <button
-              onClick={handleFeelodyClick}
+              onClick={handleMelodyRecommendation}
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
               <span>필로디</span>

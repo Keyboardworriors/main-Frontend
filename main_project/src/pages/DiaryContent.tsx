@@ -42,15 +42,13 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
               // songs: data.rec_music, // API 응답에서 받은 추천 음악 목록
               onConfirm: () => {
                 console.log("노래 선택 완료");
-
                 // ===== API 연동 시 구현 추가 =====
               },
             });
           } else {
-            // 분석 실패 시 에러 모달
+            // 분석 실패 시 에러 모달 - Modal.tsx에 설정된 값 사용
             openModal("songAnalysisError", {
-              message: "음악 추천에 실패했어요..",
-              onRetry: retryMelodyAnalysis, // 다시 분석하기
+              onRetry: retryMelodyAnalysis,
               onSaveWithoutMusic: () => {
                 // 음악 없이 저장하기 모드로 전환
                 setButtonText("저장하기");
@@ -62,10 +60,9 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
           console.error("음악 추천 중 오류 발생:", error);
           closeModal();
 
-          // 에러 발생 시 에러 모달 표시
+          // 에러 발생 시 에러 모달 표시 - Modal.tsx에 설정된 값 사용
           openModal("songAnalysisError", {
-            message: "음악 추천에 실패했어요..",
-            onRetry: retryMelodyAnalysis, // 다시 분석하기
+            onRetry: retryMelodyAnalysis,
             onSaveWithoutMusic: () => {
               // 음악 없이 저장하기 모드로 전환
               setButtonText("저장하기");
@@ -83,7 +80,6 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
     // 음악없이 일기만 저장(저장모드)
     if (isSaving) {
       console.log("저장하기 로직 실행, 음악 없이 일기만 저장");
-
       // ===== API 연동 시 구현 코드 추가 =====
       return;
     }
@@ -109,15 +105,13 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
           // songs: recommendedSongs, // API 응답에서 받은 추천 음악 목록
           onConfirm: () => {
             console.log("노래 선택 완료");
-
             // ===== API 연동 시 구현 로직 =====
           },
         });
       } else {
-        // ===== 분석 실패 시 에러 모달 표시 =====
+        // ===== 분석 실패 시 에러 모달 표시 - Modal.tsx에 설정된 값 사용 =====
         openModal("songAnalysisError", {
-          message: "음악 추천에 실패했어요..",
-          onRetry: retryMelodyAnalysis, // 다시 분석하기
+          onRetry: retryMelodyAnalysis,
           onSaveWithoutMusic: () => {
             // 노래 없이 저장하기 모드로 전환
             setButtonText("저장하기");
@@ -129,10 +123,9 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
       console.error("음악 추천 중 오류 발생:", error);
       closeModal();
 
-      // 에러 발생 시 노래 분석 에러 모달 표시
+      // 에러 발생 시 노래 분석 에러 모달 표시 - Modal.tsx에 설정된 값 사용
       openModal("songAnalysisError", {
-        message: "음악 추천에 실패했어요..",
-        onRetry: retryMelodyAnalysis, // 다시 분석하기
+        onRetry: retryMelodyAnalysis,
         onSaveWithoutMusic: () => {
           // 노래 없이 저장하기 모드로 전환
           setButtonText("저장하기");

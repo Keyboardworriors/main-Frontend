@@ -24,7 +24,7 @@ const CustomConfirmModal = ({
   cancelText = "취소",
   onConfirm,
   onCancel,
-  isDanger = false,
+  //isDanger = false,
 }: CustomConfirmModalProps) => {
   const { isOpen: storeIsOpen, type: storeType, closeModal } = useModalStore();
 
@@ -41,19 +41,25 @@ const CustomConfirmModal = ({
     onClose();
   };
 
+  // <br> 태그를 실제 줄바꿈으로 변환
+  const formattedMessage = message.replace(/<br\s*\/?>/gi, "<br>");
+
   return createPortal(
     <div className="bg-black/50 rounded-xl w-full h-full p-10 inset-0 flex justify-center items-center pointer-events-auto">
       <div className="w-full absolute inset-0 rounded-xl"></div>
       <div className="relative flex flex-col items-center z-10">
-        <div className="p-8 bg-white rounded-xl max-w-md w-full shadow-lg">
+        <div className="p-8 bg-white rounded-xl max-w-lg w-full shadow-lg">
           <h3 className="text-center font-bold text-xl mb-5">{title}</h3>
 
-          <div className="text-center text-gray-600 mb-8">{message}</div>
+          <div
+            className="text-center text-gray-600 mb-8"
+            dangerouslySetInnerHTML={{ __html: formattedMessage }}
+          ></div>
 
           <div className="flex gap-4 mt-6">
             <button
               onClick={handleCancel}
-              className="flex-1 py-3 px-6 shadow-md rounded-full bg-white text-gray-700 border border-black font-medium hover:bg-gray-50 transition-colors"
+              className="flex-1 py-2 px-4 shadow-md rounded-full bg-white text-gray-700 border border-black font-medium hover:bg-gray-50 transition-colors whitespace-nowrap"
             >
               {cancelText}
             </button>
@@ -62,7 +68,7 @@ const CustomConfirmModal = ({
                 onConfirm();
                 onClose();
               }}
-              className={`flex-1 py-3 px-6 rounded-full font-medium transition-colors shadow-md bg-[#7698CC] text-white hover:bg-[#6387BB]`}
+              className={`flex-1 py-2 px-4 rounded-full font-medium transition-colors shadow-md bg-[#7698CC] text-white hover:bg-[#6387BB] whitespace-nowrap`}
             >
               {confirmText}
             </button>

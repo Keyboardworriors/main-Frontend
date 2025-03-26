@@ -25,8 +25,8 @@ export interface ModalData {
     | "saveDiary";
   user?: User;
   moods?: Mood[];
-  songs?: Song[];
-  selectedSong?: Music[];
+  //songs?: Song[];
+  //selectedSong?: Music[];
   confirmText?: string;
   cancelText?: string;
   isDanger?: boolean;

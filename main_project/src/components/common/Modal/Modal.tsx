@@ -63,7 +63,7 @@ const Modal = () => {
           title="⚠️ 404 (Not found)"
           message={
             data?.message ||
-            "음악 추천에 실패했어요..\n다시 분석을 원하시면 다시 시도,\n그렇지 않다면 저장하기를 클릭해주세요!"
+            "음악 추천에 실패했어요..<br />다시 분석을 원하시면 다시 시도,<br />그렇지 않다면 저장하기를 클릭해주세요!"
           }
           confirmText="저장하기"
           cancelText="다시 분석하기"

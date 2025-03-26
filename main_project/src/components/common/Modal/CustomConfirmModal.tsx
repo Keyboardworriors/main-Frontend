@@ -35,7 +35,7 @@ const CustomConfirmModal = ({
   if (!modalContainer) return null;
 
   return createPortal(
-    <div className="bg-black/50 rounded-xl p-7 w-full h-full p-10 inset-0 flex justify-center items-center pointer-events-auto">
+    <div className="bg-black/50 rounded-xl w-full h-full p-10 inset-0 flex justify-center items-center pointer-events-auto">
       <div className="w-full absolute inset-0 rounded-xl"></div>
       <div className="relative flex flex-col items-center z-10">
         <div className="p-8 bg-white rounded-xl max-w-sm w-full shadow-lg">

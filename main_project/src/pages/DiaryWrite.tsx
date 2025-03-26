@@ -5,6 +5,7 @@ import { formatDateKorean } from "../utils/date";
 import { DiaryContent, Mood } from "../models/diary";
 import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
 import DiaryContentPreview from "./DiaryContent";
+import { useModalStore } from "../store/modal"; // 모달 스토어 추가
 
 interface DiaryWriteProps {
   selectedDate: Date;
@@ -32,6 +33,8 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   const [analyzedMood, setAnalyzedMood] = useState<string>();
   const [isDirectSelect, setIsDirectSelect] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+
+  const { openModal, closeModal } = useModalStore(); // useModalStore 추가
 
   const editor = useEditor({
     ...editorConfig,
@@ -61,6 +64,14 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
 
   const handleEmotionAnalysis = async () => {
     try {
+      // 로딩 모달 표시 추가
+      openModal("loading", {
+        message: "감정을 분석중이에요",
+        modalPurpose: "mood",
+      });
+      // 테스트용 지연 추가 (실제 API 연결 시 삭제 요망)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const response = await fetch("api/diary/recommendation-keyword", {
         method: "POST",
         headers: {
@@ -79,9 +90,13 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
       const data = await response.json();
       setAnalyzedMood(data.mood);
       setIsAnalysisFailed(false);
+
+      closeModal(); // 로딩 모달 닫기 추가
     } catch {
       setIsAnalysisFailed(true);
       setAnalyzedMood(undefined);
+
+      closeModal(); // 에러 발생 시에도 로딩 모달 닫기 추가
     }
     setIsDirectSelect(false);
     setIsMoodModalOpen(true);
@@ -107,6 +122,12 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
 
   const handleSave = async () => {
     try {
+      // 기록 저장 시 로딩 모달 표시 추가
+      openModal("loading", {
+        message: "기록을 저장중이에요",
+        modalPurpose: "saving",
+      });
+
       // TODO: API 호출하여 일기 저장
       // const response = await fetch("api/diary", {
       //   method: "POST",
@@ -123,9 +144,16 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
       //   throw new Error("일기 저장에 실패했습니다.");
       // }
 
+      // 테스트 확인용으로 지연 추가 (실제 API 연결 시 삭제 요망)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       setIsSaved(true);
+
+      closeModal(); // 저장 완료 후 로딩 모달 닫기 추가
     } catch (error) {
       console.error("일기 저장 중 오류 발생:", error);
+
+      closeModal(); // 에러 발생 시에도 로딩 모달 닫기 추가
     }
   };
 

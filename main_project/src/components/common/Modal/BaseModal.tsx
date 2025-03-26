@@ -12,15 +12,15 @@ const BaseModal = ({ isOpen, onClose, children, hideCloseButton = false }: BaseM
   const modalRef = useRef<HTMLDivElement>(null);
   const previousOverflowStyle = useRef<string | null>(null);
 
-  const handleClickOutside = (e: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(e.target as Node) && onClose) {
-      onClose();
-    }
-  };
+  // const handleClickOutside = (e: MouseEvent) => {
+  //   if (modalRef.current && !modalRef.current.contains(e.target as Node) && onClose) {
+  //     onClose();
+  //   }
+  // };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Escape" && onClose) onClose();
-  };
+  // const handleKeyDown = (e: KeyboardEvent) => {
+  //   if (e.key === "Escape" && onClose) onClose();
+  // };
 
   const manageScrollbar = () => {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -37,19 +37,18 @@ const BaseModal = ({ isOpen, onClose, children, hideCloseButton = false }: BaseM
 
   useEffect(() => {
     if (!isOpen) return;
-
-    if (onClose) {
-      document.addEventListener("keydown", handleKeyDown);
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    // if (onClose) {
+    //   document.addEventListener("keydown", handleKeyDown);
+    //   document.addEventListener("mousedown", handleClickOutside);
+    // }
 
     manageScrollbar();
 
     return () => {
-      if (onClose) {
-        document.removeEventListener("keydown", handleKeyDown);
-        document.removeEventListener("mousedown", handleClickOutside);
-      }
+      // if (onClose) {
+      //   document.removeEventListener("keydown", handleKeyDown);
+      //   document.removeEventListener("mousedown", handleClickOutside);
+      // }
       restoreScrollbar();
     };
   }, [isOpen, onClose]);
@@ -60,8 +59,22 @@ const BaseModal = ({ isOpen, onClose, children, hideCloseButton = false }: BaseM
   if (!modalContainer) return null;
 
   return createPortal(
-    <div className="rounded-xl p-7 bg-white w-full p-10 inset-0 flex justify-center pointer-events-auto">
-      <div className="bg-white w-full absolute inset-0 bg-white rounded-xl"></div>
+    <div className="rounded-xl bg-white w-full h-full p-10 inset-0 flex justify-center items-center pointer-events-auto">
+      <div className="bg-white w-full absolute inset-0 rounded-xl"></div>
+
+      {/* 
+      {!hideCloseButton && onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full shadow-lg z-[9999] font-bold text-lg"
+          style={{ zIndex: 9999 }}
+          aria-label="닫기"
+        >
+          X
+        </button>
+      )}
+      */}
+
       <div
         ref={modalRef}
         className="relative flex flex-col items-center z-10"

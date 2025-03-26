@@ -24,7 +24,7 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
     if (mode === "edit") {
       const fetchProfile = async () => {
         try {
-          const res = await axiosFetcher.get("api/members/mypage");
+          const res = await axiosFetcher.get(`api/members/mypage`);
           const { nickname, introduce, favorite_genre, profile_image } = res;
 
           setNickname(nickname);

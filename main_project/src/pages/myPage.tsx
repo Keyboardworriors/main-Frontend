@@ -5,6 +5,7 @@ import mockUserProfile from "../mock/userProfile";
 import HomeLayout from "../components/layouts/HomeLayout";
 import { useAuthStore } from "../store/useAuthStore";
 import { axiosFetcher } from "../api/axiosFetcher";
+import { useModalStore } from "../store/modal";
 
 interface UserProfile {
   nickname: string;
@@ -17,40 +18,65 @@ interface UserProfile {
 const MyPage = () => {
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { openModal, closeModal } = useModalStore();
 
   useEffect(() => {
+    openModal("loading", {
+      message: "프로필 정보를 불러오는 중이에요",
+      modalPurpose: "profileLoading",
+    });
+
     const fetchUserProfile = async () => {
       try {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // 실제 API 연동 시 삭제요망
         setUserProfile(mockUserProfile);
       } catch (error) {
         console.error("마이페이지 정보 불러오기 실패", error);
+      } finally {
+        closeModal();
+        setIsLoading(false);
       }
     };
 
     fetchUserProfile();
-  }, []);
+  }, [openModal, closeModal]);
 
   const handleDeleteAccount = async () => {
-    const confirmed = confirm("정말로 탈퇴하시겠습니까?");
-    if (!confirmed) return;
+    // 회원 탈퇴 모달 추가
+    openModal("customConfirm", {
+      title: "기록을 중단하시겠습니까?",
+      message: "모든 데이터가 삭제되며 이 작업은 되돌릴 수 없어요",
+      confirmText: "탈퇴하기",
+      cancelText: "취소하기",
+      isDanger: true,
+      onConfirm: async () => {
+        try {
+          const { refreshToken } = useAuthStore.getState();
 
-    try {
-      const { refreshToken } = useAuthStore.getState();
+          await axiosFetcher.delete("members/mypage/", {
+            data: { refresh_token: refreshToken },
+          });
 
-      await axiosFetcher.delete("members/mypage/", {
-        data: { refresh_token: refreshToken },
-      });
-
-      alert("회원 탈퇴가 완료되었습니다.");
-      useAuthStore.getState().clearAuth()
-      navigate("/"); // 홈으로 이동
-    } catch (error) {
-      console.error("회원 탈퇴 실패", error);
-      alert("회원 탈퇴 중 오류가 발생했습니다.");
-    }
+          alert("회원 탈퇴가 완료되었습니다.");
+          useAuthStore.getState().clearAuth();
+          navigate("/");
+        } catch (error) {
+          console.error("회원 탈퇴 실패", error);
+          alert("회원 탈퇴 중 오류가 발생했습니다.");
+        }
+      },
+    });
   };
 
-  if (!userProfile) return <div>로딩 중...</div>;
+  // 로딩 중일 때는 비어있는 컨테이너만 반환 추가
+  if (isLoading) {
+    return (
+      <HomeLayout>
+        <div className="flex justify-center items-center w-full h-[55vh]"></div>
+      </HomeLayout>
+    );
+  }
 
   return (
     <>
@@ -59,24 +85,24 @@ const MyPage = () => {
 
         <div className="flex flex-row items-center justify-center gap-6 mb-8">
           <img
-            src={userProfile.profile_image || "/default-profile.png"}
+            src={userProfile?.profile_image || "/default-profile.png"}
             alt="프로필 이미지"
             className="w-30 h-30 rounded-full object-cover border border-[#A6CCF2]"
           />
-          <p className="text-2xl font-semibold ml-12">{userProfile.nickname}</p>
+          <p className="text-2xl font-semibold ml-12">{userProfile?.nickname}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-y-4 gap-x-30 text-gray-700 max-w-2xl mx-auto">
           <div className="font-medium text-right">이메일</div>
-          <div className="text-left">{userProfile.email}</div>
+          <div className="text-left">{userProfile?.email}</div>
 
           <div className="font-medium text-right">선호하는 음악 장르</div>
           <div className="text-left">
-            {userProfile.genres.length > 0 ? userProfile.genres.join(", ") : "-"}
+            {userProfile?.genres.length ? userProfile.genres.join(", ") : "-"}
           </div>
 
           <div className="font-medium text-right">한 줄 소개</div>
-          <div className="text-left break-words">{userProfile.bio || "-"}</div>
+          <div className="text-left break-words">{userProfile?.bio || "-"}</div>
         </div>
 
         <div className="flex flex-col justify-center items-center">

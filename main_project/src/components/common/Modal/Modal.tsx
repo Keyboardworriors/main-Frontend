@@ -18,9 +18,11 @@ const Modal = () => {
         return "감정을 분석중이에요";
       case "melody":
         return "필로디🎵";
+        return "필로디🎵";
       case "saving":
         return "기록을 저장중이에요";
       default:
+        return "로딩 중이예요";
         return "로딩 중이예요";
     }
   };

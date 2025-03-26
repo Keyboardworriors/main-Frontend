@@ -9,9 +9,18 @@ export type ModalType =
   | "songSelect"
   | "songAnalysisError"
   | "customConfirm"
+  | "loading"
+  | "confirm"
+  | "profile"
+  | "moodSelect"
+  | "songSelect"
+  | "songAnalysisError"
+  | "customConfirm"
   | null;
 
 export interface ModalData {
+  message?: string;
+  title?: string;
   message?: string;
   title?: string;
   modalPurpose?:

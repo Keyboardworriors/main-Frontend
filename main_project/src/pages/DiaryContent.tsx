@@ -2,6 +2,8 @@ import { formatDateKorean } from "../utils/date";
 import { DiaryContent as DiaryContentType } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { useState } from "react";
+import { useModalStore } from "../store/modal";
+import { useState } from "react";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
@@ -94,13 +96,20 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
       await new Promise((resolve) => setTimeout(resolve, 2000)); // API 연동 시 삭제 요망
       // ===== 실제 API 연동 코드 추가 =====
 
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // API 연동 시 삭제 요망
+      // ===== 실제 API 연동 코드 추가 =====
+
       closeModal();
 
+      const isSuccess = Math.random() > 0.5; // API 연동 시 삭제 요망
       const isSuccess = Math.random() > 0.5; // API 연동 시 삭제 요망
 
       if (isSuccess) {
         // ===== 분석 성공 시 노래 선택 모달 표시 =====
+        // ===== 분석 성공 시 노래 선택 모달 표시 =====
         openModal("songSelect", {
+          // API 연동 시 아래 주석 해제 및 수정
+          // songs: recommendedSongs, // API 응답에서 받은 추천 음악 목록
           // API 연동 시 아래 주석 해제 및 수정
           // songs: recommendedSongs, // API 응답에서 받은 추천 음악 목록
           onConfirm: () => {
@@ -184,6 +193,7 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
               onClick={handleMelodyRecommendation}
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
+              <span>{buttonText}</span>
               <span>{buttonText}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

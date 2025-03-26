@@ -1,3 +1,10 @@
+export interface SocialLoginUser {
+  email: string;
+  profile_image: string;
+  provider: string;
+  is_active: boolean;
+}
+
 export type Genre =
   | "Electronic"
   | "Pop"

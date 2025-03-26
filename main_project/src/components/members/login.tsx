@@ -19,7 +19,6 @@ const Login = () => {
 
   return (
     <>
-      <Header />
       <HomeLayout>
         <div className="flex flex-col items-center justify-center py-16 gap-6">
           <h3 className="text-2xl font-semibold text-gray-700 text-center">

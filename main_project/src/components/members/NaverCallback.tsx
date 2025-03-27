@@ -36,6 +36,8 @@ const NaverCallback = () => {
             email: user.email,
           });
 
+          console.log("토큰 응답 결과:", tokenRes);
+
           const {
             access_token: accessToken,
             refresh_token: refreshToken,

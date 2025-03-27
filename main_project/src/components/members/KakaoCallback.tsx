@@ -23,12 +23,12 @@ const KakaoCallback = () => {
       }
 
       try {
-        const res = await axiosFetcher.get(`api/oauth/kakao/callback/?code=${code}`);
+        const res = await axiosFetcher.get(`/api/oauth/kakao/callback/?code=${code}`);
         const user: SocialLoginUser = res;
 
         console.log("응답 결과:", user);
         if (user.is_active) {
-          const tokenRes = await axiosFetcher.post("api/members/login/", {
+          const tokenRes = await axiosFetcher.post("/api/members/login/", {
             email: user.email,
           });
 

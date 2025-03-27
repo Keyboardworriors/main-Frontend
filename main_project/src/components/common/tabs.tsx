@@ -4,10 +4,10 @@ import DiaryHome from "../../pages/DiaryHome";
 import MoodChart from "../../pages/moodChart";
 import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaUser, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
-import { User } from "../../models/diary";
 import { SearchResult } from "../../models/search";
 import { useNavigate } from "react-router-dom";
 import ProfileModal from "./Modal/ProfileModal";
+import { axiosFetcher } from "../../api/axiosFetcher";
 
 function MyTabs() {
   const navigate = useNavigate();
@@ -18,47 +18,72 @@ function MyTabs() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const user: User = {
-    nickname: "김민정",
-    email: "hong@example.com",
-    profile_image: "",
-    introduce: "안녕하세요, 김민정입니다.",
-    favorite_genre: "팝, 록, 힙합",
-    is_active: true,
-  };
-  const modalUser = {
-    nickname: user.nickname,
-    profileImage: user.profile_image,
-    introduction: user.introduce,
-    preferredGenres: user.favorite_genre?.split(",") || [],
-  };
+
+  const [modalUser, setModalUser] = useState({
+    nickname: "",
+    profileImage: "",
+    introduction: "",
+    preferredGenres: [] as string[],
+  });
+
   const clearSearch = () => {
     setSearchQuery("");
     setShowSearch(false);
     setIsSearching(false);
     setSearchResults([]);
   };
+
   const handleSearchInputRef = (element: HTMLInputElement | null) => {
     if (element && showSearch) {
       element.focus();
     }
   };
+
   const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setShowDropdown(false);
     }
   };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim()) {
       setIsSearching(true);
-      // TODO: API 연동 후 실제 검색 구현
+      // TODO: 검색 API 연동
       setIsSearching(false);
     }
   };
+
+  const handleOpenProfile = async () => {
+    try {
+      const res = await axiosFetcher.get<{
+        profile_image: string;
+        member: {
+          nickname: string;
+          introduce: string;
+          favorite_genre: string[];
+        };
+      }>("api/members/profile/");
+      console.log("프로필 API 응답:", res);
+
+      setModalUser({
+        nickname: res.member.nickname ?? "",
+        profileImage: res.profile_image ?? "",
+        introduction: res.member.introduce ?? "",
+        preferredGenres: res.member.favorite_genre ?? [],
+      });
+
+      setIsProfileOpen(true);
+    } catch (error) {
+      console.error("프로필 불러오기 실패:", error);
+      alert("프로필 정보를 불러오는데 실패했어요.");
+    }
+  };
+
   return (
     <Tabs className="bg-[#A6CCF2] min-h-screen flex flex-col" defaultIndex={0}>
       <TabList className="flex max-w-[1130px] w-full mx-auto pt-0 pr-4 pl-7 items-center">
@@ -110,12 +135,12 @@ function MyTabs() {
               className="p-2 text-gray-700 hover:text-black focus:outline-none flex items-center gap-1 cursor-pointer"
             >
               <FaUserCircle size={20} />
-              <span className="text-sm hidden md:inline">{user.nickname}</span>
+              <span className="text-sm hidden md:inline">내 정보</span>
             </button>
             {showDropdown && (
               <div className="absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg py-2 z-50 border-2 border-[#A6CCF2]">
                 <button
-                  onClick={() => setIsProfileOpen(true)}
+                  onClick={handleOpenProfile}
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
                 >
                   <FaUser size={14} />
@@ -162,4 +187,5 @@ function MyTabs() {
     </Tabs>
   );
 }
+
 export default MyTabs;

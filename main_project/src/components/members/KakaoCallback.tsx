@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosFetcher } from "../../api/axiosFetcher";
 import { useAuthStore } from "../../store/useAuthStore";
 import { SocialLoginUser } from "../../models/profile";
+import LoadingModal from "../common/Modal/LoadingModal";
 
 const KakaoCallback = () => {
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getKakaoToken = async () => {
@@ -16,18 +18,16 @@ const KakaoCallback = () => {
 
       if (!code) {
         alert("인증 코드를 받아오는데 실패했습니다. 다시 시도해주세요.");
+        setIsLoading(false);
         return;
       }
 
       try {
-        // 1차: 유저 정보만 받음
         const res = await axiosFetcher.get(`api/oauth/kakao/callback/?code=${code}`);
         const user: SocialLoginUser = res;
 
-        console.log("응답 결과", res);
-
+        console.log("응답 결과:", user);
         if (user.is_active) {
-          // 2차: 토큰 요청
           const tokenRes = await axiosFetcher.post("api/members/login/", {
             email: user.email,
           });
@@ -48,16 +48,28 @@ const KakaoCallback = () => {
         } else {
           navigate("/members/register", { state: { mode: "create", user } });
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("카카오 로그인 실패", error);
-        alert("카카오 로그인 중 오류가 발생했습니다.");
+
+        const errorMessage = error.response?.data?.error;
+
+        if (errorMessage === "An account with this email already exists.") {
+          alert(
+            "이미 다른 소셜 계정(예: 네이버)으로 가입된 이메일입니다.\n기존에 로그인했던 방식으로 로그인해주세요."
+          );
+          navigate("/login");
+        } else {
+          alert("카카오 로그인 중 오류가 발생했습니다.");
+        }
+      } finally {
+        setIsLoading(false);
       }
     };
 
     getKakaoToken();
   }, [navigate, setAuth]);
 
-  return <div>카카오 로그인 처리 중...</div>;
+  return <LoadingModal isOpen={isLoading} message="카카오 로그인 처리 중..." />;
 };
 
 export default KakaoCallback;

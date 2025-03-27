@@ -2,9 +2,10 @@ import { SearchResult } from "../models/search";
 
 interface DiaryListProps {
   diaries: SearchResult[];
+  onDiarySelect: (diaryId: string) => void;
 }
 
-const DiaryList = ({ diaries }: DiaryListProps) => {
+const DiaryList = ({ diaries, onDiarySelect }: DiaryListProps) => {
   if (diaries.length === 0) {
     return (
       <div className="text-center py-4 text-gray-500">검색 결과와 일치하는 일기가 없어요.</div>
@@ -17,7 +18,8 @@ const DiaryList = ({ diaries }: DiaryListProps) => {
         {diaries.map((diary) => (
           <div
             key={diary.diary_id}
-            className="bg-white p-2 rounded-lg shadow hover:shadow-md transition-shadow"
+            onClick={() => onDiarySelect(diary.diary_id.toString())}
+            className="cursor-pointer bg-white p-2 rounded-lg shadow hover:shadow-md transition-shadow"
           >
             <div className="flex justify-between items-start">
               <h3 className="text-sm font-semibold text-gray-800">{diary.title}</h3>

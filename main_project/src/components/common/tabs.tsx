@@ -4,20 +4,27 @@ import DiaryHome from "../../pages/DiaryHome";
 import MoodChart from "../../pages/moodChart";
 import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaUser, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
-import { SearchResult } from "../../models/search";
 import { useNavigate } from "react-router-dom";
 import ProfileModal from "./Modal/ProfileModal";
 import { axiosFetcher } from "../../api/axiosFetcher";
+import { useSearch } from "../../hooks/useSearch";
 
 function MyTabs() {
   const navigate = useNavigate();
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const {
+    showSearch,
+    setShowSearch,
+    searchQuery,
+    setSearchQuery,
+    isSearching,
+    searchResults,
+    clearSearch,
+    handleSearchInputRef,
+    handleSearch,
+  } = useSearch();
 
   const [modalUser, setModalUser] = useState({
     nickname: "",
@@ -25,19 +32,6 @@ function MyTabs() {
     introduction: "",
     preferredGenres: [] as string[],
   });
-
-  const clearSearch = () => {
-    setSearchQuery("");
-    setShowSearch(false);
-    setIsSearching(false);
-    setSearchResults([]);
-  };
-
-  const handleSearchInputRef = (element: HTMLInputElement | null) => {
-    if (element && showSearch) {
-      element.focus();
-    }
-  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -49,14 +43,6 @@ function MyTabs() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchQuery.trim()) {
-      setIsSearching(true);
-      // TODO: 검색 API 연동
-      setIsSearching(false);
-    }
-  };
 
   const handleOpenProfile = async () => {
     try {
@@ -147,7 +133,7 @@ function MyTabs() {
                   <span>프로필</span>
                 </button>
                 <button
-                  onClick={() => navigate("/members/mypage/")}
+                  onClick={() => navigate("api/members/mypage/")}
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
                 >
                   <FaUserCircle size={14} />

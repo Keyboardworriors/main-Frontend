@@ -1,8 +1,10 @@
-import { mockDiaries } from "../mock/diaryData";
-import DiaryList from "./DiaryList";
 import { formatDate, formatDateKorean, getTargetDateOrToday } from "../utils/date";
 import { SearchResult } from "../models/search";
-import { useModalStore } from "../store/modal"; // 모달 스토어 추가
+import { Diary } from "../models/diary";
+import { useModalStore } from "../store/modal";
+import { useEffect, useState } from "react";
+import { axiosFetcher } from "../api/axiosFetcher";
+import DiaryList from "./DiaryList";
 
 interface DiaryViewProps {
   selectedDate: Date | null;
@@ -17,21 +19,63 @@ const DiaryView = ({
   searchResults = [],
   onWriteClick,
 }: DiaryViewProps) => {
-  const { openModal } = useModalStore(); // useModalStore 추가
+  const { openModal } = useModalStore();
+  const [diary, setDiary] = useState<Diary | null>(null);
+  const [diaryIdMap, setDiaryIdMap] = useState<Record<string, string>>({});
+  const [selectedDiaryId, setSelectedDiaryId] = useState<string | null>(null);
 
-  const targetDiary = mockDiaries.find(
-    (diary) => diary.date === formatDate(getTargetDateOrToday(selectedDate)),
-  );
-
-  // 일기 삭제 핸들러 추가
-  const handleDeleteDiary = () => {
-    // 실제 삭제 로직 구현
-    console.log("일기 삭제:", targetDiary?.id);
-    // API 호출이나 삭제 상태 업데이트 등
+  const handleDeleteDiary = async () => {
+    if (!selectedDate) return;
+    const dateStr = formatDate(getTargetDateOrToday(selectedDate));
+    const diaryId = diaryIdMap[dateStr];
+    if (!diaryId) return;
+    try {
+      await axiosFetcher.delete(`/api/diary/${diaryId}/`);
+      setDiary(null);
+      const updatedMap = { ...diaryIdMap };
+      delete updatedMap[dateStr];
+      setDiaryIdMap(updatedMap);
+    } catch (error) {
+      console.error("일기 삭제 실패", error);
+    }
   };
 
+  useEffect(() => {
+    const fetchDiaryDates = async () => {
+      try {
+        const res = await axiosFetcher.get("/api/diary/");
+        const map: Record<string, string> = {};
+        res.data.forEach((item: { date: string; diary_id: string }) => {
+          map[item.date] = item.diary_id;
+        });
+        setDiaryIdMap(map);
+      } catch (err) {
+        console.error("일기 ID 목록 조회 실패", err);
+      }
+    };
+    fetchDiaryDates();
+  }, []);
+
+  useEffect(() => {
+    const fetchDiaryDetail = async () => {
+      const diaryId = selectedDiaryId ?? diaryIdMap[formatDate(getTargetDateOrToday(selectedDate))];
+      if (!diaryId) {
+        setDiary(null);
+        return;
+      }
+      try {
+        const res = await axiosFetcher.get(`api/diary/${diaryId}/`);
+        setDiary(res.data);
+      } catch (err) {
+        console.error("일기 조회 실패", err);
+        setDiary(null);
+      }
+    };
+    fetchDiaryDetail();
+  }, [selectedDate, diaryIdMap, selectedDiaryId]);
+
   const renderDiaryContent = () => {
-    if (!targetDiary) return null;
+    if (!diary) return null;
 
     return (
       <div className="w-full max-w-md h-full flex flex-col">
@@ -65,16 +109,16 @@ const DiaryView = ({
             </svg>
           </button>
         </div>
-        {targetDiary.rec_music.thumbnail && (
+        {diary.rec_music.thumbnail && (
           <img
-            src={targetDiary.rec_music.thumbnail}
+            src={diary.rec_music.thumbnail}
             alt="추천 음악"
             className="w-16 h-16 object-cover rounded-full mx-auto mb-2 border border-gray-200"
           />
         )}
         <div className="text-center">
-          <p className="text-sm font-semibold text-gray-700">{targetDiary.rec_music.title}</p>
-          <p className="text-xs text-gray-600">{targetDiary.rec_music.artist}</p>
+          <p className="text-sm font-semibold text-gray-700">{diary.rec_music.title}</p>
+          <p className="text-xs text-gray-600">{diary.rec_music.artist}</p>
         </div>
 
         <div className="flex justify-between items-start mb-4 mt-8">
@@ -82,7 +126,7 @@ const DiaryView = ({
             {formatDateKorean(getTargetDateOrToday(selectedDate))}
           </div>
           <div className="flex gap-2">
-            {targetDiary.moods.map((mood, index) => (
+            {diary.moods.map((mood: string, index: number) => (
               <span
                 key={index}
                 className="px-3 py-1 bg-[#4A7196] text-white rounded-full text-xs font-medium shadow-sm"
@@ -94,8 +138,8 @@ const DiaryView = ({
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          <p className="text-base font-semibold mt-1 mb-1">{targetDiary.title}</p>
-          <p className="text-sm text-gray-700">{targetDiary.content}</p>
+          <p className="text-base font-semibold mt-1 mb-1">{diary.diary_title}</p>
+          <p className="text-sm text-gray-700">{diary.content}</p>
         </div>
       </div>
     );
@@ -116,8 +160,8 @@ const DiaryView = ({
     <div className="p-2 md:p-4 bg-transparent w-full h-full flex items-center justify-center">
       <div className="w-full h-full flex flex-col items-center justify-center overflow-auto">
         {isSearchMode ? (
-          <DiaryList diaries={searchResults} />
-        ) : targetDiary ? (
+          <DiaryList diaries={searchResults} onDiarySelect={setSelectedDiaryId} />
+        ) : diary ? (
           <div className="w-full h-full flex items-center justify-center">
             {renderDiaryContent()}
           </div>

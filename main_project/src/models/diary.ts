@@ -8,7 +8,7 @@ export interface User {
 }
 
 export interface DiaryContent {
-  title: string;
+  diary_title: string;
   content: string;
   moods: Mood[];
 }
@@ -16,7 +16,7 @@ export interface DiaryContent {
 export interface Diary {
   diary_id: number;
   date: string;
-  title: string;
+  diary_title: string;
   content: string;
   created_at: string;
   moods: Mood[];

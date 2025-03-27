@@ -17,11 +17,11 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
     (config) => {
       const { accessToken } = useAuthStore.getState();
       if (accessToken && config.headers) {
-        config.headers.Authorization = `Bearer ${accessToken}`; 
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
       return config;
     },
-    (error) => Promise.reject(error)
+    (error) => Promise.reject(error),
   );
 
   instance.interceptors.response.use(
@@ -33,18 +33,15 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
       if (error.response?.status === 401 && !originalRequest._retry && refreshToken) {
         originalRequest._retry = true;
         try {
-          const res = await axios.post(
-            `${getApiBaseUrl()}/members/token/refresh/`,
-            {
-              refresh: refreshToken,
-            }
-          );
+          const res = await axios.post(`${getApiBaseUrl()}/members/token/refresh/`, {
+            refresh: refreshToken,
+          });
 
           const newAccessToken = res.data.access;
           const { user } = useAuthStore.getState();
           setAuth(newAccessToken, refreshToken, user!);
 
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`; 
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return instance(originalRequest);
         } catch (refreshError) {
           clearAuth();
@@ -53,7 +50,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 
   return instance;
@@ -65,7 +62,7 @@ export const axiosFetcher = {
   get: async <T = any>(
     path: string,
     params?: Record<string, any>,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<T> => {
     const response: AxiosResponse<T> = await apiInstance.get(path, {
       params,
@@ -75,36 +72,24 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  post: async <T = any>(
-    path: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<T> => {
+  post: async <T = any>(path: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
     const response: AxiosResponse<T> = await apiInstance.post(path, data, config);
     return response.data;
   },
 
-  put: async <T = any>(
-    path: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<T> => {
+  put: async <T = any>(path: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
     const response: AxiosResponse<T> = await apiInstance.put(path, data, config);
     return response.data;
   },
 
-  patch: async <T = any>(
-    path: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<T> => {
+  patch: async <T = any>(path: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
     const response: AxiosResponse<T> = await apiInstance.patch(path, data, config);
     return response.data;
   },
 
   delete: async <T = any>(
     path: string,
-    config?: AxiosRequestConfig & { data?: any }
+    config?: AxiosRequestConfig & { data?: any },
   ): Promise<T> => {
     const response: AxiosResponse<T> = await apiInstance.delete(path, config);
     return response.data;

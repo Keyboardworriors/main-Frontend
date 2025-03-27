@@ -3,14 +3,17 @@ import { SearchResult } from "../models/search";
 import { Diary } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { useEffect, useState } from "react";
-import { axiosFetcher } from "../api/axiosFetcher";
 import DiaryList from "./DiaryList";
+import diaryApi from "../api/diaryApi";
 
 interface DiaryViewProps {
   selectedDate: Date | null;
   isSearchMode?: boolean;
   searchResults: SearchResult[];
   onWriteClick: () => void;
+  diaryIdMap: Record<string, string>;
+  selectedDiaryId: string | null;
+  onDiarySelect: (id: string, date: string) => void;
 }
 
 const DiaryView = ({
@@ -18,11 +21,12 @@ const DiaryView = ({
   isSearchMode = false,
   searchResults = [],
   onWriteClick,
+  diaryIdMap,
+  selectedDiaryId,
+  onDiarySelect,
 }: DiaryViewProps) => {
   const { openModal } = useModalStore();
   const [diary, setDiary] = useState<Diary | null>(null);
-  const [diaryIdMap, setDiaryIdMap] = useState<Record<string, string>>({});
-  const [selectedDiaryId, setSelectedDiaryId] = useState<string | null>(null);
 
   const handleDeleteDiary = async () => {
     if (!selectedDate) return;
@@ -30,31 +34,12 @@ const DiaryView = ({
     const diaryId = diaryIdMap[dateStr];
     if (!diaryId) return;
     try {
-      await axiosFetcher.delete(`/api/diary/${diaryId}/`);
+      await diaryApi.deleteDiary(diaryId);
       setDiary(null);
-      const updatedMap = { ...diaryIdMap };
-      delete updatedMap[dateStr];
-      setDiaryIdMap(updatedMap);
     } catch (error) {
       console.error("일기 삭제 실패", error);
     }
   };
-
-  useEffect(() => {
-    const fetchDiaryDates = async () => {
-      try {
-        const res = await axiosFetcher.get("/api/diary/");
-        const map: Record<string, string> = {};
-        res.data.forEach((item: { date: string; diary_id: string }) => {
-          map[item.date] = item.diary_id;
-        });
-        setDiaryIdMap(map);
-      } catch (err) {
-        console.error("일기 ID 목록 조회 실패", err);
-      }
-    };
-    fetchDiaryDates();
-  }, []);
 
   useEffect(() => {
     const fetchDiaryDetail = async () => {
@@ -64,7 +49,7 @@ const DiaryView = ({
         return;
       }
       try {
-        const res = await axiosFetcher.get(`api/diary/${diaryId}/`);
+        const res = await diaryApi.getDiary(diaryId);
         setDiary(res.data);
       } catch (err) {
         console.error("일기 조회 실패", err);
@@ -109,7 +94,7 @@ const DiaryView = ({
             </svg>
           </button>
         </div>
-        {diary.rec_music.thumbnail && (
+        {diary.rec_music?.thumbnail && (
           <img
             src={diary.rec_music.thumbnail}
             alt="추천 음악"
@@ -117,8 +102,8 @@ const DiaryView = ({
           />
         )}
         <div className="text-center">
-          <p className="text-sm font-semibold text-gray-700">{diary.rec_music.title}</p>
-          <p className="text-xs text-gray-600">{diary.rec_music.artist}</p>
+          <p className="text-sm font-semibold text-gray-700">{diary.rec_music?.title}</p>
+          <p className="text-xs text-gray-600">{diary.rec_music?.artist}</p>
         </div>
 
         <div className="flex justify-between items-start mb-4 mt-8">
@@ -126,7 +111,7 @@ const DiaryView = ({
             {formatDateKorean(getTargetDateOrToday(selectedDate))}
           </div>
           <div className="flex gap-2">
-            {diary.moods.map((mood: string, index: number) => (
+            {diary.moods?.map((mood: string, index: number) => (
               <span
                 key={index}
                 className="px-3 py-1 bg-[#4A7196] text-white rounded-full text-xs font-medium shadow-sm"
@@ -159,8 +144,8 @@ const DiaryView = ({
   return (
     <div className="p-2 md:p-4 bg-transparent w-full h-full flex items-center justify-center">
       <div className="w-full h-full flex flex-col items-center justify-center overflow-auto">
-        {isSearchMode ? (
-          <DiaryList diaries={searchResults} onDiarySelect={setSelectedDiaryId} />
+        {isSearchMode && selectedDiaryId === null ? (
+          <DiaryList diaries={searchResults} onDiarySelect={onDiarySelect} />
         ) : diary ? (
           <div className="w-full h-full flex items-center justify-center">
             {renderDiaryContent()}

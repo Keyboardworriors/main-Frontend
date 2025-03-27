@@ -3,14 +3,13 @@ import "react-tabs/style/react-tabs.css";
 import DiaryHome from "../../pages/DiaryHome";
 import MoodChart from "../../pages/moodChart";
 import { useState, useRef, useEffect } from "react";
-import { FaSearch, FaUser, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import ProfileModal from "./Modal/ProfileModal";
 import { axiosFetcher } from "../../api/axiosFetcher";
 import { useSearch } from "../../hooks/useSearch";
+import SearchBar from "../../components/common/SearchBar";
+import UserMenu from "../../components/common/UserMenu";
 
 function MyTabs() {
-  const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -86,71 +85,22 @@ function MyTabs() {
           나의 감정발자취
         </Tab>
         <div className="flex items-center gap-2 ml-auto">
-          {showSearch ? (
-            <div className="relative flex items-center">
-              <input
-                ref={handleSearchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleSearch}
-                placeholder="일기를 검색해보세요!"
-                className="px-4 py-2 bg-white rounded-full focus:outline-none text-gray-700 text-sm placeholder:text-sm placeholder-gray-500 w-40 md:w-64"
-                disabled={isSearching}
-              />
-              <button
-                onClick={clearSearch}
-                className="absolute right-2 text-gray-500 hover:text-gray-700"
-                aria-label="검색창 닫기"
-              >
-                ✕
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setShowSearch(true)}
-              className="p-2 text-gray-700 hover:text-black focus:outline-none cursor-pointer"
-              aria-label="검색창 열기"
-            >
-              <FaSearch size={18} />
-            </button>
-          )}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="p-2 text-gray-700 hover:text-black focus:outline-none flex items-center gap-1 cursor-pointer"
-            >
-              <FaUserCircle size={20} />
-              <span className="text-sm hidden md:inline">내 정보</span>
-            </button>
-            {showDropdown && (
-              <div className="absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg py-2 z-50 border-2 border-[#A6CCF2]">
-                <button
-                  onClick={handleOpenProfile}
-                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                >
-                  <FaUser size={14} />
-                  <span>프로필</span>
-                </button>
-                <button
-                  onClick={() => navigate("api/members/mypage/")}
-                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                >
-                  <FaUserCircle size={14} />
-                  <span>마이페이지</span>
-                </button>
-                <button
-                  onClick={() => {
-                    // TODO: 로그아웃 기능 구현
-                  }}
-                  className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
-                >
-                  <FaSignOutAlt size={14} />
-                  <span>로그아웃</span>
-                </button>
-              </div>
-            )}
-          </div>
+          <SearchBar
+            showSearch={showSearch}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            handleSearch={handleSearch}
+            clearSearch={clearSearch}
+            setShowSearch={setShowSearch}
+            handleSearchInputRef={handleSearchInputRef}
+            isSearching={isSearching}
+          />
+          <UserMenu
+            showDropdown={showDropdown}
+            setShowDropdown={setShowDropdown}
+            dropdownRef={dropdownRef}
+            handleOpenProfile={handleOpenProfile}
+          />
         </div>
       </TabList>
       <div className="w-full max-w-[1130px] mx-auto">

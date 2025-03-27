@@ -1,32 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Calendar from "react-calendar";
 import "dayjs/locale/ko";
 import "../Calendar/calendar.css";
 import { formatDate, getToday } from "../../utils/date";
-import { axiosFetcher } from "../../api/axiosFetcher";
-
 export interface MyCalendarProps {
   selectedDate: Date | null;
   onDateSelect: (date: Date | null) => void;
+  diaryDates: string[];
 }
 
-const MyCalendar = ({ selectedDate, onDateSelect }: MyCalendarProps) => {
+const MyCalendar = ({ selectedDate, onDateSelect, diaryDates }: MyCalendarProps) => {
   const [date, setDate] = useState<Date | null>(selectedDate || getToday());
-  const [diaryDates, setDiaryDates] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchDiaryDates = async () => {
-      try {
-        const res = await axiosFetcher.get("/api/diary/");
-        const dates = res.data.map((item: { date: string }) => item.date);
-        setDiaryDates(dates);
-      } catch (error) {
-        console.error("일기 날짜 목록 조회 실패", error);
-      }
-    };
-
-    fetchDiaryDates();
-  }, []);
 
   const handleDateChange = (newDate: Date | null) => {
     if (newDate instanceof Date) {

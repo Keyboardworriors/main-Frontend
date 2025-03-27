@@ -1,7 +1,7 @@
 export interface User {
   nickname: string;
   email: string;
-  profile_image: string; //url
+  profile_image: string;
   introduce: string;
   favorite_genre: string;
   is_active: boolean;
@@ -14,7 +14,7 @@ export interface DiaryContent {
 }
 
 export interface Diary {
-  diary_id: number;
+  diary_id: string;
   date: string;
   diary_title: string;
   content: string;
@@ -62,4 +62,15 @@ export enum Mood {
   Relief = "안도",
   Tension = "긴장",
   Gratitude = "감사",
+}
+
+export interface MoodSelectModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelect: (mood: Mood) => void;
+  moods: Mood[];
+  isAnalysisFailed: boolean;
+  isDirectSelect: boolean;
+  onSave: () => void;
+  analyzedKeywords?: string[];
 }

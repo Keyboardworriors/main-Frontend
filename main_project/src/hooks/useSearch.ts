@@ -28,7 +28,8 @@ export const useSearch = () => {
         const response = await axiosFetcher.post<SearchResponse>("api/diary/search/", {
           q: searchQuery.trim(),
         });
-        setSearchResults(response.diary_list);
+        console.log(response);
+        setSearchResults(response.data);
       } catch (error) {
         console.error("검색 실패:", error);
         alert("검색 중 오류가 발생했습니다.");
@@ -38,6 +39,7 @@ export const useSearch = () => {
     }
   };
 
+  console.log(searchResults);
   return {
     showSearch,
     setShowSearch,

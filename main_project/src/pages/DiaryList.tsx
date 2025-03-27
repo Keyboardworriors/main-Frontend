@@ -1,8 +1,9 @@
 import { SearchResult } from "../models/search";
+import { formatDateKorean } from "../utils/date";
 
 interface DiaryListProps {
   diaries: SearchResult[];
-  onDiarySelect: (diaryId: string) => void;
+  onDiarySelect: (diaryId: string, date: string) => void;
 }
 
 const DiaryList = ({ diaries, onDiarySelect }: DiaryListProps) => {
@@ -18,12 +19,14 @@ const DiaryList = ({ diaries, onDiarySelect }: DiaryListProps) => {
         {diaries.map((diary) => (
           <div
             key={diary.diary_id}
-            onClick={() => onDiarySelect(diary.diary_id.toString())}
+            onClick={() => onDiarySelect(diary.diary_id.toString(), diary.date)}
             className="cursor-pointer bg-white p-2 rounded-lg shadow hover:shadow-md transition-shadow"
           >
             <div className="flex justify-between items-start">
-              <h3 className="text-sm font-semibold text-gray-800">{diary.title}</h3>
-              <span className="text-xs text-gray-500">{diary.created_at}</span>
+              <h3 className="text-sm font-semibold text-gray-800">{diary.diary_title}</h3>
+              <span className="text-xs text-gray-500">
+                {formatDateKorean(new Date(diary.date))}
+              </span>
             </div>
             <div className="mt-1 flex items-center gap-2">
               <span className="text-xs text-gray-500">감정: {diary.moods.join(", ")}</span>

@@ -26,13 +26,13 @@ const NaverCallback = () => {
       }
 
       try {
-        const res = await axiosFetcher.get(`api/oauth/naver/callback/?code=${code}&state=${state}`);
+        const res = await axiosFetcher.get(`/api/oauth/naver/callback/?code=${code}&state=${state}`);
         const user: SocialLoginUser = res;
 
         console.log("응답 결과", res);
 
         if (user.is_active) {
-          const tokenRes = await axiosFetcher.post("api/members/login/", {
+          const tokenRes = await axiosFetcher.post("/api/members/login/", {
             email: user.email,
           });
 

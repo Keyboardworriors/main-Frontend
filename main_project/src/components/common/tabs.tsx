@@ -8,9 +8,12 @@ import { SearchResult } from "../../models/search";
 import { useNavigate } from "react-router-dom";
 import ProfileModal from "./Modal/ProfileModal";
 import { axiosFetcher } from "../../api/axiosFetcher";
+import { useAuthStore } from "../../store/useAuthStore";
+import CustomConfirmModal from "./Modal/CustomConfirmModal";
 
 function MyTabs() {
   const navigate = useNavigate();
+  const { refreshToken, clearAuth } = useAuthStore.getState();
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -18,6 +21,7 @@ function MyTabs() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const [modalUser, setModalUser] = useState({
     nickname: "",
@@ -81,6 +85,26 @@ function MyTabs() {
     } catch (error) {
       console.error("프로필 불러오기 실패:", error);
       alert("프로필 정보를 불러오는데 실패했어요.");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      if (!refreshToken) {
+        alert("유효하지 않은 토큰입니다. 다시 로그인해주세요.");
+        return;
+      }
+
+      await axiosFetcher.post("/api/members/logout/", {
+        refresh_token: refreshToken,
+      });
+
+      clearAuth();
+      alert("로그아웃되었습니다.");
+      navigate("/");
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+      alert("로그아웃 중 오류가 발생했습니다.");
     }
   };
 
@@ -154,9 +178,7 @@ function MyTabs() {
                   <span>마이페이지</span>
                 </button>
                 <button
-                  onClick={() => {
-                    // TODO: 로그아웃 기능 구현
-                  }}
+                  onClick={() => setShowLogoutModal(true)}
                   className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
                 >
                   <FaSignOutAlt size={14} />
@@ -167,6 +189,7 @@ function MyTabs() {
           </div>
         </div>
       </TabList>
+
       <div className="w-full max-w-[1130px] mx-auto">
         <TabPanel>
           <DiaryHome
@@ -179,10 +202,23 @@ function MyTabs() {
           <MoodChart />
         </TabPanel>
       </div>
+
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
         user={modalUser}
+      />
+
+      <CustomConfirmModal
+        type="logout"
+        title="로그아웃 하시겠습니까?"
+        message="로그아웃하면 다시 로그인해야 해요"
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        isDanger
+        confirmText="로그아웃"
+        cancelText="취소"
       />
     </Tabs>
   );

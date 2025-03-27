@@ -4,7 +4,7 @@ function InputField({ type, value, onChange, placeholder, disabled }: InputField
   return (
     <input
       type={type}
-      value={value}
+      value={value ?? ""}
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}

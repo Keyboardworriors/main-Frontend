@@ -28,9 +28,11 @@ const NaverCallback = () => {
         console.log("응답 결과", res);
 
         if (user.is_active) {
-          const tokenRes = await axiosFetcher.post(`api/members/login/`, {
+          const tokenRes = await axiosFetcher.post("api/members/login/", {
             email: user.email,
           });
+
+          console.log("토큰 응답 결과:", tokenRes);
 
           const {
             access_token: accessToken,

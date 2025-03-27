@@ -29,7 +29,7 @@ const MyPage = () => {
 
     const fetchUserProfile = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // 실제 API 연동 시 삭제요망
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // 실제 API 요청으로 교체 필요
         setUserProfile(mockUserProfile);
       } catch (error) {
         console.error("마이페이지 정보 불러오기 실패", error);
@@ -43,7 +43,6 @@ const MyPage = () => {
   }, [openModal, closeModal]);
 
   const handleDeleteAccount = async () => {
-    // 회원 탈퇴 모달 추가
     openModal("customConfirm", {
       title: "기록을 중단하시겠습니까?",
       message: "모든 데이터가 삭제되며 이 작업은 되돌릴 수 없어요",
@@ -52,14 +51,19 @@ const MyPage = () => {
       isDanger: true,
       onConfirm: async () => {
         try {
-          const { refreshToken } = useAuthStore.getState();
+          const { refreshToken, clearAuth } = useAuthStore.getState();
+
+          if (!refreshToken) {
+            alert("토큰이 유효하지 않습니다. 다시 로그인해주세요.");
+            return;
+          }
 
           await axiosFetcher.delete("members/mypage/", {
             data: { refresh_token: refreshToken },
           });
 
           alert("회원 탈퇴가 완료되었습니다.");
-          useAuthStore.getState().clearAuth();
+          clearAuth();
           navigate("/");
         } catch (error) {
           console.error("회원 탈퇴 실패", error);
@@ -69,7 +73,6 @@ const MyPage = () => {
     });
   };
 
-  // 로딩 중일 때는 비어있는 컨테이너만 반환 추가
   if (isLoading) {
     return (
       <HomeLayout>
@@ -79,49 +82,47 @@ const MyPage = () => {
   }
 
   return (
-    <>
-      <HomeLayout>
-        <h2 className="text-lg font-semibold mb-6">My Page</h2>
+    <HomeLayout>
+      <h2 className="text-lg font-semibold mb-6">My Page</h2>
 
-        <div className="flex flex-row items-center justify-center gap-6 mb-8">
-          <img
-            src={userProfile?.profile_image || "/default-profile.png"}
-            alt="프로필 이미지"
-            className="w-30 h-30 rounded-full object-cover border border-[#A6CCF2]"
-          />
-          <p className="text-2xl font-semibold ml-12">{userProfile?.nickname}</p>
+      <div className="flex flex-row items-center justify-center gap-6 mb-8">
+        <img
+          src={userProfile?.profile_image || "/default-profile.png"}
+          alt="프로필 이미지"
+          className="w-30 h-30 rounded-full object-cover border border-[#A6CCF2]"
+        />
+        <p className="text-2xl font-semibold ml-12">{userProfile?.nickname}</p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-y-4 gap-x-30 text-gray-700 max-w-2xl mx-auto">
+        <div className="font-medium text-right">이메일</div>
+        <div className="text-left">{userProfile?.email}</div>
+
+        <div className="font-medium text-right">선호하는 음악 장르</div>
+        <div className="text-left">
+          {userProfile?.genres.length ? userProfile.genres.join(", ") : "-"}
         </div>
 
-        <div className="grid grid-cols-2 gap-y-4 gap-x-30 text-gray-700 max-w-2xl mx-auto">
-          <div className="font-medium text-right">이메일</div>
-          <div className="text-left">{userProfile?.email}</div>
+        <div className="font-medium text-right">한 줄 소개</div>
+        <div className="text-left break-words">{userProfile?.bio || "-"}</div>
+      </div>
 
-          <div className="font-medium text-right">선호하는 음악 장르</div>
-          <div className="text-left">
-            {userProfile?.genres.length ? userProfile.genres.join(", ") : "-"}
-          </div>
+      <div className="flex flex-col justify-center items-center">
+        <button
+          onClick={() => navigate("/members/register", { state: { mode: "edit" } })}
+          className="mt-16 px-6 py-3 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
+        >
+          수정하기
+        </button>
 
-          <div className="font-medium text-right">한 줄 소개</div>
-          <div className="text-left break-words">{userProfile?.bio || "-"}</div>
-        </div>
-
-        <div className="flex flex-col justify-center items-center">
-          <button
-            onClick={() => navigate("/members/register", { state: { mode: "edit" } })}
-            className="mt-16 px-6 py-3 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
-          >
-            수정하기
-          </button>
-
-          <button
-            className="mt-10 text-sm text-gray-400 hover:underline"
-            onClick={handleDeleteAccount}
-          >
-            회원 탈퇴하기
-          </button>
-        </div>
-      </HomeLayout>
-    </>
+        <button
+          className="mt-10 text-sm text-gray-400 hover:underline"
+          onClick={handleDeleteAccount}
+        >
+          회원 탈퇴하기
+        </button>
+      </div>
+    </HomeLayout>
   );
 };
 

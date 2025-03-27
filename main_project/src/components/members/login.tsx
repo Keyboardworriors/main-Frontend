@@ -1,4 +1,3 @@
-import Header from "../common/header";
 import HomeLayout from "../layouts/HomeLayout";
 import KakaoLogo from "../../assets/logo/KakaoLogo.png";
 import { useEffect } from "react";

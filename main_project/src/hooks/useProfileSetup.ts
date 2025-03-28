@@ -1,7 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Genre } from "../models/profile";
-import { axiosFetcher } from "../api/axiosFetcher";
 import { useAuthStore } from "../store/useAuthStore";
+import { User } from "../models/diary";
+import authApi from "../api/Authapi";
 
 const useProfileSetup = (
   nickname: string,
@@ -22,6 +23,12 @@ const useProfileSetup = (
     }
 
     try {
+      const requestData = {
+        nickname,
+        favorite_genre: selectedGenres,
+        introduce: bio,
+      };
+
       if (mode === "create") {
         const email = userFromState?.email;
         if (!email) {
@@ -29,28 +36,37 @@ const useProfileSetup = (
           return;
         }
 
-        const requestData = {
-          email,
-          nickname,
-          favorite_genre: selectedGenres,
-          introduce: bio,
-        };
-
-        const res = await axiosFetcher.post("api/members/register/", requestData);
+        const res = await authApi.createUser({ ...requestData, email });
         const { access_token: accessToken, refresh_token: refreshToken, user } = res;
 
-        setAuth(accessToken, refreshToken, user);
+        const parsedUser: User = {
+          email: user.email,
+          profile_image: user.profile_image ?? "/default-profile.png",
+          nickname: user.nickname,
+          introduce: user.introduce ?? "",
+          favorite_genre: user.favorite_genre ?? [],
+          is_active: true, // create 시 활성화된 상태
+        };
+
+        setAuth(accessToken, refreshToken, parsedUser);
 
         alert("회원가입이 완료되었습니다.");
         navigate("/diary/");
       } else {
-        const requestData = {
-          nickname,
-          favorite_genre: selectedGenres,
-          introduce: bio,
+        const updatedUser = await authApi.updateUser(requestData);
+        const { accessToken, refreshToken, user: prevUser } = useAuthStore.getState();
+
+        const parsedUser: User = {
+          email: prevUser?.email ?? "",
+          profile_image: prevUser?.profile_image ?? "/default-profile.png",
+          nickname: updatedUser.nickname,
+          introduce: updatedUser.introduce ?? "",
+          favorite_genre: updatedUser.favorite_genre ?? [],
+          is_active: prevUser?.is_active ?? true,
         };
 
-        await axiosFetcher.patch("api/members/mypage/", requestData);
+        setAuth(accessToken!, refreshToken!, parsedUser);
+
         alert("프로필이 수정되었습니다.");
         navigate("/members/mypage/");
       }

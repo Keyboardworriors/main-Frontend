@@ -1,23 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Genre } from "../models/profile";
-import mockUserProfile from "../mock/userProfile";
 import HomeLayout from "../components/layouts/HomeLayout";
 import { useAuthStore } from "../store/useAuthStore";
-import { axiosFetcher } from "../api/axiosFetcher";
 import { useModalStore } from "../store/modal";
-
-interface UserProfile {
-  nickname: string;
-  email: string;
-  profile_image: string;
-  genres: Genre[];
-  bio: string;
-}
+import { UserViewModel } from "../models/user";
+import authApi from "../api/Authapi";
 
 const MyPage = () => {
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userProfile, setUserProfile] = useState<UserViewModel | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { openModal, closeModal } = useModalStore();
 
@@ -29,10 +20,19 @@ const MyPage = () => {
 
     const fetchUserProfile = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // 실제 API 요청으로 교체 필요
-        setUserProfile(mockUserProfile);
+        const res = await authApi.getUser();
+        const { user } = useAuthStore.getState();
+
+        setUserProfile({
+          nickname: res.nickname,
+          bio: res.introduce ?? "",
+          genres: res.favorite_genre ?? [],
+          email: user?.email ?? "",
+          profile_image: user?.profile_image ?? "/default-profile.png",
+        });
       } catch (error) {
         console.error("마이페이지 정보 불러오기 실패", error);
+        alert("프로필 정보를 불러오는 데 실패했어요.");
       } finally {
         closeModal();
         setIsLoading(false);
@@ -58,9 +58,7 @@ const MyPage = () => {
             return;
           }
 
-          await axiosFetcher.delete("members/mypage/", {
-            data: { refresh_token: refreshToken },
-          });
+          await authApi.deleteUser({ refresh_token: refreshToken });
 
           alert("회원 탈퇴가 완료되었습니다.");
           clearAuth();
@@ -83,40 +81,49 @@ const MyPage = () => {
 
   return (
     <HomeLayout>
-      <h2 className="text-lg font-semibold mb-6">My Page</h2>
+      <div className="flex items-center justify-between max-w-5xl mx-auto mb-6 px-4">
+        <h2 className="text-lg font-semibold">My Page</h2>
+        <button
+          onClick={() => navigate("/diary")}
+          className="text-gray-400 hover:text-gray-600 text-2xl"
+          aria-label="닫기"
+        >
+          ✕
+        </button>
+      </div>
 
-      <div className="flex flex-row items-center justify-center gap-6 mb-8">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-10 mb-8 text-center">
         <img
           src={userProfile?.profile_image || "/default-profile.png"}
           alt="프로필 이미지"
-          className="w-30 h-30 rounded-full object-cover border border-[#A6CCF2]"
+          className="w-28 h-28 rounded-full object-cover border border-[#A6CCF2]"
         />
-        <p className="text-2xl font-semibold ml-12">{userProfile?.nickname}</p>
+        <p className="text-2xl font-semibold">{userProfile?.nickname}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-y-4 gap-x-30 text-gray-700 max-w-2xl mx-auto">
-        <div className="font-medium text-right">이메일</div>
-        <div className="text-left">{userProfile?.email}</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-4 text-gray-700 max-w-xl mx-auto">
+        <div className="font-medium flex justify-start pl-20">이메일</div>
+        <div className="flex justify-start pl-20">{userProfile?.email}</div>
 
-        <div className="font-medium text-right">선호하는 음악 장르</div>
-        <div className="text-left">
+        <div className="font-medium flex justify-start pl-20">선호하는 음악 장르</div>
+        <div className="flex justify-start pl-20">
           {userProfile?.genres.length ? userProfile.genres.join(", ") : "-"}
         </div>
 
-        <div className="font-medium text-right">한 줄 소개</div>
-        <div className="text-left break-words">{userProfile?.bio || "-"}</div>
+        <div className="font-medium flex justify-start pl-20">한 줄 소개</div>
+        <div className="flex justify-start break-words pl-20">{userProfile?.bio || "-"}</div>
       </div>
 
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col items-center justify-center mt-12">
         <button
           onClick={() => navigate("/members/register", { state: { mode: "edit" } })}
-          className="mt-16 px-6 py-3 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
+          className="px-6 py-3 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
         >
           수정하기
         </button>
 
         <button
-          className="mt-10 text-sm text-gray-400 hover:underline"
+          className="mt-6 text-sm text-gray-400 hover:underline"
           onClick={handleDeleteAccount}
         >
           회원 탈퇴하기

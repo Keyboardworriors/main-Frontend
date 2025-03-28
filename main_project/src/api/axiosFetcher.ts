@@ -59,12 +59,10 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
   return instance;
 };
 
-// 인스턴스 생성
 const apiInstance = createAxiosInstance(getApiBaseUrl());
 
-// axiosFetcher 정의
 export const axiosFetcher = {
-  get: async <T = any>(
+  get: async <T>(
     path: string,
     params?: Record<string, any>,
     config?: AxiosRequestConfig
@@ -77,7 +75,7 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  post: async <T = any>(
+  post: async <T>(
     path: string,
     data?: any,
     config?: AxiosRequestConfig
@@ -86,7 +84,7 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  put: async <T = any>(
+  put: async <T>(
     path: string,
     data?: any,
     config?: AxiosRequestConfig
@@ -104,7 +102,7 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  delete: async <T = any>(
+  delete: async <T>(
     path: string,
     config?: AxiosRequestConfig & { data?: any }
   ): Promise<T> => {

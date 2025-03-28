@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ProfileImageUploader from "../components/Profile/ProfileImageUploader"; // 살림
+import ProfileImageUploader from "../components/Profile/ProfileImageUploader";
 import GenreSelector from "../components/Profile/GenreSelector";
 import InputField from "../components/Profile/InputField";
-import useFetchUserData from "../hooks/useFetchUserData";
 import useProfileSetup from "../hooks/useProfileSetup";
 import { Genre, SocialLoginUser } from "../models/profile";
 import ProfileLayout from "../components/layouts/ProfileLayout";
-import { axiosFetcher } from "../api/axiosFetcher";
+import authApi from "../api/Authapi";
+import { useAuthStore } from "../store/useAuthStore";
 
 type ProfileSetupProps = {
   mode: "create" | "edit";
 };
 
 const ProfileSetup = ({ mode }: ProfileSetupProps) => {
-  const { email: fetchedEmail, profileImage } = useFetchUserData(mode);
   const navigate = useNavigate();
   const location = useLocation();
   const userFromState = location.state?.user as SocialLoginUser | undefined;
 
+  const { user } = useAuthStore();
   const [email, setEmail] = useState<string>("");
+  const [profileImage, setProfileImage] = useState<string>("");
+
   const [nickname, setNickname] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
@@ -27,21 +29,21 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
   useEffect(() => {
     if (mode === "create" && userFromState) {
       setEmail(userFromState.email);
-    } else if (mode === "edit") {
-      setEmail(fetchedEmail);
+      setProfileImage(userFromState.profile_image ?? "/default-profile.png");
+    } else if (mode === "edit" && user) {
+      setEmail(user.email);
+      setProfileImage(user.profile_image ?? "/default-profile.png");
     }
-  }, [mode, userFromState, fetchedEmail]);
+  }, [mode, userFromState, user]);
 
   useEffect(() => {
     if (mode === "edit") {
       const fetchProfile = async () => {
         try {
-          const res = await axiosFetcher.get("api/members/mypage/");
-          const { nickname, introduce, favorite_genre } = res;
-
-          setNickname(nickname);
-          setBio(introduce);
-          setSelectedGenres(favorite_genre);
+          const res = await authApi.getUser();
+          setNickname(res.nickname);
+          setBio(res.introduce ?? "");
+          setSelectedGenres((res.favorite_genre ?? []).filter(isValidGenre));
         } catch (error) {
           console.error("프로필 불러오기 실패", error);
           alert("프로필 정보를 불러오는 데 실패했습니다.");
@@ -50,6 +52,20 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
       fetchProfile();
     }
   }, [mode]);
+
+  const isValidGenre = (genre: string): genre is Genre => {
+    return [
+      "Electronic",
+      "Pop",
+      "Ballad",
+      "K-pop",
+      "Jazz",
+      "Rock",
+      "Classic",
+      "Hip-hop",
+      "Country",
+    ].includes(genre);
+  };
 
   const { handleSubmit } = useProfileSetup(nickname, selectedGenres, bio, mode);
 

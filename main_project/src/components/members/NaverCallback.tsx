@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosFetcher } from "../../api/axiosFetcher";
 import { useAuthStore } from "../../store/useAuthStore";
 import { SocialLoginUser } from "../../models/profile";
+import LoadingModal from "../common/Modal/LoadingModal";
+import authApi from "../../api/Authapi";
 
 const NaverCallback = () => {
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getNaverToken = async () => {
@@ -19,47 +21,53 @@ const NaverCallback = () => {
 
       if (!code || !state) {
         alert("인증 코드를 받아오는데 실패했습니다. 다시 시도해주세요.");
+        setIsLoading(false);
         return;
       }
-      try {
-        const res = await axiosFetcher.get(`api/oauth/naver/callback/?code=${code}&state=${state}`);
-        const user: SocialLoginUser = res;
 
-        console.log("응답 결과", res);
+      try {
+        const user: SocialLoginUser = await authApi.socialLoginCallbackNaver(code, state);
+        console.log("응답 결과", user);
 
         if (user.is_active) {
-          const tokenRes = await axiosFetcher.post("api/members/login/", {
-            email: user.email,
-          });
-
-          console.log("토큰 응답 결과:", tokenRes);
-
           const {
-            access_token: accessToken,
-            refresh_token: refreshToken,
+            access_token,
+            refresh_token,
             user: loggedInUser,
-          } = tokenRes;
+          } = await authApi.login(user.email);
 
-          if (!accessToken || !refreshToken) {
+          if (!access_token || !refresh_token) {
             alert("토큰 정보가 누락되었습니다. 다시 로그인해주세요.");
             return;
           }
 
-          setAuth(accessToken, refreshToken, loggedInUser);
+          setAuth(access_token, refresh_token, loggedInUser);
           navigate("/diary/");
         } else {
           navigate("/members/register", { state: { mode: "create", user } });
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("네이버 로그인 실패", error);
-        alert("네이버 로그인 중 오류가 발생했습니다.");
+
+        const errorMessage = error.response?.data?.error;
+
+        if (errorMessage === "An account with this email already exists.") {
+          alert(
+            "이미 다른 소셜 계정(예: 카카오)으로 가입된 이메일입니다.\n기존에 로그인했던 방식으로 로그인해주세요.",
+          );
+          navigate("/login");
+        } else {
+          alert("네이버 로그인 중 오류가 발생했습니다.");
+        }
+      } finally {
+        setIsLoading(false);
       }
     };
 
     getNaverToken();
   }, [navigate, setAuth]);
 
-  return <div>네이버 로그인 처리 중...</div>;
+  return <LoadingModal isOpen={isLoading} message="네이버 로그인 처리 중..." />;
 };
 
 export default NaverCallback;

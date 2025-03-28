@@ -103,6 +103,7 @@ function MyTabs() {
           />
         </div>
       </TabList>
+
       <div className="w-full max-w-[1130px] mx-auto">
         <TabPanel>
           <DiaryHome
@@ -115,6 +116,7 @@ function MyTabs() {
           <MoodChart />
         </TabPanel>
       </div>
+
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}

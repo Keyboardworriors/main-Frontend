@@ -36,7 +36,7 @@ const useProfileSetup = (
           introduce: bio,
         };
 
-        const res = await axiosFetcher.post("api/members/register/", requestData);
+        const res = await axiosFetcher.post("/api/members/register/", requestData);
         const { access_token: accessToken, refresh_token: refreshToken, user } = res;
 
         setAuth(accessToken, refreshToken, user);
@@ -50,7 +50,7 @@ const useProfileSetup = (
           introduce: bio,
         };
 
-        await axiosFetcher.patch("api/members/mypage/", requestData);
+        await axiosFetcher.patch("/api/members/mypage/", requestData);
         alert("프로필이 수정되었습니다.");
         navigate("/members/mypage/");
       }

@@ -1,5 +1,6 @@
 import { useModalStore } from "../../../store/modal";
 import BaseModal from "./BaseModal";
+import LoadingModal from "./LoadingModal";
 import ConfirmModal from "./ConfirmModal";
 import CustomConfirmModal from "./CustomConfirmModal";
 import SongSelectModal from "./SongSelectModal";
@@ -94,16 +95,7 @@ const Modal = () => {
         </BaseModal>
       );
     case "loading":
-      return (
-        <BaseModal isOpen={isOpen} onClose={closeModal}>
-          <div className="p-6 text-center">
-            <p className="text-[#5E8FBF] font-semibold text-sm mb-2">
-              {data?.message ?? "잠시만 기다려주세요..."}
-            </p>
-            <div className="animate-spin rounded-full border-t-4 border-[#5E8FBF] border-opacity-50 h-8 w-8 mx-auto"></div>
-          </div>
-        </BaseModal>
-      );
+      return <LoadingModal isOpen={isOpen} message={data?.message} />;
     default:
       return null;
   }

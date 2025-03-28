@@ -93,9 +93,12 @@ const SongSelectModal = () => {
 
   const handleSave = useCallback(() => {
     if (selectedSongId && onConfirm) {
-      onConfirm();
+      const selected = songs.find((s) => s.video_id === selectedSongId);
+      if (selected) {
+        onConfirm(selected);
+      }
     }
-  }, [selectedSongId, onConfirm]);
+  }, [selectedSongId, onConfirm, songs]);
 
   return (
     <BaseModal isOpen={isOpen} onClose={closeModal}>

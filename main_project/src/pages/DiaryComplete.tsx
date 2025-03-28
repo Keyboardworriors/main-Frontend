@@ -1,179 +1,98 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { formatDateKorean } from "../utils/date";
 import { useModalStore } from "../store/modal";
 
-interface DiaryCompleteProps {
+type DiaryCompleteProps = {
   selectedDate: Date;
   diaryContent: DiaryContentType;
   selectedMusic: Music | null;
-  onFinish: () => void;
   onBack: () => void;
-}
+  onFinish: () => void;
+};
 
 const DiaryComplete = ({
   selectedDate,
   diaryContent,
   selectedMusic,
   onFinish,
-  onBack,
 }: DiaryCompleteProps) => {
-  const { openModal, closeModal } = useModalStore();
+  const { openModal } = useModalStore();
   const formattedDate = formatDateKorean(selectedDate);
 
+  const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState(false); // ✅ 말풍선 상태
+
+  // ✅ 선택된 음악 확인 로그
   useEffect(() => {
-    console.log("DiaryComplete mounted. Selected music:", selectedMusic);
+    if (selectedMusic) {
+      console.log("DiaryComplete rendered with music:", selectedMusic);
+    } else {
+      console.log("DiaryComplete rendered: selectedMusic is null or undefined");
+    }
   }, [selectedMusic]);
 
-  const handleDelete = () => {
-    openModal("customConfirm", {
-      title: "기록을 삭제할까요?",
-      message: "삭제하고 나면 되돌릴 수 없어요!",
-      confirmText: "삭제하기",
-      cancelText: "취소하기",
-      isDanger: true,
-      onConfirm: onBack,
-    });
-  };
-
-  const handleSave = async () => {
-    const payload = {
-      diary_title: diaryContent.title,
-      content: diaryContent.content,
-      moods: diaryContent.moods,
-      rec_music: selectedMusic ? [selectedMusic] : [],
-    };
-
-    // 실제 저장 API 호출 (주석처리)
-    // try {
-    //   const response = await axios.post("/api/diary/create", payload);
-    //   console.log("저장 성공:", response.data);
-    // } catch (error) {
-    //   console.error("저장 실패:", error);
-    // }
-
-    onFinish();
-  };
-
-  useEffect(() => {
-    const handleRetry = () => {
-      openModal("loading", {
-        message: "추천 필로디 🎵",
-        modalPurpose: "melody",
-      });
-
-      setTimeout(() => {
-        closeModal();
-
-        const isSuccess = Math.random() > 0.5;
-
-        if (isSuccess) {
-          openModal("songSelect", {
-            songs: [
-              {
-                video_id: "4Tr0otuiQuU",
-                title: "Moonlight Sonata",
-                artist: "Beethoven",
-                thumbnail: "https://i.ytimg.com/vi/4Tr0otuiQuU/hqdefault.jpg",
-                embedUrl: "https://www.youtube.com/embed/4Tr0otuiQuU",
-              },
-              {
-                video_id: "9E6b3swbnWg",
-                title: "Clair de Lune",
-                artist: "Debussy",
-                thumbnail: "https://i.ytimg.com/vi/9E6b3swbnWg/hqdefault.jpg",
-                embedUrl: "https://www.youtube.com/embed/9E6b3swbnWg",
-              },
-            ],
-            onConfirm: (selected: Music) => {
-              closeModal();
-              onFinish();
-            },
-          });
-        } else {
-          openModal("songAnalysisError", {
-            message: "음악 추천에 실패했어요. 다시 분석하시겠습니까?",
-            onRetry: () => {
-              closeModal();
-              setTimeout(handleRetry, 300);
-            },
-            onSaveWithoutMusic: () => {
-              closeModal();
-              onFinish();
-            },
-          });
-        }
-      }, 1500);
-    };
-
-    window.handleRetryFromComplete = handleRetry;
-  }, [openModal, closeModal, onFinish]);
-
   return (
-    <div className="w-full max-w-md mx-auto h-full flex flex-col">
-      <div className="flex justify-between items-center mb-2">
-        <div className="text-medium text-[#5E8FBF] font-medium">{formattedDate}</div>
-        <button
-          onClick={handleDelete}
-          className="text-gray-500 hover:text-red-500 transition-colors cursor-pointer"
-          aria-label="삭제"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-      </div>
-
-      {selectedMusic && selectedMusic.video_id ? (
-        <div className="mt-6 mb-6">
-          <h3 className="text-base text-gray-600 font-semibold mb-3">선택된 노래</h3>
-          <div className="flex flex-wrap gap-2">
-            <span className="px-4 py-1.5 bg-[#A6CCF2] text-white rounded-full text-sm font-medium text-center">
-              {selectedMusic.artist} - {selectedMusic.title}
-            </span>
+    <div className="w-full max-w-6xl mx-auto px-4">
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="w-full md:w-[60%]">
+          <h2 className="text-base font-medium text-gray-800 mb-4 block border-b border-[#4A7196] px-1">
+            {diaryContent.title}
+          </h2>
+          <div className="border border-[#4A7196] rounded-lg p-3 h-[280px] bg-white overflow-y-auto">
+            <div className="prose prose-sm max-w-none h-full text-sm">
+              {diaryContent.content.split("\n").map((line, index) => (
+                <p key={index} className="mb-2">
+                  {line}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
-      ) : (
-        <div className="text-center mb-6 py-4">
-          <p className="text-sm text-gray-600">음악 없이 저장되었습니다</p>
-        </div>
-      )}
 
-      <div className="flex justify-between items-start mb-4">
-        <div className="text-sm text-[#4A7196] font-semibold">{formattedDate}</div>
-        <div className="flex gap-2">
-          {diaryContent.moods.map((mood, index) => (
-            <span
-              key={index}
-              className="px-3 py-1 bg-[#4A7196] text-white rounded-full text-xs font-medium shadow-sm"
+        <div className="w-full md:w-[40%] flex flex-col justify-between md:pl-2.5 md:pt-10 mt-4 md:mt-0">
+          <div>
+            <h3 className="text-base text-gray-600 font-semibold mb-3">감정 키워드</h3>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {diaryContent.moods.map((mood, index) => (
+                <span
+                  key={index}
+                  className="px-4 py-1.5 bg-[#A6CCF2] text-white rounded-full text-sm font-medium min-w-[80px] text-center"
+                >
+                  {mood}
+                </span>
+              ))}
+            </div>
+
+            {selectedMusic?.video_id && (
+              <>
+                <h3 className="text-base text-gray-600 font-semibold mb-3">추천된 필로디 🎵</h3>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-4 py-1.5 bg-[#A6CCF2] text-white rounded-full text-sm font-medium min-w-[80px] text-center">
+                    {selectedMusic.title} - {selectedMusic.artist}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex justify-end mt-4 md:mt-8 relative">
+            {isHoveringSaveBtn && (
+              <div className="absolute bottom-full right-0 mb-2 bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg w-60 text-xs text-left z-50">
+                <div className="absolute bottom-[-6px] right-6 transform rotate-45 w-3 h-3 bg-gray-700"></div>
+                저장하신 기록은 수정할 수 없어요!
+              </div>
+            )}
+
+            <button
+              onClick={onFinish} // 바로 저장
+              onMouseEnter={() => setIsHoveringSaveBtn(true)}
+              onMouseLeave={() => setIsHoveringSaveBtn(false)}
+              className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
-              {mood}
-            </span>
-          ))}
+              완료하기
+            </button>
+          </div>
         </div>
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        <p className="text-base font-semibold mt-1 mb-1">{diaryContent.title}</p>
-        <p className="text-sm text-gray-700">{diaryContent.content}</p>
-      </div>
-
-      <div className="flex justify-center mt-4">
-        <button
-          onClick={handleSave}
-          className="px-5 py-2.5 bg-[#4A7196] text-white rounded-full text-sm font-medium"
-        >
-          저장하기
-        </button>
       </div>
     </div>
   );

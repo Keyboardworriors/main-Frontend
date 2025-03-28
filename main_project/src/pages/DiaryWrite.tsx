@@ -65,10 +65,6 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
 
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    // 실제 API 연결 시 아래 코드로 대체 예정
-    // const response = await axios.post("/api/diary/recommendation", { content: diaryContent.content });
-    // const { moods } = response.data;
-
     // 더미 분석 결과
     setAnalyzedMood("기쁨");
     setIsAnalysisFailed(false);

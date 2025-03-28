@@ -4,6 +4,7 @@ import DiaryContentPreview from "./DiaryContent";
 import DiaryMusic from "./DiaryMusic";
 import DiaryComplete from "./DiaryComplete";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
+import { useModalStore } from "../store/modal";
 
 interface DiaryControlProps {
   selectedDate: Date;
@@ -14,14 +15,14 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   const [currentStep, setCurrentStep] = useState<"writing" | "content" | "music" | "complete">(
     "writing",
   );
-
   const [diaryContent, setDiaryContent] = useState<DiaryContentType>({
     title: "",
     content: "",
     moods: [],
   });
-
   const [selectedMusic, setSelectedMusic] = useState<Music | null>(null);
+
+  const { openModal, closeModal } = useModalStore(); // ✅ 모달 제어
 
   // 1단계: 작성 완료
   const handleDiaryWriteComplete = (content: DiaryContentType) => {
@@ -45,7 +46,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
     setCurrentStep("complete");
   };
 
-  // 4단계: 최종 저장 (axios 호출 주석 처리)
+  // 4단계: 최종 저장
   const handleComplete = async () => {
     const payload = {
       diary_title: diaryContent.title,
@@ -54,16 +55,29 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
       rec_music: selectedMusic ? [selectedMusic] : [],
     };
 
-    // 실제 서버에 저장 요청 (주석처리)
-    // try {
-    //   const response = await axios.post("/api/diary/create", payload);
-    //   console.log("저장 성공:", response.data);
-    // } catch (error) {
-    //   console.error("저장 실패:", error);
-    // }
+    // ✅ 1) 로딩 모달 표시
+    openModal("loading", {
+      message: "소중한 감정을 기록중이에요",
+      modalPurpose: "saving",
+    });
 
-    // 저장 후 작성 종료 처리
-    onCancel();
+    // ✅ 2) 저장 로직 시뮬레이션 (실제 호출은 주석처리)
+    setTimeout(() => {
+      // 실제 서버 저장 요청 예시
+      // try {
+      //   const response = await axios.post("/api/diary/create", payload);
+      //   console.log("저장 성공:", response.data);
+      // } catch (error) {
+      //   console.error("저장 실패:", error);
+      // }
+
+      // ✅ 3) 콘솔에 최종 데이터 출력
+      console.log("📘 일기 저장됨:", payload);
+
+      // ✅ 4) 로딩 모달 닫고 작성 종료
+      closeModal();
+      onCancel();
+    }, 1500);
   };
 
   const renderStep = () => {
@@ -91,7 +105,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             selectedDate={selectedDate}
             diaryContent={diaryContent}
             onBack={handleEditDiary}
-            onComplete={handleMusicSelected} // 이제 이 콜백으로 선택된 음악을 직접 전달받음
+            onComplete={handleMusicSelected}
           />
         );
       case "complete":
@@ -101,7 +115,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             diaryContent={diaryContent}
             selectedMusic={selectedMusic}
             onFinish={handleComplete}
-            onBack={() => setCurrentStep("music")} // 이전으로
+            onBack={() => setCurrentStep("music")}
           />
         );
     }

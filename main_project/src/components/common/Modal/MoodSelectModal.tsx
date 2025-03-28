@@ -50,16 +50,25 @@ const MoodSelectModal = ({
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className="p-4 sm:p-6 w-[95vw] sm:w-[90vw] md:w-full max-w-6xl">
         {/* 추천 감정 키워드 */}
-        {!isAnalysisFailed && analyzedKeywords?.length ? (
+        {!isAnalysisFailed && analyzedKeywords?.length && analyzedKeywords.length > 0 ? (
           <div className="mb-4 sm:mb-6">
-            <h2 className="mb-2 sm:mb-3 text-base sm:text-lg text-gray-600 font-semibold">
-              추천 감정 키워드
-            </h2>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-2.5 md:gap-3 mb-3">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-base sm:text-lg text-gray-600 font-semibold">추천 감정 키워드</h2>
+              <span className="text-xs sm:text-sm text-gray-500">
+                {selectedMoods.length}/3 개의 감정을 선택했어요.
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2 sm:gap-2.5 md:gap-3 mb-3">
               {analyzedKeywords.map((keyword, index) => (
                 <button
                   key={index}
-                  className="p-2 sm:p-2.5 bg-[#F5F9FF] text-[#5E8FBF] border border-[#A6CCF2] rounded-md hover:bg-[#E1EFFB] text-sm"
+                  onClick={() => handleMoodSelect(keyword as Mood)}
+                  className={`p-2 sm:p-2 md:p-2.5 border rounded-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer
+                    text-xs sm:text-sm font-medium min-w-[70px] sm:min-w-[90px] md:min-w-[100px] ${
+                      selectedMoods.includes(keyword as Mood)
+                        ? "bg-[#4A7196] text-white border-[#4A7196] shadow-md hover:bg-[#3A5A7A] hover:border-[#3A5A7A]"
+                        : "bg-white text-[#5E8FBF] border-[#A6CCF2] hover:bg-[#F5F9FF] hover:text-[#4A7196] hover:border-[#5E8FBF]"
+                    }`}
                 >
                   {keyword}
                 </button>
@@ -73,7 +82,7 @@ const MoodSelectModal = ({
         ) : null}
 
         {/* 기본 감정 키워드 */}
-        {!isAnalysisFailed && (
+        {isAnalysisFailed && (
           <div className="min-h-[200px] sm:h-[240px]">
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-base sm:text-lg text-gray-600 font-semibold">감정 키워드</h2>

@@ -12,7 +12,7 @@ const diaryApi = {
     return await axiosFetcher.get<{ data: Diary }>(`api/diary/${diary_id}/`);
   },
 
-  // 일기 생성
+  // 일기 생성(저장)
   createDiary: async (data: DiaryContent) => {
     return await axiosFetcher.post<{ data: Diary }>("api/diary/create/", data);
   },

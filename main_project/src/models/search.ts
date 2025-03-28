@@ -2,10 +2,10 @@ import { Mood } from "./diary";
 import { Music } from "./diary";
 
 export interface SearchResult {
-  diary_id: number;
-  title: string;
+  diary_id: string;
+  diary_title: string;
   content: string;
-  created_at: string;
+  date: string;
   rec_music: Music;
   moods: string[];
 }

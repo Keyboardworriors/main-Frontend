@@ -2,8 +2,8 @@ export interface User {
   nickname: string;
   email: string;
   profile_image: string;
-  introduce: string;
-  favorite_genre: string;
+  introduce: string | null;
+  favorite_genre: string[];
   is_active: boolean;
 }
 
@@ -72,5 +72,5 @@ export interface MoodSelectModalProps {
   isAnalysisFailed: boolean;
   isDirectSelect: boolean;
   onSave: () => void;
-  analyzedKeywords?: string[];
+  analyzedKeywords?: Mood[];
 }

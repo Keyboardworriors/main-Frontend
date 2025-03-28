@@ -2,16 +2,16 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import DiaryHome from "../../pages/DiaryHome";
 import MoodChart from "../../pages/moodChart";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, RefObject } from "react";
 import ProfileModal from "./Modal/ProfileModal";
 import { axiosFetcher } from "../../api/axiosFetcher";
 import { useSearch } from "../../hooks/useSearch";
-import SearchBar from "../../components/common/SearchBar";
-import UserMenu from "../../components/common/UserMenu";
+import SearchBar from "./SearchBar";
+import UserMenu from "./UserMenu";
 
 function MyTabs() {
   const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const {
     showSearch,
@@ -98,7 +98,7 @@ function MyTabs() {
           <UserMenu
             showDropdown={showDropdown}
             setShowDropdown={setShowDropdown}
-            dropdownRef={dropdownRef}
+            dropdownRef={dropdownRef as RefObject<HTMLDivElement>}
             handleOpenProfile={handleOpenProfile}
           />
         </div>

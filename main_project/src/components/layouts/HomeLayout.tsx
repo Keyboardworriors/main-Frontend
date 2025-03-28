@@ -1,6 +1,9 @@
+import { useScrollToTop } from "../../hooks/useScrollTopOnMount";
 import { HomeLayoutProps } from "../../models/layoutProps";
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {
+  useScrollToTop()
+
   return (
     <main className="relative min-h-screen bg-[#A6CCF2] pt-0 pr-4 pb-4 pl-4">
       <div className="bg-white rounded-xl p-7 max-w-6xl mx-auto relative">

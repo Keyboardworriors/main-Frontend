@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosFetcher } from "../../api/axiosFetcher";
 import { useAuthStore } from "../../store/useAuthStore";
 import { SocialLoginUser } from "../../models/profile";
 import LoadingModal from "../common/Modal/LoadingModal";
+import authApi from "../../api/Authapi";
 
 const KakaoCallback = () => {
   const navigate = useNavigate();
@@ -14,7 +14,6 @@ const KakaoCallback = () => {
     const getKakaoToken = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
-      console.log("Kakao code:", code);
 
       if (!code) {
         alert("인증 코드를 받아오는데 실패했습니다. 다시 시도해주세요.");
@@ -23,20 +22,14 @@ const KakaoCallback = () => {
       }
 
       try {
-        const res = await axiosFetcher.get(`/api/oauth/kakao/callback/?code=${code}`);
-        const user: SocialLoginUser = res;
+        const user: SocialLoginUser = await authApi.socialLoginCallback(code);
 
-        console.log("응답 결과:", user);
         if (user.is_active) {
-          const tokenRes = await axiosFetcher.post("/api/members/login/", {
-            email: user.email,
-          });
-
           const {
             access_token: accessToken,
             refresh_token: refreshToken,
             user: loggedInUser,
-          } = tokenRes;
+          } = await authApi.login(user.email);
 
           if (!accessToken || !refreshToken) {
             alert("토큰 정보가 누락되었습니다. 다시 로그인해주세요.");
@@ -55,7 +48,7 @@ const KakaoCallback = () => {
 
         if (errorMessage === "An account with this email already exists.") {
           alert(
-            "이미 다른 소셜 계정(예: 네이버)으로 가입된 이메일입니다.\n기존에 로그인했던 방식으로 로그인해주세요."
+            "이미 다른 소셜 계정(예: 네이버)으로 가입된 이메일입니다.\n기존에 로그인했던 방식으로 로그인해주세요.",
           );
           navigate("/login");
         } else {

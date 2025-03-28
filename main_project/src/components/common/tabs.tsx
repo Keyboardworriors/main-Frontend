@@ -10,7 +10,7 @@ import { useSearch } from "../../hooks/useSearch";
 import SearchBar from "./SearchBar";
 import UserMenu from "./UserMenu";
 import { useNavigate } from "react-router-dom";
-import authApi from "../../api/Authapi";
+import authApi from "../../api/authApi";
 import CustomConfirmModal from "./Modal/CustomConfirmModal";
 
 function MyTabs() {

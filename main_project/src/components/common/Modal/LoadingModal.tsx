@@ -1,122 +1,49 @@
-import { useEffect } from "react";
 import BaseModal from "./BaseModal";
 
 interface LoadingModalProps {
   isOpen: boolean;
-  message: string;
+  message?: string;
 }
 
-const KEYFRAMES_ID = "loading-animation-style";
-const KEYFRAMES_CONTENT = `
-  @keyframes floatAnimation {
+const bounceKeyframes = `
+  @keyframes note-bounce {
     0%, 100% {
       transform: translateY(0);
-      opacity: 0.8;
+      opacity: 0.4;
     }
     50% {
-      transform: translateY(-12px);
+      transform: translateY(-8px);
       opacity: 1;
     }
   }
 `;
 
-const COMMON_NOTE_STYLE = {
-  marginLeft: "-5px",
-  marginRight: "-5px",
-  animation: "floatAnimation 0.7s ease-in-out infinite",
-};
-
-interface MusicNoteProps {
-  delay: string;
-  children: React.ReactNode;
-}
-
-const MusicNote = ({ delay, children }: MusicNoteProps) => (
-  <div
-    style={{
-      ...COMMON_NOTE_STYLE,
-      animationDelay: delay,
-    }}
-  >
-    {children}
-  </div>
-);
-
-const LoadingModal = ({ isOpen, message }: LoadingModalProps) => {
-  useEffect(() => {
-    if (!document.getElementById(KEYFRAMES_ID)) {
-      const styleElement = document.createElement("style");
-      styleElement.id = KEYFRAMES_ID;
-      styleElement.textContent = KEYFRAMES_CONTENT;
-      document.head.appendChild(styleElement);
-    }
-
-    return () => {
-      const styleElement = document.getElementById(KEYFRAMES_ID);
-      if (styleElement && document.querySelectorAll("[data-modal-type='loading']").length <= 1) {
-        styleElement.remove();
-      }
-    };
-  }, []);
-
+const LoadingModal = ({ isOpen, message = "로딩 중입니다..." }: LoadingModalProps) => {
   return (
-    <BaseModal isOpen={isOpen} hideCloseButton={true}>
-      <div className="flex flex-col items-center py-6" data-modal-type="loading">
-        <h2 className="text-2xl font-bold text-center mb-8">{message}</h2>
-        <div className="flex items-center justify-center h-28">
-          <MusicNote delay="0s">
-            <svg
-              width="48"
-              height="48"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M9 17.5C9 19.433 7.433 21 5.5 21C3.567 21 2 19.433 2 17.5C2 15.567 3.567 14 5.5 14C7.433 14 9 15.567 9 17.5Z"
-                fill="#A6CCF2"
-              />
-              <path
-                d="M19 16.5C19 18.433 17.433 20 15.5 20C13.567 20 12 18.433 12 16.5C12 14.567 13.567 13 15.5 13C17.433 13 19 14.567 19 16.5Z"
-                fill="#A6CCF2"
-              />
-              <path d="M9 17.5V3.5H19V16.5" stroke="#A6CCF2" strokeWidth="2" />
-            </svg>
-          </MusicNote>
+    <BaseModal isOpen={isOpen} hideCloseButton>
+      {/* 키프레임을 직접 style로 삽입 */}
+      <style>{bounceKeyframes}</style>
 
-          <MusicNote delay="0.15s">
+      <div className="flex flex-col items-center justify-center py-8 px-6 w-[240px]">
+        <div className="flex space-x-2 mb-4">
+          {[0, 0.2, 0.4].map((delay, index) => (
             <svg
-              width="48"
-              height="48"
+              key={index}
               viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+              width="28"
+              height="28"
+              fill="#4A7196"
+              style={{
+                opacity: 0.4,
+                animation: "note-bounce 1s infinite ease-in-out",
+                animationDelay: `${delay}s`,
+              }}
             >
-              <path
-                d="M12.5 20C12.5 21.933 10.933 23.5 9 23.5C7.067 23.5 5.5 21.933 5.5 20C5.5 18.067 7.067 16.5 9 16.5C10.933 16.5 12.5 18.067 12.5 20Z"
-                fill="#A6CCF2"
-              />
-              <path d="M12.5 20V3" stroke="#A6CCF2" strokeWidth="2" strokeLinecap="round" />
+              <path d="M9 3v12a4 4 0 1 0 2-3.465V6h4V3H9z" />
             </svg>
-          </MusicNote>
-
-          <MusicNote delay="0.3s">
-            <svg
-              width="48"
-              height="48"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10 18C10 19.933 8.433 21.5 6.5 21.5C4.567 21.5 3 19.933 3 18C3 16.067 4.567 14.5 6.5 14.5C8.433 14.5 10 16.067 10 18Z"
-                fill="#A6CCF2"
-              />
-              <path d="M10 18V4" stroke="#A6CCF2" strokeWidth="2" strokeLinecap="round" />
-              <path d="M10 4L18 7" stroke="#A6CCF2" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </MusicNote>
+          ))}
         </div>
+        <p className="text-sm text-gray-700 text-center whitespace-pre-line">{message}</p>
       </div>
     </BaseModal>
   );

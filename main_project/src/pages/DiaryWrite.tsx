@@ -4,12 +4,12 @@ import StarterKit from "@tiptap/starter-kit";
 import { formatDateKorean } from "../utils/date";
 import { DiaryContent, Mood } from "../models/diary";
 import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
-import DiaryContentPreview from "./DiaryContent";
-import { useModalStore } from "../store/modal"; // 모달 스토어 추가
+import { useModalStore } from "../store/modal";
 
 interface DiaryWriteProps {
   selectedDate: Date;
   onCancel: () => void;
+  onDiaryComplete: (content: DiaryContent) => void;
 }
 
 const editorConfig = {
@@ -22,7 +22,7 @@ const editorConfig = {
   },
 };
 
-const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
+const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps) => {
   const [diaryContent, setDiaryContent] = useState<DiaryContent>({
     title: "",
     content: "",
@@ -32,10 +32,8 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   const [isAnalysisFailed, setIsAnalysisFailed] = useState(false);
   const [analyzedMood, setAnalyzedMood] = useState<string>();
   const [isDirectSelect, setIsDirectSelect] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
 
-  const { openModal, closeModal } = useModalStore(); // useModalStore 추가
-
+  const { openModal, closeModal } = useModalStore();
   const editor = useEditor({
     ...editorConfig,
     onUpdate: ({ editor }) => {
@@ -49,55 +47,32 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   const formattedDate = formatDateKorean(selectedDate);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDiaryContent((prev) => ({
-      ...prev,
-      title: e.target.value,
-    }));
+    setDiaryContent((prev) => ({ ...prev, title: e.target.value }));
   };
 
   const handleEmotionSelect = () => {
+    setIsDirectSelect(true);
     setIsAnalysisFailed(false);
     setAnalyzedMood(undefined);
-    setIsDirectSelect(true);
     setIsMoodModalOpen(true);
   };
 
   const handleEmotionAnalysis = async () => {
-    try {
-      // 로딩 모달 표시 추가
-      openModal("loading", {
-        message: "감정을 분석중이에요",
-        modalPurpose: "mood",
-      });
-      // 테스트용 지연 추가 (실제 API 연결 시 삭제 요망)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    openModal("loading", {
+      message: "감정을 분석중이에요",
+      modalPurpose: "mood",
+    });
 
-      const response = await fetch("api/diary/recommendation-keyword", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: diaryContent.title,
-          content: diaryContent.content,
-        }),
-      });
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      if (!response.ok) {
-        throw new Error("감정 분석에 실패했습니다.");
-      }
+    // 실제 API 연결 시 아래 코드로 대체 예정
+    // const response = await axios.post("/api/diary/recommendation", { content: diaryContent.content });
+    // const { moods } = response.data;
 
-      const data = await response.json();
-      setAnalyzedMood(data.mood);
-      setIsAnalysisFailed(false);
-
-      closeModal(); // 로딩 모달 닫기 추가
-    } catch {
-      setIsAnalysisFailed(true);
-      setAnalyzedMood(undefined);
-
-      closeModal(); // 에러 발생 시에도 로딩 모달 닫기 추가
-    }
+    // 더미 분석 결과
+    setAnalyzedMood("기쁨");
+    setIsAnalysisFailed(false);
+    closeModal();
     setIsDirectSelect(false);
     setIsMoodModalOpen(true);
   };
@@ -105,77 +80,22 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   const handleMoodSelect = (mood: string) => {
     setDiaryContent((prev) => {
       if (prev.moods.includes(mood as Mood)) {
-        return {
-          ...prev,
-          moods: prev.moods.filter((m) => m !== mood),
-        };
+        return { ...prev, moods: prev.moods.filter((m) => m !== mood) };
       }
       if (prev.moods.length < 3) {
-        return {
-          ...prev,
-          moods: [...prev.moods, mood as Mood],
-        };
+        return { ...prev, moods: [...prev.moods, mood as Mood] };
       }
       return prev;
     });
   };
 
-  const handleSave = async () => {
-    try {
-      // 기록 저장 시 로딩 모달 표시 추가
-      openModal("loading", {
-        message: "기록을 저장중이에요",
-        modalPurpose: "saving",
-      });
-
-      // TODO: API 호출하여 일기 저장
-      // const response = await fetch("api/diary", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     date: selectedDate,
-      //     ...diaryContent,
-      //   }),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error("일기 저장에 실패했습니다.");
-      // }
-
-      // 테스트 확인용으로 지연 추가 (실제 API 연결 시 삭제 요망)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setIsSaved(true);
-
-      closeModal(); // 저장 완료 후 로딩 모달 닫기 추가
-    } catch (error) {
-      console.error("일기 저장 중 오류 발생:", error);
-
-      closeModal(); // 에러 발생 시에도 로딩 모달 닫기 추가
+  const handleSave = () => {
+    if (diaryContent.moods.length === 0) {
+      alert("최소 1개의 감정을 선택해주세요.");
+      return;
     }
+    onDiaryComplete(diaryContent);
   };
-
-  const handleEdit = () => {
-    setIsSaved(false);
-    setDiaryContent({
-      title: "",
-      content: "",
-      moods: [],
-    });
-    editor?.commands.setContent("");
-  };
-
-  if (isSaved) {
-    return (
-      <DiaryContentPreview
-        selectedDate={selectedDate}
-        diaryContent={diaryContent}
-        onEdit={handleEdit}
-      />
-    );
-  }
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -207,22 +127,14 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
         <button
           onClick={handleEmotionSelect}
           disabled={!diaryContent.title.trim() || !diaryContent.content.trim()}
-          className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            !diaryContent.title.trim() || !diaryContent.content.trim()
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#A6CCF2] hover:bg-[#5E8FBF] text-white"
-          }`}
+          className="px-3 py-1.5 rounded-full text-sm bg-[#A6CCF2] hover:bg-[#5E8FBF] text-white"
         >
           감정 직접 선택
         </button>
         <button
           onClick={handleEmotionAnalysis}
           disabled={!diaryContent.title.trim() || !diaryContent.content.trim()}
-          className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            !diaryContent.title.trim() || !diaryContent.content.trim()
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#5E8FBF] hover:bg-[#4A7196] text-white"
-          }`}
+          className="px-3 py-1.5 rounded-full text-sm bg-[#5E8FBF] hover:bg-[#4A7196] text-white"
         >
           감정 분석
         </button>

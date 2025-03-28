@@ -24,6 +24,7 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
     ],
   });
 
+  // chart.js 기본 옵션
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,

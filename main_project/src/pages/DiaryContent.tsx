@@ -1,146 +1,20 @@
 import { formatDateKorean } from "../utils/date";
 import { DiaryContent as DiaryContentType } from "../models/diary";
-import { useModalStore } from "../store/modal";
-import { useState } from "react";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
   diaryContent: DiaryContentType;
   onEdit: () => void;
+  onContinueToMusic: () => void; // 이 함수가 호출되어야 함
 };
 
-const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryContentPreviewProps) => {
+const DiaryContentPreview = ({
+  selectedDate,
+  diaryContent,
+  onEdit,
+  onContinueToMusic,
+}: DiaryContentPreviewProps) => {
   const formattedDate = formatDateKorean(selectedDate);
-  const { openModal, closeModal } = useModalStore();
-  const [buttonText, setButtonText] = useState("필로디");
-
-  // 저장 모드 상태 (음악 없이 저장 여부)
-  const [isSaving, setIsSaving] = useState(false);
-
-  // 노래 분석 시도
-  const retryMelodyAnalysis = async () => {
-    closeModal();
-
-    setTimeout(() => {
-      openModal("loading", {
-        message: "추천 필로디 🎵",
-        modalPurpose: "melody",
-      });
-
-      setTimeout(async () => {
-        // 분석 실행 테스트용
-        try {
-          await new Promise((resolve) => setTimeout(resolve, 2000)); // API 연동 시 삭제요망
-
-          closeModal();
-
-          const isSuccess = Math.random() > 0.5; // API 연동 시 삭제요망
-
-          if (isSuccess) {
-            // 분석 성공 시, 노래 선택 모달
-            openModal("songSelect", {
-              // songs: data.rec_music, // API 응답에서 받은 추천 음악 목록
-              onConfirm: () => {
-                console.log("노래 선택 완료");
-
-                // ===== API 연동 시 구현 추가 =====
-              },
-            });
-          } else {
-            // 분석 실패 시 에러 모달
-            openModal("songAnalysisError", {
-              message: "음악 추천에 실패했어요..",
-              onRetry: retryMelodyAnalysis, // 다시 분석하기
-              onSaveWithoutMusic: () => {
-                // 음악 없이 저장하기 모드로 전환
-                setButtonText("저장하기");
-                setIsSaving(true);
-              },
-            });
-          }
-        } catch (error) {
-          console.error("음악 추천 중 오류 발생:", error);
-          closeModal();
-
-          // 에러 발생 시 에러 모달 표시
-          openModal("songAnalysisError", {
-            message: "음악 추천에 실패했어요..",
-            onRetry: retryMelodyAnalysis, // 다시 분석하기
-            onSaveWithoutMusic: () => {
-              // 음악 없이 저장하기 모드로 전환
-              setButtonText("저장하기");
-              setIsSaving(true);
-            },
-          });
-        }
-      }, 100);
-      // ===== API 연동 시 위 setTimeout 전체 삭제하고 실제 API 호출 코드로 대체 =====
-    }, 50);
-  };
-
-  // 필로디/저장 버튼 클릭 핸들러
-  const handleMelodyRecommendation = async () => {
-    // 음악없이 일기만 저장(저장모드)
-    if (isSaving) {
-      console.log("저장하기 로직 실행, 음악 없이 일기만 저장");
-
-      // ===== API 연동 시 구현 코드 추가 =====
-      return;
-    }
-
-    // 노래 추천 및 분석
-    try {
-      openModal("loading", {
-        message: "추천 필로디 🎵",
-        modalPurpose: "melody",
-      });
-
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // API 연동 시 삭제 요망
-      // ===== 실제 API 연동 코드 추가 =====
-
-      closeModal();
-
-      const isSuccess = Math.random() > 0.5; // API 연동 시 삭제 요망
-
-      if (isSuccess) {
-        // ===== 분석 성공 시 노래 선택 모달 표시 =====
-        openModal("songSelect", {
-          // API 연동 시 아래 주석 해제 및 수정
-          // songs: recommendedSongs, // API 응답에서 받은 추천 음악 목록
-          onConfirm: () => {
-            console.log("노래 선택 완료");
-
-            // ===== API 연동 시 구현 로직 =====
-          },
-        });
-      } else {
-        // ===== 분석 실패 시 에러 모달 표시 =====
-        openModal("songAnalysisError", {
-          message: "음악 추천에 실패했어요..",
-          onRetry: retryMelodyAnalysis, // 다시 분석하기
-          onSaveWithoutMusic: () => {
-            // 노래 없이 저장하기 모드로 전환
-            setButtonText("저장하기");
-            setIsSaving(true);
-          },
-        });
-      }
-    } catch (error) {
-      console.error("음악 추천 중 오류 발생:", error);
-      closeModal();
-
-      // 에러 발생 시 노래 분석 에러 모달 표시
-      openModal("songAnalysisError", {
-        message: "음악 추천에 실패했어요..",
-        onRetry: retryMelodyAnalysis, // 다시 분석하기
-        onSaveWithoutMusic: () => {
-          // 노래 없이 저장하기 모드로 전환
-          setButtonText("저장하기");
-          setIsSaving(true);
-        },
-      });
-    }
-  };
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -188,10 +62,10 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
 
           <div className="flex justify-end mt-4 md:mt-8">
             <button
-              onClick={handleMelodyRecommendation}
+              onClick={onContinueToMusic} // 직접 onContinueToMusic 함수 호출
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
-              <span>{buttonText}</span>
+              <span>필로디</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"

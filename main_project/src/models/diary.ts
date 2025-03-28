@@ -8,15 +8,15 @@ export interface User {
 }
 
 export interface DiaryContent {
-  title: string;
+  diary_title: string;
   content: string;
   moods: Mood[];
 }
 
 export interface Diary {
-  diary_id: number;
+  diary_id: string;
   date: string;
-  title: string;
+  diary_title: string;
   content: string;
   created_at: string;
   moods: Mood[];
@@ -62,4 +62,15 @@ export enum Mood {
   Relief = "안도",
   Tension = "긴장",
   Gratitude = "감사",
+}
+
+export interface MoodSelectModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelect: (mood: Mood) => void;
+  moods: Mood[];
+  isAnalysisFailed: boolean;
+  isDirectSelect: boolean;
+  onSave: () => void;
+  analyzedKeywords?: Mood[];
 }

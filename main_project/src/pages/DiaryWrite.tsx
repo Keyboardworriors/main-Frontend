@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import diaryApi from "../api/diaryApi";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { formatDateKorean } from "../utils/date";
 import { DiaryContent, Mood } from "../models/diary";
 import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
 import DiaryContentPreview from "./DiaryContent";
-import { useModalStore } from "../store/modal"; // 모달 스토어 추가
+import { useModalStore } from "../store/modal";
 
 interface DiaryWriteProps {
   selectedDate: Date;
@@ -24,17 +26,35 @@ const editorConfig = {
 
 const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   const [diaryContent, setDiaryContent] = useState<DiaryContent>({
-    title: "",
+    diary_title: "",
     content: "",
     moods: [],
   });
+  const [analyzedKeywords, setAnalyzedKeywords] = useState<string[]>([]);
   const [isMoodModalOpen, setIsMoodModalOpen] = useState(false);
   const [isAnalysisFailed, setIsAnalysisFailed] = useState(false);
-  const [analyzedMood, setAnalyzedMood] = useState<string>();
   const [isDirectSelect, setIsDirectSelect] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
-  const { openModal, closeModal } = useModalStore(); // useModalStore 추가
+  const { openModal, closeModal } = useModalStore();
+  const analyzeMoodMutation = useMutation({
+    mutationFn: ({ title, content }: { title: string; content: string }) =>
+      diaryApi.analyzeDiaryMood(title, content),
+    onSuccess: (res) => {
+      console.log("추천받은 감정 키워드:", res);
+      setAnalyzedKeywords(res || []);
+      setIsAnalysisFailed(false);
+      closeModal();
+      setIsDirectSelect(false);
+      setIsMoodModalOpen(true);
+    },
+    onError: () => {
+      setIsAnalysisFailed(true);
+      closeModal();
+      setIsDirectSelect(false);
+      setIsMoodModalOpen(true);
+    },
+  });
 
   const editor = useEditor({
     ...editorConfig,
@@ -51,55 +71,25 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDiaryContent((prev) => ({
       ...prev,
-      title: e.target.value,
+      diary_title: e.target.value,
     }));
   };
 
   const handleEmotionSelect = () => {
     setIsAnalysisFailed(false);
-    setAnalyzedMood(undefined);
     setIsDirectSelect(true);
     setIsMoodModalOpen(true);
   };
 
   const handleEmotionAnalysis = async () => {
-    try {
-      // 로딩 모달 표시 추가
-      openModal("loading", {
-        message: "감정을 분석중이에요",
-        modalPurpose: "mood",
-      });
-      // 테스트용 지연 추가 (실제 API 연결 시 삭제 요망)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      const response = await fetch("api/diary/recommendation-keyword", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: diaryContent.title,
-          content: diaryContent.content,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("감정 분석에 실패했습니다.");
-      }
-
-      const data = await response.json();
-      setAnalyzedMood(data.mood);
-      setIsAnalysisFailed(false);
-
-      closeModal(); // 로딩 모달 닫기 추가
-    } catch {
-      setIsAnalysisFailed(true);
-      setAnalyzedMood(undefined);
-
-      closeModal(); // 에러 발생 시에도 로딩 모달 닫기 추가
-    }
-    setIsDirectSelect(false);
-    setIsMoodModalOpen(true);
+    openModal("loading", {
+      message: "감정을 분석중이에요",
+      modalPurpose: "mood",
+    });
+    analyzeMoodMutation.mutate({
+      title: diaryContent.diary_title,
+      content: diaryContent.content,
+    });
   };
 
   const handleMoodSelect = (mood: string) => {
@@ -160,7 +150,7 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   const handleEdit = () => {
     setIsSaved(false);
     setDiaryContent({
-      title: "",
+      diary_title: "",
       content: "",
       moods: [],
     });
@@ -194,7 +184,7 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
         type="text"
         placeholder="감정기록의 제목을 입력하세요 (최대 100자)"
         maxLength={100}
-        value={diaryContent.title}
+        value={diaryContent.diary_title}
         onChange={handleTitleChange}
         className="w-full p-2 text-base font-medium border-b border-[#A6CCF2] focus:outline-none focus:border-[#5E8FBF] mb-3 placeholder:text-base placeholder:font-medium"
       />
@@ -206,9 +196,9 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
       <div className="flex justify-end gap-2">
         <button
           onClick={handleEmotionSelect}
-          disabled={!diaryContent.title.trim() || !diaryContent.content.trim()}
+          disabled={!diaryContent.diary_title.trim() || !diaryContent.content.trim()}
           className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            !diaryContent.title.trim() || !diaryContent.content.trim()
+            !diaryContent.diary_title.trim() || !diaryContent.content.trim()
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-[#A6CCF2] hover:bg-[#5E8FBF] text-white"
           }`}
@@ -217,9 +207,9 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
         </button>
         <button
           onClick={handleEmotionAnalysis}
-          disabled={!diaryContent.title.trim() || !diaryContent.content.trim()}
+          disabled={!diaryContent.diary_title.trim() || !diaryContent.content.trim()}
           className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            !diaryContent.title.trim() || !diaryContent.content.trim()
+            !diaryContent.diary_title.trim() || !diaryContent.content.trim()
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-[#5E8FBF] hover:bg-[#4A7196] text-white"
           }`}
@@ -231,12 +221,12 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
       <MoodSelectModal
         isOpen={isMoodModalOpen}
         onClose={() => setIsMoodModalOpen(false)}
-        onSelect={handleMoodSelect}
+        onSelect={(mood: Mood) => handleMoodSelect(mood)}
         moods={Object.values(Mood)}
         isAnalysisFailed={isAnalysisFailed}
-        analyzedMood={analyzedMood}
         isDirectSelect={isDirectSelect}
         onSave={handleSave}
+        analyzedKeywords={analyzedKeywords}
       />
     </div>
   );

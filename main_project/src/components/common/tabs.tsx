@@ -4,7 +4,6 @@ import DiaryHome from "../../pages/DiaryHome";
 import MoodChart from "../../pages/moodChart";
 import { useState, useRef, useEffect, RefObject } from "react";
 import ProfileModal from "./Modal/ProfileModal";
-import { axiosFetcher } from "../../api/axiosFetcher";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useSearch } from "../../hooks/useSearch";
 import SearchBar from "./SearchBar";
@@ -12,7 +11,6 @@ import UserMenu from "./UserMenu";
 import { useNavigate } from "react-router-dom";
 import authApi from "../../api/authApi";
 import CustomConfirmModal from "./Modal/CustomConfirmModal";
-import authApi from "../../api/authApi";
 
 function MyTabs() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -53,16 +51,7 @@ function MyTabs() {
 
   const handleOpenProfile = async () => {
     try {
-      const res = await axiosFetcher.get<{
-        profile_image: string;
-        member: {
-          nickname: string;
-          introduce: string;
-          favorite_genre: string[];
-        };
-      }>("api/members/profile/");
-      console.log("프로필 API 응답:", res);
-
+      const res = await authApi.getProfile();
       setModalUser({
         nickname: res.member.nickname ?? "",
         profileImage: res.profile_image ?? "",
@@ -126,6 +115,7 @@ function MyTabs() {
             setShowDropdown={setShowDropdown}
             dropdownRef={dropdownRef as RefObject<HTMLDivElement>}
             handleOpenProfile={handleOpenProfile}
+            handleOpenLogoutConfirm={() => setShowLogoutModal(true)}
           />
         </div>
       </TabList>

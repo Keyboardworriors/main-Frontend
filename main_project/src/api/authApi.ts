@@ -7,6 +7,7 @@ import {
   UpdateUserRequest,
   LogoutRequest,
   LogoutResponse,
+  ProfileResponse,
 } from "../models/user";
 import { axiosFetcher } from "./axiosFetcher";
 
@@ -40,6 +41,11 @@ const authApi = {
   // 회원 조회 (마이페이지)
   getUser: async (): Promise<UserProfile> => {
     return await axiosFetcher.get("/api/members/mypage/");
+  },
+
+  // 회원 프로필 조회
+  getProfile: async (): Promise<ProfileResponse> => {
+    return await axiosFetcher.get("/api/members/profile/");
   },
 
   // 회원 수정

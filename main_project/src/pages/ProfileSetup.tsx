@@ -13,18 +13,23 @@ type ProfileSetupProps = {
   mode: "create" | "edit";
 };
 
+// ✅ 문자 수 기준 (한글도 1글자)
+const getCharLength = (str: string) => [...str].length;
+
 const ProfileSetup = ({ mode }: ProfileSetupProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const userFromState = location.state?.user as SocialLoginUser | undefined;
-
   const { user } = useAuthStore();
+
   const [email, setEmail] = useState<string>("");
   const [profileImage, setProfileImage] = useState<string>("");
-
   const [nickname, setNickname] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
+
+  const [nicknameError, setNicknameError] = useState(false);
+  const [bioError, setBioError] = useState(false); // ✅ 추가
 
   useEffect(() => {
     if (mode === "create" && userFromState) {
@@ -69,6 +74,18 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
 
   const { handleSubmit } = useProfileSetup(nickname, selectedGenres, bio, mode);
 
+  const handleClickSubmit = () => {
+    const isNicknameTooLong = getCharLength(nickname) > 15;
+    const isBioTooLong = getCharLength(bio) > 25;
+
+    setNicknameError(isNicknameTooLong);
+    setBioError(isBioTooLong);
+
+    if (isNicknameTooLong || isBioTooLong) return;
+
+    handleSubmit();
+  };
+
   const handleGenreClick = (genre: Genre) => {
     setSelectedGenres((prev) =>
       prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre],
@@ -86,29 +103,48 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
         <div className="w-0.5 h-20 bg-gray-400 my-4"></div>
 
         <ProfileImageUploader profileImage={profileImage} disabled />
-
         <InputField type="email" value={email} disabled />
 
+        {nicknameError && (
+          <p className="text-red-500 text-sm w-full mt-2 mb-[-15px] text-left">
+            닉네임은 15자 이내로 가능합니다.
+          </p>
+        )}
         <InputField
           type="text"
           value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setNickname(value);
+            setNicknameError(getCharLength(value) > 15);
+          }}
           placeholder="닉네임 (필수)"
+          isError={nicknameError}
         />
 
         <p className="mt-10 font-semibold text-gray-700">관심있는 음악 장르 선택</p>
         <GenreSelector selectedGenres={selectedGenres} onGenreClick={handleGenreClick} />
 
+        {bioError && (
+          <p className="text-red-500 text-sm w-full mt-10 mb-[-15px] text-left">
+            한 줄 소개는 25자 이내로 작성해주세요.
+          </p>
+        )}
         <InputField
           type="text"
           value={bio}
-          onChange={(e) => setBio(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setBio(value);
+            setBioError(getCharLength(value) > 25);
+          }}
           placeholder="한 줄 소개"
+          isError={bioError}
         />
 
         <div className="flex gap-4 mt-8">
           <button
-            onClick={handleSubmit}
+            onClick={handleClickSubmit}
             className="px-6 py-3 bg-blue-500 text-white rounded-3xl hover:bg-blue-600"
           >
             {mode === "edit" ? "수정 완료" : "작성 완료"}

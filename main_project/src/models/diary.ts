@@ -1,9 +1,9 @@
 export interface User {
   nickname: string;
   email: string;
-  profile_image: string; //url
-  introduce: string;
-  favorite_genre: string;
+  profile_image: string;
+  introduce: string | null;
+  favorite_genre: string[];
   is_active: boolean;
 }
 

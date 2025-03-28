@@ -2,20 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeLayout from "../components/layouts/HomeLayout";
 import { useAuthStore } from "../store/useAuthStore";
-import { axiosFetcher } from "../api/axiosFetcher";
 import { useModalStore } from "../store/modal";
-
-interface UserProfile {
-  nickname: string;
-  email: string;
-  profile_image: string;
-  genres: string[];
-  bio: string;
-}
+import { UserViewModel } from "../models/user";
+import authApi from "../api/Authapi";
 
 const MyPage = () => {
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userProfile, setUserProfile] = useState<UserViewModel | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { openModal, closeModal } = useModalStore();
 
@@ -27,19 +20,13 @@ const MyPage = () => {
 
     const fetchUserProfile = async () => {
       try {
-        const res = await axiosFetcher.get<{
-          nickname: string;
-          introduce: string;
-          favorite_genre: string[];
-          social_account: string;
-        }>("api/members/mypage/");
-
+        const res = await authApi.getUser();
         const { user } = useAuthStore.getState();
 
         setUserProfile({
           nickname: res.nickname,
-          bio: res.introduce,
-          genres: res.favorite_genre,
+          bio: res.introduce ?? "",
+          genres: res.favorite_genre ?? [],
           email: user?.email ?? "",
           profile_image: user?.profile_image ?? "/default-profile.png",
         });
@@ -71,9 +58,7 @@ const MyPage = () => {
             return;
           }
 
-          await axiosFetcher.delete("api/members/mypage/", {
-            data: { refresh_token: refreshToken },
-          });
+          await authApi.deleteUser({ refresh_token: refreshToken });
 
           alert("회원 탈퇴가 완료되었습니다.");
           clearAuth();

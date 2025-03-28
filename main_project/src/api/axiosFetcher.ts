@@ -59,10 +59,8 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
   return instance;
 };
 
-// 인스턴스 생성
 const apiInstance = createAxiosInstance(getApiBaseUrl());
 
-// axiosFetcher 정의
 export const axiosFetcher = {
   get: async <T = any>(
     path: string,

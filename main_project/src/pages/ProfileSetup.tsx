@@ -27,9 +27,10 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
   useEffect(() => {
     if (mode === "create" && userFromState) {
       setEmail(userFromState.email);
-    } else if (mode === "edit") {
+    } else if (mode === "edit" && fetchedEmail) {
       setEmail(fetchedEmail);
     }
+    console.log(fetchedEmail)
   }, [mode, userFromState, fetchedEmail]);
 
   useEffect(() => {

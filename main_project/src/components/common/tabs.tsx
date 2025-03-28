@@ -10,7 +10,7 @@ import ProfileModal from "./Modal/ProfileModal";
 import { axiosFetcher } from "../../api/axiosFetcher";
 import { useAuthStore } from "../../store/useAuthStore";
 import CustomConfirmModal from "./Modal/CustomConfirmModal";
-import authApi from "../../api/Authapi";
+import authApi from "../../api/authApi";
 
 function MyTabs() {
   const navigate = useNavigate();

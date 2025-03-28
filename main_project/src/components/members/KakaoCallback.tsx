@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { SocialLoginUser } from "../../models/profile";
 import LoadingModal from "../common/Modal/LoadingModal";
-import authApi from "../../api/Authapi";
+import authApi from "../../api/authApi";
 
 const KakaoCallback = () => {
   const navigate = useNavigate();

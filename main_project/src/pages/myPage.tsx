@@ -4,7 +4,7 @@ import HomeLayout from "../components/layouts/HomeLayout";
 import { useAuthStore } from "../store/useAuthStore";
 import { useModalStore } from "../store/modal";
 import { UserViewModel } from "../models/user";
-import authApi from "../api/Authapi";
+import authApi from "../api/authApi";
 
 const MyPage = () => {
   const navigate = useNavigate();

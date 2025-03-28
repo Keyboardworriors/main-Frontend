@@ -6,7 +6,7 @@ import InputField from "../components/Profile/InputField";
 import useProfileSetup from "../hooks/useProfileSetup";
 import { Genre, SocialLoginUser } from "../models/profile";
 import ProfileLayout from "../components/layouts/ProfileLayout";
-import authApi from "../api/Authapi";
+import authApi from "../api/authApi";
 import { useAuthStore } from "../store/useAuthStore";
 
 type ProfileSetupProps = {

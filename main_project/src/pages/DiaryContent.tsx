@@ -158,7 +158,7 @@ const DiaryContentPreview = ({ selectedDate, diaryContent, onEdit }: DiaryConten
       <div className="flex flex-col md:flex-row gap-4">
         <div className="w-full md:w-[60%]">
           <h2 className="text-base font-medium text-gray-800 mb-4 block border-b border-[#4A7196] px-1">
-            {diaryContent.title}
+            {diaryContent.diary_title}
           </h2>
           <div className="border border-[#4A7196] rounded-lg p-3 h-[280px] bg-white overflow-y-auto">
             <div className="prose prose-sm max-w-none h-full text-sm">

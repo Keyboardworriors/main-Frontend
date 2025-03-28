@@ -3,8 +3,9 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, TooltipItem } from "char
 import { Doughnut } from "react-chartjs-2";
 import { PeriodType, MoodData, ChartComponentProps } from "../../models/chart";
 import { useModalStore } from "../../store/modal";
-import { Mood } from "../../models/diary";
 import { MOOD_COLORS } from "../../models/constants";
+import { fetchEmotionsByPeriod } from "../../api/chartApi";
+import { Mood } from "../../models/diary";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -44,9 +45,8 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
     },
   };
 
-  // 테스트용 더미 데이터 생성 함수
+  // API 호출 실패 시 더미데이터로 대체
   const generateDummyData = (type: PeriodType) => {
-    // 기간 유형별 데이터 반환
     if (type === PeriodType.WEEKLY) {
       return [
         { label: Mood.Happiness, value: 12, color: MOOD_COLORS[Mood.Happiness] },
@@ -70,7 +70,7 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
         { label: Mood.Sadness, value: 145, color: MOOD_COLORS[Mood.Sadness] },
         { label: Mood.Anxiety, value: 175, color: MOOD_COLORS[Mood.Anxiety] },
         { label: Mood.Anger, value: 80, color: MOOD_COLORS[Mood.Anger] },
-        { label: Mood.Hope, value: 230, color: MOOD_COLORS[Mood.Hope] },
+        { label: Mood.Hope, value: 100, color: MOOD_COLORS[Mood.Hope] },
         { label: Mood.Restlessness, value: 120, color: MOOD_COLORS[Mood.Restlessness] },
         { label: Mood.Excitement, value: 95, color: MOOD_COLORS[Mood.Excitement] },
         { label: Mood.Regret, value: 65, color: MOOD_COLORS[Mood.Regret] },
@@ -117,21 +117,33 @@ const ChartComponent = ({ periodType }: ChartComponentProps) => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    const loadChartData = async () => {
+      try {
+        setLoading(true);
 
-    openModal("loading", {
-      message: "차트를 분석중이에요",
-      modalPurpose: "chart",
-    });
+        openModal("loading", {
+          message: "차트를 분석중이에요",
+          modalPurpose: "chart",
+        });
 
-    // API 연결 후에는 실제 데이터 패치 로직으로 대체 예정
-    const newData = generateDummyData(periodType);
+        const data = await fetchEmotionsByPeriod(periodType);
+        setMoodData(data);
 
-    setTimeout(() => {
-      setMoodData(newData);
-      setLoading(false);
-      closeModal();
-    }, 1500);
+        setLoading(false);
+        closeModal();
+      } catch (error) {
+        console.error("감정 데이터 조회 실패:", error);
+
+        // API 호출 실패 시 더미데이터로 대체
+        const fallbackData = generateDummyData(periodType);
+        setMoodData(fallbackData);
+
+        setLoading(false);
+        closeModal();
+      }
+    };
+
+    loadChartData();
   }, [periodType, openModal, closeModal]);
 
   return (

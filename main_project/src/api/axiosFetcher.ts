@@ -62,7 +62,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 const apiInstance = createAxiosInstance(getApiBaseUrl());
 
 export const axiosFetcher = {
-  get: async <T = any>(
+  get: async <T>(
     path: string,
     params?: Record<string, any>,
     config?: AxiosRequestConfig
@@ -75,7 +75,7 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  post: async <T = any>(
+  post: async <T>(
     path: string,
     data?: any,
     config?: AxiosRequestConfig
@@ -84,7 +84,7 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  put: async <T = any>(
+  put: async <T>(
     path: string,
     data?: any,
     config?: AxiosRequestConfig
@@ -102,7 +102,7 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  delete: async <T = any>(
+  delete: async <T>(
     path: string,
     config?: AxiosRequestConfig & { data?: any }
   ): Promise<T> => {

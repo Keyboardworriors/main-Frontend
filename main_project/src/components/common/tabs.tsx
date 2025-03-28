@@ -10,6 +10,7 @@ import ProfileModal from "./Modal/ProfileModal";
 import { axiosFetcher } from "../../api/axiosFetcher";
 import { useAuthStore } from "../../store/useAuthStore";
 import CustomConfirmModal from "./Modal/CustomConfirmModal";
+import authApi from "../../api/Authapi";
 
 function MyTabs() {
   const navigate = useNavigate();
@@ -95,9 +96,7 @@ function MyTabs() {
         return;
       }
 
-      await axiosFetcher.post("/api/members/logout/", {
-        refresh_token: refreshToken,
-      });
+      await authApi.logout({ refresh_token: refreshToken });
 
       clearAuth();
       alert("로그아웃되었습니다.");

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosFetcher } from "../../api/axiosFetcher";
 import { useAuthStore } from "../../store/useAuthStore";
 import { SocialLoginUser } from "../../models/profile";
 import LoadingModal from "../common/Modal/LoadingModal";
+import authApi from "../../api/Authapi";
 
 const NaverCallback = () => {
   const navigate = useNavigate();
@@ -26,30 +26,22 @@ const NaverCallback = () => {
       }
 
       try {
-        const res = await axiosFetcher.get(`/api/oauth/naver/callback/?code=${code}&state=${state}`);
-        const user: SocialLoginUser = res;
-
-        console.log("응답 결과", res);
+        const user: SocialLoginUser = await authApi.socialLoginCallbackNaver(code, state);
+        console.log("응답 결과", user);
 
         if (user.is_active) {
-          const tokenRes = await axiosFetcher.post("/api/members/login/", {
-            email: user.email,
-          });
-
-          console.log("토큰 응답 결과:", tokenRes);
-
           const {
-            access_token: accessToken,
-            refresh_token: refreshToken,
+            access_token,
+            refresh_token,
             user: loggedInUser,
-          } = tokenRes;
+          } = await authApi.login(user.email);
 
-          if (!accessToken || !refreshToken) {
+          if (!access_token || !refresh_token) {
             alert("토큰 정보가 누락되었습니다. 다시 로그인해주세요.");
             return;
           }
 
-          setAuth(accessToken, refreshToken, loggedInUser);
+          setAuth(access_token, refresh_token, loggedInUser);
           navigate("/diary/");
         } else {
           navigate("/members/register", { state: { mode: "create", user } });

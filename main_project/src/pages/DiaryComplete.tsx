@@ -22,7 +22,7 @@ const DiaryComplete = ({
 
   const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState(false); // ✅ 말풍선 상태
 
-  // ✅ 선택된 음악 확인 로그
+  // 선택된 음악 확인 로그
   useEffect(() => {
     if (selectedMusic) {
       console.log("DiaryComplete rendered with music:", selectedMusic);

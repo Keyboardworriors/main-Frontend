@@ -22,7 +22,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   });
   const [selectedMusic, setSelectedMusic] = useState<Music | null>(null);
 
-  const { openModal, closeModal } = useModalStore(); // ✅ 모달 제어
+  const { openModal, closeModal } = useModalStore();
 
   // 1단계: 작성 완료
   const handleDiaryWriteComplete = (content: DiaryContentType) => {
@@ -49,21 +49,21 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   // 4단계: 최종 저장
   const handleComplete = async () => {
     const payload = {
+      date: selectedDate.toISOString(),
       diary_title: diaryContent.title,
       content: diaryContent.content,
       moods: diaryContent.moods,
       rec_music: selectedMusic ? [selectedMusic] : [],
     };
 
-    // ✅ 1) 로딩 모달 표시
+    // 로딩 모달 표시
     openModal("loading", {
       message: "소중한 감정을 기록중이에요",
       modalPurpose: "saving",
     });
 
-    // ✅ 2) 저장 로직 시뮬레이션 (실제 호출은 주석처리)
+    // 저장 로직
     setTimeout(() => {
-      // 실제 서버 저장 요청 예시
       // try {
       //   const response = await axios.post("/api/diary/create", payload);
       //   console.log("저장 성공:", response.data);
@@ -71,10 +71,10 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
       //   console.error("저장 실패:", error);
       // }
 
-      // ✅ 3) 콘솔에 최종 데이터 출력
+      // 콘솔에 최종 데이터 출력
       console.log("📘 일기 저장됨:", payload);
 
-      // ✅ 4) 로딩 모달 닫고 작성 종료
+      // 모달 닫고 작성 종료
       closeModal();
       onCancel();
     }, 1500);

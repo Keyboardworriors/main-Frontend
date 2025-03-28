@@ -13,7 +13,6 @@ type ProfileSetupProps = {
   mode: "create" | "edit";
 };
 
-// ✅ 문자 수 기준 (한글도 1글자)
 const getCharLength = (str: string) => [...str].length;
 
 const ProfileSetup = ({ mode }: ProfileSetupProps) => {
@@ -29,7 +28,7 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
   const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
 
   const [nicknameError, setNicknameError] = useState(false);
-  const [bioError, setBioError] = useState(false); // ✅ 추가
+  const [bioError, setBioError] = useState(false);
 
   useEffect(() => {
     if (mode === "create" && userFromState) {

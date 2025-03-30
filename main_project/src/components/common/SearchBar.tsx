@@ -9,6 +9,7 @@ interface SearchBarProps {
   setShowSearch: (show: boolean) => void;
   handleSearchInputRef: (element: HTMLInputElement | null) => void;
   isSearching: boolean;
+  tabIndex: number; // Added tabIndex to the interface
 }
 
 const SearchBar = ({
@@ -20,8 +21,9 @@ const SearchBar = ({
   setShowSearch,
   handleSearchInputRef,
   isSearching,
+  tabIndex,
 }: SearchBarProps) => {
-  return (
+  return tabIndex === 0 ? (
     <>
       {showSearch ? (
         <div className="relative flex items-center">
@@ -53,7 +55,7 @@ const SearchBar = ({
         </button>
       )}
     </>
-  );
+  ) : null;
 };
 
 export default SearchBar;

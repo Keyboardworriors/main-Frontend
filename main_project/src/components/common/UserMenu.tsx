@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 interface UserMenuProps {
   showDropdown: boolean;
   setShowDropdown: (show: boolean) => void;
-  dropdownRef: React.RefObject<HTMLDivElement>;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
   handleOpenProfile: () => void;
+  handleOpenLogoutConfirm: () => void;
 }
 
 const UserMenu = ({
@@ -13,6 +14,7 @@ const UserMenu = ({
   setShowDropdown,
   dropdownRef,
   handleOpenProfile,
+  handleOpenLogoutConfirm,
 }: UserMenuProps) => {
   const navigate = useNavigate();
 
@@ -42,9 +44,7 @@ const UserMenu = ({
             <span>마이페이지</span>
           </button>
           <button
-            onClick={() => {
-              // TODO: 로그아웃 기능 구현
-            }}
+            onClick={handleOpenLogoutConfirm}
             className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
           >
             <FaSignOutAlt size={14} />

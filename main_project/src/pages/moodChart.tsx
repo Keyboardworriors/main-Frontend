@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import HomeLayout from "../components/layouts/HomeLayout";
 import ChartLayout from "../components/layouts/ChartLayout";
-import ChartComponent from "../components/common/Chart";
+import ChartComponent from "../components/Chart/Chart";
 import { PeriodType } from "../models/chart";
 
 const MoodChart = () => {

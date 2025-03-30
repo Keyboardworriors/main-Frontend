@@ -32,7 +32,6 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   });
   const [analyzedKeywords, setAnalyzedKeywords] = useState<string[]>([]);
   const [isMoodModalOpen, setIsMoodModalOpen] = useState(false);
-  const [isAnalysisFailed, setIsAnalysisFailed] = useState(false);
   const [isDirectSelect, setIsDirectSelect] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
@@ -43,13 +42,11 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
     onSuccess: (res) => {
       console.log("추천받은 감정 키워드:", res);
       setAnalyzedKeywords(res || []);
-      setIsAnalysisFailed(false);
-      closeModal();
-      setIsDirectSelect(false);
-      setIsMoodModalOpen(true);
     },
     onError: () => {
-      setIsAnalysisFailed(true);
+      setAnalyzedKeywords([]);
+    },
+    onSettled: () => {
       closeModal();
       setIsDirectSelect(false);
       setIsMoodModalOpen(true);
@@ -76,7 +73,6 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
   };
 
   const handleEmotionSelect = () => {
-    setIsAnalysisFailed(false);
     setIsDirectSelect(true);
     setIsMoodModalOpen(true);
   };
@@ -112,7 +108,6 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
 
   const handleSave = async () => {
     try {
-      // 기록 저장 시 로딩 모달 표시 추가
       openModal("loading", {
         message: "기록을 저장중이에요",
         modalPurpose: "saving",
@@ -139,11 +134,11 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
 
       setIsSaved(true);
 
-      closeModal(); // 저장 완료 후 로딩 모달 닫기 추가
+      closeModal();
     } catch (error) {
       console.error("일기 저장 중 오류 발생:", error);
 
-      closeModal(); // 에러 발생 시에도 로딩 모달 닫기 추가
+      closeModal();
     }
   };
 
@@ -223,7 +218,7 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
         onClose={() => setIsMoodModalOpen(false)}
         onSelect={(mood: Mood) => handleMoodSelect(mood)}
         moods={Object.values(Mood)}
-        isAnalysisFailed={isAnalysisFailed}
+        isAnalysisFailed={analyzedKeywords.length === 0 && !isDirectSelect}
         isDirectSelect={isDirectSelect}
         onSave={handleSave}
         analyzedKeywords={analyzedKeywords}

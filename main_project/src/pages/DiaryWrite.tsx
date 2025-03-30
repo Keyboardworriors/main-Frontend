@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import diaryApi from "../api/diaryApi";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -12,7 +12,7 @@ import { useModalStore } from "../store/modal";
 interface DiaryWriteProps {
   selectedDate: Date;
   onCancel: () => void;
-  onDiaryComplete?: (content: DiaryContent) => void; // 추가
+  onDiaryComplete?: (content: DiaryContent) => void;
 }
 
 const editorConfig = {
@@ -37,6 +37,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
   const [isSaved, setIsSaved] = useState(false);
 
   const { openModal, closeModal } = useModalStore();
+  const queryClient = useQueryClient();
   const analyzeMoodMutation = useMutation({
     mutationFn: ({ title, content }: { title: string; content: string }) =>
       diaryApi.analyzeDiaryMood(title, content),
@@ -117,9 +118,9 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setIsSaved(true);
+      queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
       closeModal();
 
-      // 콜백 존재 시 실행
       if (onDiaryComplete) {
         onDiaryComplete(diaryContent);
       }

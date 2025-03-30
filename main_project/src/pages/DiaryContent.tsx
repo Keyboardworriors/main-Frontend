@@ -1,20 +1,98 @@
 import { formatDateKorean } from "../utils/date";
-import { DiaryContent as DiaryContentType } from "../models/diary";
+import { DiaryContent as DiaryContentType, Music } from "../models/diary";
+import { useModalStore } from "../store/modal";
+import { useState } from "react";
+import diaryApi from "../api/diaryApi";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
   diaryContent: DiaryContentType;
   onEdit: () => void;
-  onContinueToMusic: () => void; // 이 함수가 호출되어야 함
+  onCompleteMusic: (selectedMusic: Music) => void; // 추가
 };
 
 const DiaryContentPreview = ({
   selectedDate,
   diaryContent,
   onEdit,
-  onContinueToMusic,
+  onCompleteMusic,
 }: DiaryContentPreviewProps) => {
   const formattedDate = formatDateKorean(selectedDate);
+  const { openModal, closeModal } = useModalStore();
+  const [buttonText, setButtonText] = useState("필로디");
+  const [isSaving, setIsSaving] = useState(false);
+
+  const retryMelodyAnalysis = async () => {
+    closeModal();
+    setTimeout(() => {
+      analyzeMusic();
+    }, 300);
+  };
+
+  const analyzeMusic = async () => {
+    if (!diaryContent.moods || diaryContent.moods.length === 0) {
+      console.warn("감정 키워드가 비어있어서 추천을 실행하지 않습니다.");
+      return;
+    }
+
+    openModal("loading", {
+      message: "추천 필로디 🎵",
+      modalPurpose: "melody",
+    });
+
+    try {
+      const favoriteGenre = []; // 필요시 유저 장르 추가
+      const songs = await diaryApi.recommendMusic(diaryContent.moods, favoriteGenre);
+
+      closeModal();
+
+      if (songs && songs.length > 0) {
+        openModal("songSelect", {
+          songs,
+          onConfirm: (selected: Music) => {
+            closeModal();
+            onCompleteMusic(selected);
+          },
+          onRetry: retryMelodyAnalysis,
+        });
+      } else {
+        openModal("songAnalysisError", {
+          onRetry: retryMelodyAnalysis,
+          onSaveWithoutMusic: () => {
+            closeModal();
+            setButtonText("저장하기");
+            setIsSaving(true);
+          },
+        });
+      }
+    } catch (error) {
+      closeModal();
+      openModal("songAnalysisError", {
+        onRetry: retryMelodyAnalysis,
+        onSaveWithoutMusic: () => {
+          closeModal();
+          setButtonText("저장하기");
+          setIsSaving(true);
+        },
+      });
+    }
+  };
+
+  const handleMelodyRecommendation = async () => {
+    if (isSaving) {
+      console.log("음악 없이 저장하기 실행됨");
+      onCompleteMusic({
+        video_id: "",
+        title: "",
+        artist: "",
+        thumbnail: "",
+        embedUrl: "",
+      });
+      return;
+    }
+
+    analyzeMusic();
+  };
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -62,10 +140,10 @@ const DiaryContentPreview = ({
 
           <div className="flex justify-end mt-4 md:mt-8">
             <button
-              onClick={onContinueToMusic} // 직접 onContinueToMusic 함수 호출
+              onClick={handleMelodyRecommendation}
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
-              <span>필로디</span>
+              <span>{buttonText}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"

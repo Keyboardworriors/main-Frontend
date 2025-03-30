@@ -46,7 +46,7 @@ const Modal = () => {
           onClose={closeModal}
           songs={data?.songs ?? []}
           onConfirm={data?.onConfirm}
-          onRetry={data?.onRetry} // ✅ 다시 시도 콜백 전달
+          onRetry={data?.onRetry}
         />
       );
     case "moodSelect":

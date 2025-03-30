@@ -34,7 +34,7 @@ export interface ModalData {
   onConfirm?: () => void;
   onCancel?: () => void;
   onRetry?: () => void;
-  onSaveWithoutMusic?: () => void; // 음악 없이 저장하기 콜백 추가
+  onSaveWithoutMusic?: () => void;
 }
 
 interface ModalState {

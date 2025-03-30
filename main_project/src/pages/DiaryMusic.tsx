@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { formatDateKorean } from "../utils/date";
+import diaryApi from "../api/diaryApi";
 
 interface DiaryMusicProps {
   selectedDate: Date;
@@ -10,63 +11,24 @@ interface DiaryMusicProps {
   onComplete: (selectedMusic: Music) => void;
 }
 
-const dummySongs: Music[] = [
-  {
-    video_id: "4Tr0otuiQuU",
-    title: "Moonlight Sonata",
-    artist: "Beethoven",
-    thumbnail: "https://i.ytimg.com/vi/4Tr0otuiQuU/hqdefault.jpg",
-    embedUrl: "https://www.youtube.com/embed/4Tr0otuiQuU",
-  },
-  {
-    video_id: "9E6b3swbnWg",
-    title: "Clair de Lune",
-    artist: "Debussy",
-    thumbnail: "https://i.ytimg.com/vi/9E6b3swbnWg/hqdefault.jpg",
-    embedUrl: "https://www.youtube.com/embed/9E6b3swbnWg",
-  },
-  {
-    video_id: "lO9d-AJai8Q",
-    title: "The Four Seasons",
-    artist: "Vivaldi",
-    thumbnail: "https://i.ytimg.com/vi/lO9d-AJai8Q/hqdefault.jpg",
-    embedUrl: "https://www.youtube.com/embed/lO9d-AJai8Q",
-  },
-];
-
 const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMusicProps) => {
   const { openModal, closeModal } = useModalStore();
   const formattedDate = formatDateKorean(selectedDate);
 
-  const analyzeMusic = () => {
+  const analyzeMusic = async () => {
     openModal("loading", {
       message: "추천 필로디 🎵",
       modalPurpose: "melody",
     });
 
-    setTimeout(() => {
+    try {
+      const recommendedSongs = await diaryApi.recommendMusic(diaryContent.moods, []);
       closeModal();
 
-      const isSuccess = true;
-
-      if (isSuccess) {
-        openModal("songSelect", {
-          songs: dummySongs,
-          onConfirm: (selected: Music) => {
-            closeModal();
-            onComplete(selected);
-          },
-          onRetry: () => {
-            closeModal();
-            setTimeout(analyzeMusic, 300);
-          },
-        });
-      } else {
+      if (recommendedSongs.length === 0) {
         openModal("songAnalysisError", {
-          onRetry: () => {
-            closeModal();
-            setTimeout(analyzeMusic, 300);
-          },
+          message: "추천된 음악이 없어요 😢",
+          onRetry: analyzeMusic,
           onSaveWithoutMusic: () => {
             closeModal();
             onComplete({
@@ -78,8 +40,37 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
             });
           },
         });
+      } else {
+        openModal("songSelect", {
+          songs: recommendedSongs,
+          onConfirm: (selected: Music) => {
+            closeModal();
+            onComplete(selected);
+          },
+          onRetry: () => {
+            closeModal();
+            setTimeout(analyzeMusic, 300);
+          },
+        });
       }
-    }, 1500);
+    } catch (error) {
+      closeModal();
+
+      openModal("songAnalysisError", {
+        message: "음악 추천에 실패했어요 😭",
+        onRetry: analyzeMusic,
+        onSaveWithoutMusic: () => {
+          closeModal();
+          onComplete({
+            video_id: "",
+            title: "",
+            artist: "",
+            thumbnail: "",
+            embedUrl: "",
+          });
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -102,7 +93,7 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
       <div className="flex flex-col md:flex-row gap-4">
         <div className="w-full md:w-[60%]">
           <h2 className="text-base font-medium text-gray-800 mb-4 block border-b border-[#4A7196] px-1">
-            {diaryContent.title}
+            {diaryContent.diary_title}
           </h2>
           <div className="border border-[#4A7196] rounded-lg p-3 h-[280px] bg-white overflow-y-auto">
             <div className="prose prose-sm max-w-none h-full text-sm">

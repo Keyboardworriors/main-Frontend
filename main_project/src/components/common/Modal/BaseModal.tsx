@@ -8,7 +8,7 @@ interface BaseModalProps {
   hideCloseButton?: boolean;
 }
 
-const BaseModal = ({ isOpen, onClose, children, hideCloseButton = false }: BaseModalProps) => {
+const BaseModal = ({ isOpen, onClose, children = false }: BaseModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousOverflowStyle = useRef<string | null>(null);
 

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { formatDateKorean } from "../utils/date";
 import { useModalStore } from "../store/modal";
+import diaryApi from "../api/diaryApi";
 
 type DiaryCompleteProps = {
   selectedDate: Date;
@@ -17,26 +18,34 @@ const DiaryComplete = ({
   selectedMusic,
   onFinish,
 }: DiaryCompleteProps) => {
-  const { openModal } = useModalStore();
+  const { openModal, closeModal } = useModalStore();
   const formattedDate = formatDateKorean(selectedDate);
+  const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState(false);
 
-  const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState(false); // ✅ 말풍선 상태
+  const handleSaveDiary = async () => {
+    const payload = {
+      diary_title: diaryContent.diary_title,
+      content: diaryContent.content,
+      moods: diaryContent.moods,
+      date: selectedDate.toISOString().slice(0, 10),
+      rec_music: selectedMusic || {},
+    };
 
-  // 선택된 음악 확인 로그
-  useEffect(() => {
-    if (selectedMusic) {
-      console.log("DiaryComplete rendered with music:", selectedMusic);
-    } else {
-      console.log("DiaryComplete rendered: selectedMusic is null or undefined");
+    try {
+      await diaryApi.createDiary(payload);
+      openModal("success", { message: "일기가 성공적으로 저장되었어요!" });
+      onFinish();
+    } catch (error) {
+      openModal("error", { message: "일기 저장에 실패했어요. 다시 시도해주세요." });
     }
-  }, [selectedMusic]);
+  };
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       <div className="flex flex-col md:flex-row gap-4">
         <div className="w-full md:w-[60%]">
           <h2 className="text-base font-medium text-gray-800 mb-4 block border-b border-[#4A7196] px-1">
-            {diaryContent.title}
+            {diaryContent.diary_title}
           </h2>
           <div className="border border-[#4A7196] rounded-lg p-3 h-[280px] bg-white overflow-y-auto">
             <div className="prose prose-sm max-w-none h-full text-sm">
@@ -63,9 +72,9 @@ const DiaryComplete = ({
               ))}
             </div>
 
-            {selectedMusic?.video_id && (
+            {selectedMusic && selectedMusic.title && (
               <>
-                <h3 className="text-base text-gray-600 font-semibold mb-3">추천된 필로디 🎵</h3>
+                <h3 className="text-base text-gray-600 font-semibold mb-3">추천된 필로디🎵</h3>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-4 py-1.5 bg-[#A6CCF2] text-white rounded-full text-sm font-medium min-w-[80px] text-center">
                     {selectedMusic.title} - {selectedMusic.artist}
@@ -84,12 +93,12 @@ const DiaryComplete = ({
             )}
 
             <button
-              onClick={onFinish} // 바로 저장
+              onClick={handleSaveDiary}
               onMouseEnter={() => setIsHoveringSaveBtn(true)}
               onMouseLeave={() => setIsHoveringSaveBtn(false)}
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
-              완료하기
+              저장하기
             </button>
           </div>
         </div>

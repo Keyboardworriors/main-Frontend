@@ -8,12 +8,11 @@ import { DiaryContent, Mood } from "../models/diary";
 import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
 import DiaryContentPreview from "./DiaryContent";
 import { useModalStore } from "../store/modal";
-import { useModalStore } from "../store/modal";
 
 interface DiaryWriteProps {
   selectedDate: Date;
   onCancel: () => void;
-  onDiaryComplete: (content: DiaryContent) => void;
+  onDiaryComplete?: (content: DiaryContent) => void; // 추가
 }
 
 const editorConfig = {
@@ -36,6 +35,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
   const [isMoodModalOpen, setIsMoodModalOpen] = useState(false);
   const [isAnalysisFailed, setIsAnalysisFailed] = useState(false);
   const [isDirectSelect, setIsDirectSelect] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   const { openModal, closeModal } = useModalStore();
   const analyzeMoodMutation = useMutation({
@@ -57,7 +57,6 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
     },
   });
 
-  const { openModal, closeModal } = useModalStore();
   const editor = useEditor({
     ...editorConfig,
     onUpdate: ({ editor }) => {
@@ -71,12 +70,15 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
   const formattedDate = formatDateKorean(selectedDate);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDiaryContent((prev) => ({ ...prev, diary_title: e.target.value }));
+    setDiaryContent((prev) => ({
+      ...prev,
+      diary_title: e.target.value,
+    }));
   };
 
   const handleEmotionSelect = () => {
-    setIsDirectSelect(true);
     setIsAnalysisFailed(false);
+    setIsDirectSelect(true);
     setIsMoodModalOpen(true);
   };
 
@@ -89,28 +91,21 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       title: diaryContent.diary_title,
       content: diaryContent.content,
     });
-    openModal("loading", {
-      message: "감정을 분석중이에요",
-      modalPurpose: "mood",
-    });
-
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // 더미 분석 결과
-    setAnalyzedMood("기쁨");
-    setIsAnalysisFailed(false);
-    closeModal();
-    setIsDirectSelect(false);
-    setIsMoodModalOpen(true);
   };
 
   const handleMoodSelect = (mood: string) => {
     setDiaryContent((prev) => {
       if (prev.moods.includes(mood as Mood)) {
-        return { ...prev, moods: prev.moods.filter((m) => m !== mood) };
+        return {
+          ...prev,
+          moods: prev.moods.filter((m) => m !== mood),
+        };
       }
       if (prev.moods.length < 3) {
-        return { ...prev, moods: [...prev.moods, mood as Mood] };
+        return {
+          ...prev,
+          moods: [...prev.moods, mood as Mood],
+        };
       }
       return prev;
     });
@@ -118,38 +113,23 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
 
   const handleSave = async () => {
     try {
-      // 기록 저장 시 로딩 모달 표시 추가
       openModal("loading", {
         message: "기록을 저장중이에요",
         modalPurpose: "saving",
       });
 
-      // TODO: API 호출하여 일기 저장
-      // const response = await fetch("api/diary", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     date: selectedDate,
-      //     ...diaryContent,
-      //   }),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error("일기 저장에 실패했습니다.");
-      // }
-
-      // 테스트 확인용으로 지연 추가 (실제 API 연결 시 삭제 요망)
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setIsSaved(true);
+      closeModal();
 
-      closeModal(); // 저장 완료 후 로딩 모달 닫기 추가
+      // 콜백 존재 시 실행
+      if (onDiaryComplete) {
+        onDiaryComplete(diaryContent);
+      }
     } catch (error) {
       console.error("일기 저장 중 오류 발생:", error);
-
-      closeModal(); // 에러 발생 시에도 로딩 모달 닫기 추가
+      closeModal();
     }
   };
 
@@ -172,13 +152,6 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       />
     );
   }
-  const handleSave = () => {
-    if (diaryContent.moods.length === 0) {
-      alert("최소 1개의 감정을 선택해주세요.");
-      return;
-    }
-    onDiaryComplete(diaryContent);
-  };
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -215,8 +188,6 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-[#A6CCF2] hover:bg-[#5E8FBF] text-white"
           }`}
-          disabled={!diaryContent.title.trim() || !diaryContent.content.trim()}
-          className="px-3 py-1.5 rounded-full text-sm bg-[#A6CCF2] hover:bg-[#5E8FBF] text-white"
         >
           감정 직접 선택
         </button>
@@ -228,8 +199,6 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-[#5E8FBF] hover:bg-[#4A7196] text-white"
           }`}
-          disabled={!diaryContent.title.trim() || !diaryContent.content.trim()}
-          className="px-3 py-1.5 rounded-full text-sm bg-[#5E8FBF] hover:bg-[#4A7196] text-white"
         >
           감정 분석
         </button>

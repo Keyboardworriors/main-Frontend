@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { User, Mood } from "../models/diary";
+import { User, Mood, Music } from "../models/diary";
 
 export type ModalType =
   | "loading"
@@ -25,8 +25,8 @@ export interface ModalData {
     | "saveDiary";
   user?: User;
   moods?: Mood[];
-  songs?: Song[];
-  selectedSong?: Music[];
+  songs?: Music[];
+  selectedSong?: Music;
   confirmText?: string;
   cancelText?: string;
   isDanger?: boolean;
@@ -34,7 +34,7 @@ export interface ModalData {
   onConfirm?: () => void;
   onCancel?: () => void;
   onRetry?: () => void;
-  onSaveWithoutMusic?: () => void; // 음악 없이 저장하기 콜백 추가
+  onSaveWithoutMusic?: () => void;
 }
 
 interface ModalState {

@@ -4,7 +4,7 @@ import DiaryLayout from "../components/layouts/DiaryLayout";
 import MyCalendar from "../components/Calendar/Calendar";
 import DiaryView from "./DiaryView";
 import { SearchResult } from "../models/search";
-import DiaryWrite from "./DiaryWrite";
+import DiaryControl from "./DiaryControl";
 import { useQuery } from "@tanstack/react-query";
 import diaryApi from "../api/diaryApi";
 
@@ -58,7 +58,7 @@ const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: Diar
   return (
     <HomeLayout>
       {isWriteMode && selectedDate ? (
-        <DiaryWrite selectedDate={selectedDate} onCancel={handleCancelWrite} />
+        <DiaryControl selectedDate={selectedDate} onCancel={handleCancelWrite} />
       ) : (
         <DiaryLayout
           calendarContent={

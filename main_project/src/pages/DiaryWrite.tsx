@@ -12,6 +12,7 @@ import { useModalStore } from "../store/modal";
 interface DiaryWriteProps {
   selectedDate: Date;
   onCancel: () => void;
+  onDiaryComplete?: (content: DiaryContent) => void; // 추가
 }
 
 const editorConfig = {
@@ -24,7 +25,7 @@ const editorConfig = {
   },
 };
 
-const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
+const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps) => {
   const [diaryContent, setDiaryContent] = useState<DiaryContent>({
     diary_title: "",
     content: "",
@@ -113,31 +114,17 @@ const DiaryWrite = ({ selectedDate, onCancel }: DiaryWriteProps) => {
         modalPurpose: "saving",
       });
 
-      // TODO: API 호출하여 일기 저장
-      // const response = await fetch("api/diary", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     date: selectedDate,
-      //     ...diaryContent,
-      //   }),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error("일기 저장에 실패했습니다.");
-      // }
-
-      // 테스트 확인용으로 지연 추가 (실제 API 연결 시 삭제 요망)
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setIsSaved(true);
-
       closeModal();
+
+      // 콜백 존재 시 실행
+      if (onDiaryComplete) {
+        onDiaryComplete(diaryContent);
+      }
     } catch (error) {
       console.error("일기 저장 중 오류 발생:", error);
-
       closeModal();
     }
   };

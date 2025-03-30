@@ -1,7 +1,7 @@
 interface Props {
   profileImage: string;
   onImageChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  disabled?: boolean; // 추가
+  disabled?: boolean;
 }
 
 const ProfileImageUploader = ({ profileImage, onImageChange, disabled = false }: Props) => {

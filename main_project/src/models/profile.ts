@@ -5,16 +5,23 @@ export interface SocialLoginUser {
   is_active: boolean;
 }
 
-export type Genre =
-  | "Electronic"
-  | "Pop"
-  | "Ballad"
-  | "K-pop"
-  | "Jazz"
-  | "Rock"
-  | "Classic"
-  | "Hip-hop"
-  | "Country";
+export const GENRE_LIST = [
+  "Electronic",
+  "Pop",
+  "Ballad",
+  "K-pop",
+  "Jazz",
+  "Rock",
+  "Classic",
+  "Hip-hop",
+  "Country",
+] as const;
+
+export type Genre = (typeof GENRE_LIST)[number];
+
+export const isValidGenre = (genre: string): genre is Genre => {
+  return GENRE_LIST.includes(genre as Genre);
+};
 
 export interface GenreSelectorProps {
   selectedGenres: Genre[];

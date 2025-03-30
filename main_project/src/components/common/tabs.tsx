@@ -51,7 +51,7 @@ function MyTabs() {
 
   const handleOpenProfile = async () => {
     try {
-      const res = await authApi.getProfile();
+      const res = await authApi.fetchUserProfile();
       setModalUser({
         nickname: res.member.nickname ?? "",
         profileImage: res.profile_image ?? "",
@@ -73,7 +73,7 @@ function MyTabs() {
         return;
       }
 
-      await authApi.logout({ refresh_token: refreshToken });
+      await authApi.logoutUser({ refresh_token: refreshToken });
 
       clearAuth();
       alert("로그아웃되었습니다.");

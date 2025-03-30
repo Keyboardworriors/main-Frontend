@@ -22,14 +22,14 @@ const KakaoCallback = () => {
       }
 
       try {
-        const user: SocialLoginUser = await authApi.socialLoginCallback(code);
+        const user: SocialLoginUser = await authApi.fetchKakaoUser(code);
 
         if (user.is_active) {
           const {
             access_token: accessToken,
             refresh_token: refreshToken,
             user: loggedInUser,
-          } = await authApi.login(user.email);
+          } = await authApi.loginUser(user.email);
 
           if (!accessToken || !refreshToken) {
             alert("토큰 정보가 누락되었습니다. 다시 로그인해주세요.");

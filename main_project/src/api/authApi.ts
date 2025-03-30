@@ -12,18 +12,18 @@ import {
 import { axiosFetcher } from "./axiosFetcher";
 
 const authApi = {
-  // 카카오 콜백
-  socialLoginCallback: async (code: string): Promise<SocialLoginUser> => {
+  // 카카오 소셜 로그인 콜백 → 동사형 네이밍
+  fetchKakaoUser: async (code: string): Promise<SocialLoginUser> => {
     return await axiosFetcher.get(`/api/oauth/kakao/callback/?code=${code}`);
   },
 
-  // 네이버 콜백
-  socialLoginCallbackNaver: async (code: string, state: string): Promise<SocialLoginUser> => {
+  // 네이버 소셜 로그인 콜백
+  fetchNaverUser: async (code: string, state: string): Promise<SocialLoginUser> => {
     return await axiosFetcher.get(`/api/oauth/naver/callback/?code=${code}&state=${state}`);
   },
 
-  // 로그인 (is_active: true)
-  login: async (
+  // 로그인
+  loginUser: async (
     email: string,
   ): Promise<{
     access_token: string;
@@ -38,17 +38,17 @@ const authApi = {
     return await axiosFetcher.post("/api/members/register/", data);
   },
 
-  // 회원 조회 (마이페이지)
-  getUser: async (): Promise<UserProfile> => {
+  // 마이페이지 정보 조회
+  fetchUserInfo: async (): Promise<UserProfile> => {
     return await axiosFetcher.get("/api/members/mypage/");
   },
 
-  // 회원 프로필 조회
-  getProfile: async (): Promise<ProfileResponse> => {
+  // 프로필 조회
+  fetchUserProfile: async (): Promise<ProfileResponse> => {
     return await axiosFetcher.get("/api/members/profile/");
   },
 
-  // 회원 수정
+  // 회원 정보 수정
   updateUser: async (data: UpdateUserRequest): Promise<UserProfile> => {
     return await axiosFetcher.patch("/api/members/mypage/", data);
   },
@@ -61,7 +61,7 @@ const authApi = {
   },
 
   // 로그아웃
-  logout: async (data: LogoutRequest): Promise<LogoutResponse> => {
+  logoutUser: async (data: LogoutRequest): Promise<LogoutResponse> => {
     return await axiosFetcher.post("/api/members/logout/", data);
   },
 };

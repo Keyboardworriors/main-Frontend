@@ -1,4 +1,4 @@
-import { Diary, DiaryContent } from "../models/diary";
+import { Diary, DiaryContent, Music } from "../models/diary";
 import { axiosFetcher } from "./axiosFetcher";
 
 const diaryApi = {
@@ -13,7 +13,13 @@ const diaryApi = {
   },
 
   // 일기 생성(저장)
-  createDiary: async (data: DiaryContent) => {
+  createDiary: async (data: {
+    diary_title: string;
+    content: string;
+    moods: string[];
+    date: string;
+    rec_music: Music | null;
+  }) => {
     return await axiosFetcher.post<{ data: Diary }>("api/diary/create/", data);
   },
 
@@ -21,13 +27,19 @@ const diaryApi = {
   analyzeDiaryMood: async (title: string, content: string) => {
     const response = await axiosFetcher.post<{ moods: string[] }>(
       "api/diary/recommendation-keyword/",
-      {
-        title,
-        content,
-      },
+      { title, content },
     );
     console.log("추천받은 감정 키워드:", response.moods);
-    return response.moods; // 변경된 부분: response를 moods로 반환
+    return response.moods;
+  },
+
+  // 음악 분석
+  recommendMusic: async (moods: string[], favorite_genre: string[]) => {
+    const response = await axiosFetcher.post<{ data: Music[] }>("api/diary/music/recommend/", {
+      moods,
+      favorite_genre,
+    });
+    return response.data;
   },
 
   // 일기 검색

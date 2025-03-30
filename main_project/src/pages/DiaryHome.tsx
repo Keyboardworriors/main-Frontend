@@ -4,7 +4,7 @@ import DiaryLayout from "../components/layouts/DiaryLayout";
 import MyCalendar from "../components/Calendar/Calendar";
 import DiaryView from "./DiaryView";
 import { SearchResult } from "../models/search";
-import DiaryWrite from "./DiaryWrite";
+import DiaryControl from "./DiaryControl";
 import { useQuery } from "@tanstack/react-query";
 import diaryApi from "../api/diaryApi";
 import { useAuthStore } from "../store/useAuthStore";
@@ -58,16 +58,17 @@ const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: Diar
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
-  const diaryDates = (diaryData ?? []).map((item) => item.date);
+  const diaryDates = diaryData?.map((item) => item.date) || [];
+
   const diaryIdMap: Record<string, string> = {};
-  (diaryData ?? []).forEach((item) => {
+  diaryData?.forEach((item) => {
     diaryIdMap[item.date] = item.diary_id;
   });
 
   return (
     <HomeLayout>
       {isWriteMode && selectedDate ? (
-        <DiaryWrite selectedDate={selectedDate} onCancel={handleCancelWrite} />
+        <DiaryControl selectedDate={selectedDate} onCancel={handleCancelWrite} />
       ) : (
         <DiaryLayout
           calendarContent={

@@ -4,6 +4,10 @@ export interface MoodData {
   color: string;
 }
 
+export type RawEmotionStats = {
+  [label: string]: number;
+};
+
 export interface ChartComponentProps {
   periodType: PeriodType;
 }

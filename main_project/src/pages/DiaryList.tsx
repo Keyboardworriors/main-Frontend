@@ -29,21 +29,29 @@ const DiaryList = ({ diaries, onDiarySelect }: DiaryListProps) => {
               </span>
             </div>
 
-            <div className="mt-1 flex items-center gap-2">
-              <span className="text-xs text-gray-500">감정: {diary.moods.join(", ")}</span>
+            <div className="mt-1 flex justify-between items-center flex-wrap">
               {diary.rec_music && (
-                <>
-                  <span className="text-xs text-gray-500">음악: {diary.rec_music.title}</span>
-                  {/* 음악 썸네일 추가 */}
+                <div className="flex items-center gap-2">
                   {diary.rec_music.thumbnail && (
                     <img
                       src={diary.rec_music.thumbnail}
                       alt={diary.rec_music.title}
-                      className="w-8 h-8 object-cover rounded ml-1 border border-gray-200"
+                      className="w-8 h-8 object-cover rounded border border-gray-200"
                     />
                   )}
-                </>
+                  <span className="text-xs text-gray-500">{diary.rec_music.title}</span>
+                </div>
               )}
+              <div className="flex flex-wrap gap-1">
+                {diary.moods.map((mood, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-100 text-black text-xs font-medium px-2 py-0.5 rounded-full"
+                  >
+                    {mood}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         ))}

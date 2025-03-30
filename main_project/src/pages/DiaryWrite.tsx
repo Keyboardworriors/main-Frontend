@@ -33,7 +33,6 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
   });
   const [analyzedKeywords, setAnalyzedKeywords] = useState<string[]>([]);
   const [isMoodModalOpen, setIsMoodModalOpen] = useState(false);
-  const [isAnalysisFailed, setIsAnalysisFailed] = useState(false);
   const [isDirectSelect, setIsDirectSelect] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
@@ -44,13 +43,11 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
     onSuccess: (res) => {
       console.log("추천받은 감정 키워드:", res);
       setAnalyzedKeywords(res || []);
-      setIsAnalysisFailed(false);
-      closeModal();
-      setIsDirectSelect(false);
-      setIsMoodModalOpen(true);
     },
     onError: () => {
-      setIsAnalysisFailed(true);
+      setAnalyzedKeywords([]);
+    },
+    onSettled: () => {
       closeModal();
       setIsDirectSelect(false);
       setIsMoodModalOpen(true);
@@ -77,7 +74,6 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
   };
 
   const handleEmotionSelect = () => {
-    setIsAnalysisFailed(false);
     setIsDirectSelect(true);
     setIsMoodModalOpen(true);
   };
@@ -209,7 +205,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
         onClose={() => setIsMoodModalOpen(false)}
         onSelect={(mood: Mood) => handleMoodSelect(mood)}
         moods={Object.values(Mood)}
-        isAnalysisFailed={isAnalysisFailed}
+        isAnalysisFailed={analyzedKeywords.length === 0 && !isDirectSelect}
         isDirectSelect={isDirectSelect}
         onSave={handleSave}
         analyzedKeywords={analyzedKeywords}

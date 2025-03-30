@@ -8,6 +8,7 @@ import { axiosFetcher } from "../../api/axiosFetcher";
 import authApi from "../../api/Authapi";
 
 interface TopBarContainerProps {
+  tabIndex: number;
   showSearch: boolean;
   setShowSearch: (show: boolean) => void;
   searchQuery: string;
@@ -19,6 +20,7 @@ interface TopBarContainerProps {
 }
 
 const TopBarContainer = ({
+  tabIndex,
   showSearch,
   setShowSearch,
   searchQuery,
@@ -98,6 +100,7 @@ const TopBarContainer = ({
   return (
     <>
       <TopBar
+        tabIndex={tabIndex}
         showSearch={showSearch}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

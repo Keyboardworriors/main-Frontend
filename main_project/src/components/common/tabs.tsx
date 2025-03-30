@@ -4,8 +4,11 @@ import DiaryHome from "../../pages/DiaryHome";
 import MoodChart from "../../pages/moodChart";
 import TopBarContainer from "./TopBarContainer";
 import { useSearch } from "../../hooks/useSearch";
+import { useState } from "react";
 
 function MyTabs() {
+  const [tabIndex, setTabIndex] = useState(0);
+
   const {
     showSearch,
     setShowSearch,
@@ -19,7 +22,11 @@ function MyTabs() {
   } = useSearch();
 
   return (
-    <Tabs className="bg-[#A6CCF2] min-h-screen flex flex-col" defaultIndex={0}>
+    <Tabs
+      className="bg-[#A6CCF2] min-h-screen flex flex-col"
+      selectedIndex={tabIndex}
+      onSelect={(index) => setTabIndex(index)}
+    >
       <TabList className="flex max-w-[1130px] w-full mx-auto pt-0 pr-4 pl-7 items-center">
         <Tab
           className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"
@@ -34,6 +41,7 @@ function MyTabs() {
           나의 감정발자취
         </Tab>
         <TopBarContainer
+          tabIndex={tabIndex}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
           searchQuery={searchQuery}

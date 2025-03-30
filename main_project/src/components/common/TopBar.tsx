@@ -3,6 +3,7 @@ import UserMenu from "./UserMenu";
 import { RefObject } from "react";
 
 interface TopBarProps {
+  tabIndex: number;
   showSearch: boolean;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -20,6 +21,7 @@ interface TopBarProps {
 }
 
 const TopBar = ({
+  tabIndex,
   showSearch,
   searchQuery,
   setSearchQuery,
@@ -37,6 +39,7 @@ const TopBar = ({
   return (
     <div className="flex items-center gap-2 ml-auto">
       <SearchBar
+        tabIndex={tabIndex}
         showSearch={showSearch}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

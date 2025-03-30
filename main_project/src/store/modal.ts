@@ -7,7 +7,6 @@ export type ModalType =
   | "profile"
   | "moodSelect"
   | "songSelect"
-  | "songAnalysisError"
   | "customConfirm"
   | null;
 
@@ -18,7 +17,6 @@ export interface ModalData {
     | "chart"
     | "mood"
     | "melody"
-    | "songAnalysisError"
     | "saving"
     | "withdraw"
     | "profileLoading"

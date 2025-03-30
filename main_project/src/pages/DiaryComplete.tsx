@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { format } from "date-fns";
-import { useModalStore } from "../store/modal";
 import diaryApi from "../api/diaryApi";
 
 type DiaryCompleteProps = {
@@ -18,7 +17,6 @@ const DiaryComplete = ({
   selectedMusic,
   onFinish,
 }: DiaryCompleteProps) => {
-  const { openModal, closeModal } = useModalStore();
   const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState(false);
 
   const handleSaveDiary = async () => {
@@ -40,11 +38,9 @@ const DiaryComplete = ({
 
     try {
       await diaryApi.createDiary(payload);
-      openModal("success", { message: "일기가 성공적으로 저장되었어요!" });
       onFinish();
     } catch (error) {
       console.error("일기 저장 실패:", error);
-      openModal("error", { message: "일기 저장에 실패했어요. 다시 시도해주세요." });
     }
   };
 

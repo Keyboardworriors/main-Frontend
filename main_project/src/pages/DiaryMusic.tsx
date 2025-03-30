@@ -41,8 +41,8 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
           title: "⚠️ 404 (NOT FOUND)",
           message:
             "음악 추천에 실패했어요\n다시 분석을 원하시면 다시 시도,\n그렇지 않다면 저장하기를 눌러주세요!",
-          confirmText: "다시 시도",
-          cancelText: "음악 없이 저장",
+          confirmText: "다시시도",
+          cancelText: "저장하기",
           isDanger: false,
           onConfirm: analyzeMusic,
           onCancel: handleNoMusic,
@@ -69,8 +69,8 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         title: "⚠️ 404 (NOT FOUND)",
         message:
           "음악 추천에 실패했어요\n다시 분석을 원하시면 다시 시도,\n그렇지 않다면 저장하기를 눌러주세요!",
-        confirmText: "다시 시도",
-        cancelText: "음악 없이 저장",
+        confirmText: "다시시도",
+        cancelText: "저장하기",
         isDanger: false,
         onConfirm: analyzeMusic,
         onCancel: handleNoMusic,

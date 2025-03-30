@@ -48,9 +48,10 @@ const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: Diar
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
-  const diaryDates = (diaryData ?? []).map((item) => item.date);
+  const diaryDates = diaryData?.map((item) => item.date) || [];
+
   const diaryIdMap: Record<string, string> = {};
-  (diaryData ?? []).forEach((item) => {
+  diaryData?.forEach((item) => {
     diaryIdMap[item.date] = item.diary_id;
   });
 

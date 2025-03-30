@@ -8,7 +8,7 @@ type DiaryContentPreviewProps = {
   selectedDate: Date;
   diaryContent: DiaryContentType;
   onEdit: () => void;
-  onCompleteMusic: (selectedMusic: Music) => void; // 추가
+  onCompleteMusic: (selectedMusic: Music) => void;
 };
 
 const DiaryContentPreview = ({
@@ -41,7 +41,7 @@ const DiaryContentPreview = ({
     });
 
     try {
-      const favoriteGenre = []; // 필요시 유저 장르 추가
+      const favoriteGenre = []; // 유저 장르 필요 시 추가
       const songs = await diaryApi.recommendMusic(diaryContent.moods, favoriteGenre);
 
       closeModal();
@@ -51,7 +51,12 @@ const DiaryContentPreview = ({
           songs,
           onConfirm: (selected: Music) => {
             closeModal();
-            onCompleteMusic(selected);
+            // 음악 제목 앞 * 제거
+            const cleaned = {
+              ...selected,
+              title: selected.title.replace(/^\*/, ""),
+            };
+            onCompleteMusic(cleaned);
           },
           onRetry: retryMelodyAnalysis,
         });
@@ -80,7 +85,6 @@ const DiaryContentPreview = ({
 
   const handleMelodyRecommendation = async () => {
     if (isSaving) {
-      console.log("음악 없이 저장하기 실행됨");
       onCompleteMusic({
         video_id: "",
         title: "",

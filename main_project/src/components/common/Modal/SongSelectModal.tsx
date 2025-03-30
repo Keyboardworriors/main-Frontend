@@ -19,6 +19,7 @@ const SongItem = memo(
   }) => {
     const isPlaying = playingSongId === song.video_id;
     const playerRef = useRef<HTMLIFrameElement | null>(null);
+    const isValidSong = !!song.video_id;
 
     const stateClasses = isSelected
       ? "bg-[#A6CCF2] scale-[1.02] shadow-lg"
@@ -26,23 +27,31 @@ const SongItem = memo(
 
     return (
       <div
-        onClick={() => onSelect(song.video_id)}
-        className={`w-full max-w-[220px] rounded-lg overflow-hidden transition-all cursor-pointer ${stateClasses}`}
+        onClick={() => isValidSong && onSelect(song.video_id)}
+        className={`w-full max-w-[220px] rounded-lg overflow-hidden transition-all ${
+          isValidSong ? "cursor-pointer" : "opacity-50 cursor-default"
+        } ${stateClasses}`}
       >
         <div className="relative w-full h-[120px] bg-black">
-          {isPlaying ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${song.video_id}?autoplay=1&rel=0&controls=1`}
-              title={`${song.title} - ${song.artist}`}
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              className="w-full h-full"
-              ref={playerRef}
-            />
+          {isValidSong ? (
+            isPlaying ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${song.video_id}?autoplay=1&rel=0&controls=1`}
+                title={`${song.title} - ${song.artist}`}
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                className="w-full h-full"
+                ref={playerRef}
+              />
+            ) : (
+              <img src={song.thumbnail} alt={song.title} className="w-full h-full object-cover" />
+            )
           ) : (
-            <img src={song.thumbnail} alt={song.title} className="w-full h-full object-cover" />
+            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm bg-gray-100">
+              추천되지 않음
+            </div>
           )}
-          {!isPlaying && (
+          {isValidSong && !isPlaying && (
             <div
               className="absolute inset-0 flex items-center justify-center"
               onClick={(e) => onPlayToggle(e, song.video_id)}
@@ -55,8 +64,10 @@ const SongItem = memo(
         </div>
 
         <div className="text-center px-2 py-2">
-          <p className="font-semibold text-xs text-gray-900 truncate">{song.title}</p>
-          <p className="text-[11px] text-gray-600 truncate">{song.artist}</p>
+          <p className="font-semibold text-xs text-gray-900 truncate">
+            {song.title?.replace(/^\*/, "") || "제목 없음"}
+          </p>
+          <p className="text-[11px] text-gray-600 truncate">{song.artist || "아티스트 없음"}</p>
         </div>
       </div>
     );
@@ -71,9 +82,25 @@ const SongSelectModal = () => {
 
   if (type !== "songSelect" || !isOpen) return null;
 
-  const songs = data?.songs || [];
+  const songs: Music[] = data?.songs || [];
   const onRetry = data?.onRetry;
   const onConfirm = data?.onConfirm;
+
+  // 카드는 항상 3개 유지, 3개 미만 추천시 빈박스 반환/클릭불가 처리
+  const filledSongs = [...songs];
+  const needToFill = 3 - filledSongs.length;
+
+  if (needToFill > 0) {
+    for (let i = 0; i < needToFill; i++) {
+      filledSongs.push({
+        video_id: "",
+        title: "",
+        artist: "",
+        thumbnail: "",
+        embedUrl: "",
+      });
+    }
+  }
 
   const handleSongSelect = useCallback(
     (songId: string) => {
@@ -106,9 +133,9 @@ const SongSelectModal = () => {
         <h2 className="font-bold text-center mb-6 text-xl sm:text-2xl">추천 필로디 🎵</h2>
 
         <div className="grid grid-cols-3 gap-5 justify-items-center mb-8">
-          {songs.map((song) => (
+          {filledSongs.map((song, idx) => (
             <SongItem
-              key={song.video_id}
+              key={idx}
               song={song}
               isSelected={selectedSongId === song.video_id}
               playingSongId={playingSongId}

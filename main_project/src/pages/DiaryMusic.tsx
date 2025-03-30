@@ -15,6 +15,17 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
   const { openModal, closeModal } = useModalStore();
   const formattedDate = formatDateKorean(selectedDate);
 
+  const handleNoMusic = () => {
+    closeModal();
+    onComplete({
+      video_id: "",
+      title: "",
+      artist: "",
+      thumbnail: "",
+      embedUrl: "",
+    });
+  };
+
   const analyzeMusic = async () => {
     openModal("loading", {
       message: "추천 필로디 🎵",
@@ -26,26 +37,25 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
       closeModal();
 
       if (recommendedSongs.length === 0) {
-        openModal("songAnalysisError", {
-          message: "추천된 음악이 없어요 😢",
-          onRetry: analyzeMusic,
-          onSaveWithoutMusic: () => {
-            closeModal();
-            onComplete({
-              video_id: "",
-              title: "",
-              artist: "",
-              thumbnail: "",
-              embedUrl: "",
-            });
-          },
+        openModal("customConfirm", {
+          title: "⚠️ 404 (NOT FOUND)",
+          message:
+            "음악 추천에 실패했어요\n다시 분석을 원하시면 다시 시도,\n그렇지 않다면 저장하기를 눌러주세요!",
+          confirmText: "다시 시도",
+          cancelText: "음악 없이 저장",
+          isDanger: false,
+          onConfirm: analyzeMusic,
+          onCancel: handleNoMusic,
         });
       } else {
         openModal("songSelect", {
           songs: recommendedSongs,
           onConfirm: (selected: Music) => {
             closeModal();
-            onComplete(selected);
+            onComplete({
+              ...selected,
+              title: selected.title.replace(/^\*/, ""),
+            });
           },
           onRetry: () => {
             closeModal();
@@ -55,20 +65,15 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
       }
     } catch (error) {
       closeModal();
-
-      openModal("songAnalysisError", {
-        message: "음악 추천에 실패했어요 😭",
-        onRetry: analyzeMusic,
-        onSaveWithoutMusic: () => {
-          closeModal();
-          onComplete({
-            video_id: "",
-            title: "",
-            artist: "",
-            thumbnail: "",
-            embedUrl: "",
-          });
-        },
+      openModal("customConfirm", {
+        title: "⚠️ 404 (NOT FOUND)",
+        message:
+          "음악 추천에 실패했어요\n다시 분석을 원하시면 다시 시도,\n그렇지 않다면 저장하기를 눌러주세요!",
+        confirmText: "다시 시도",
+        cancelText: "음악 없이 저장",
+        isDanger: false,
+        onConfirm: analyzeMusic,
+        onCancel: handleNoMusic,
       });
     }
   };

@@ -141,11 +141,11 @@ const DiaryView = ({
           setShowDateWarning(false);
           onWriteClick();
         }}
-        className="border border-black py-1 px-2 text-xs rounded-full active:scale-95 transition-transform duration-150 cursor-pointer"
+        className="border border-black py-2 px-4 text-sm rounded-full active:scale-95 transition-transform duration-150 cursor-pointer"
       >
         + 감정 기록 작성하기
       </button>
-      {showDateWarning && <p className="text-xs text-red-500">날짜를 선택해주세요!</p>}
+      {showDateWarning && <p className="text-sm text-red-500">날짜를 선택해주세요!</p>}
     </div>
   );
 

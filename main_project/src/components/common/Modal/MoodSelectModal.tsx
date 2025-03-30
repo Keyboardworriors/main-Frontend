@@ -20,6 +20,7 @@ const MoodSelectModal = ({
   moods,
   isAnalysisFailed = false,
   analyzedKeywords,
+  isDirectSelect = false,
   onSave,
 }: MoodSelectModalProps) => {
   const [selectedMoods, setSelectedMoods] = useState<Mood[]>([]);
@@ -81,8 +82,7 @@ const MoodSelectModal = ({
           </div>
         ) : null}
 
-        {/* 기본 감정 키워드 */}
-        {isAnalysisFailed && (
+        {(isAnalysisFailed || isDirectSelect) && (
           <div className="min-h-[200px] sm:h-[240px]">
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-base sm:text-lg text-gray-600 font-semibold">감정 키워드</h2>

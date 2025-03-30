@@ -1,8 +1,7 @@
-import { useState } from "react";
 import Calendar from "react-calendar";
 import "dayjs/locale/ko";
 import "../Calendar/calendar.css";
-import { formatDate, getToday } from "../../utils/date";
+import { formatDate } from "../../utils/date";
 export interface MyCalendarProps {
   selectedDate: Date | null;
   onDateSelect: (date: Date | null) => void;
@@ -10,15 +9,11 @@ export interface MyCalendarProps {
 }
 
 const MyCalendar = ({ selectedDate, onDateSelect, diaryDates }: MyCalendarProps) => {
-  const [date, setDate] = useState<Date | null>(selectedDate || getToday());
-
   const handleDateChange = (newDate: Date | null) => {
     if (newDate instanceof Date) {
-      if (date && formatDate(date) === formatDate(newDate)) {
-        setDate(null);
+      if (selectedDate && formatDate(selectedDate) === formatDate(newDate)) {
         onDateSelect(null);
       } else {
-        setDate(newDate);
         onDateSelect(newDate);
       }
     }
@@ -28,7 +23,7 @@ const MyCalendar = ({ selectedDate, onDateSelect, diaryDates }: MyCalendarProps)
     <div className="w-full h-[374px] overflow-hidden flex justify-center items-center">
       <Calendar
         onChange={(value) => value instanceof Date && handleDateChange(value)}
-        value={date}
+        value={selectedDate}
         locale="ko"
         calendarType="gregory"
         prev2Label={null}

@@ -80,10 +80,20 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
   };
 
   const handleEmotionAnalysis = async () => {
+    if (diaryContent.diary_title.trim().length < 1 || diaryContent.content.trim().length < 30) {
+      openModal("customConfirm", {
+        message: "감정 분석을 원하시면\n제목과 내용(30자 이상)을 작성해주세요.",
+        onConfirm: () => {},
+        onCancel: () => {},
+      });
+      return;
+    }
+
     openModal("loading", {
       message: "감정을 분석중이에요",
       modalPurpose: "mood",
     });
+
     analyzeMoodMutation.mutate({
       title: diaryContent.diary_title,
       content: diaryContent.content,
@@ -121,7 +131,6 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
       closeModal();
 
-      // 콜백 존재 시 실행
       if (onDiaryComplete) {
         onDiaryComplete(diaryContent);
       }
@@ -147,6 +156,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
         selectedDate={selectedDate}
         diaryContent={diaryContent}
         onEdit={handleEdit}
+        onCompleteMusic={() => {}}
       />
     );
   }
@@ -166,8 +176,8 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
 
       <input
         type="text"
-        placeholder="감정기록의 제목을 입력하세요 (최대 100자)"
-        maxLength={100}
+        placeholder="감정기록의 제목을 입력하세요 (20자 이내로 작성해주세요!)"
+        maxLength={20}
         value={diaryContent.diary_title}
         onChange={handleTitleChange}
         className="w-full p-2 text-base font-medium border-b border-[#A6CCF2] focus:outline-none focus:border-[#5E8FBF] mb-3 placeholder:text-base placeholder:font-medium"
@@ -180,9 +190,9 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       <div className="flex justify-end gap-2">
         <button
           onClick={handleEmotionSelect}
-          disabled={!diaryContent.diary_title.trim() || !diaryContent.content.trim()}
+          disabled={diaryContent.diary_title.trim().length < 1}
           className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            !diaryContent.diary_title.trim() || !diaryContent.content.trim()
+            diaryContent.diary_title.trim().length < 1
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-[#A6CCF2] hover:bg-[#5E8FBF] text-white"
           }`}
@@ -191,12 +201,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
         </button>
         <button
           onClick={handleEmotionAnalysis}
-          disabled={!diaryContent.diary_title.trim() || !diaryContent.content.trim()}
-          className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            !diaryContent.diary_title.trim() || !diaryContent.content.trim()
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#5E8FBF] hover:bg-[#4A7196] text-white"
-          }`}
+          className="px-3 py-1.5 rounded-full text-sm transition-colors bg-[#5E8FBF] hover:bg-[#4A7196] text-white"
         >
           감정 분석
         </button>

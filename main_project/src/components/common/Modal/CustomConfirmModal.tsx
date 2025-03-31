@@ -24,7 +24,6 @@ const CustomConfirmModal = ({
   cancelText = "취소",
   onConfirm,
   onCancel,
-  isDanger = false,
 }: CustomConfirmModalProps) => {
   const { isOpen: storeIsOpen, type: storeType, closeModal } = useModalStore();
 
@@ -48,7 +47,7 @@ const CustomConfirmModal = ({
         <div className="p-8 bg-white rounded-xl max-w-md w-full shadow-lg pointer-events-auto">
           <h3 className="text-center font-bold text-xl mb-5">{title}</h3>
 
-          <div className="text-center text-gray-600 mb-8">{message}</div>
+          <div className="text-center text-gray-600 mb-8 whitespace-pre-line">{message}</div>
 
           <div className="flex gap-4 mt-6">
             <button

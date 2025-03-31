@@ -1,11 +1,9 @@
 import HomeLayout from "../layouts/HomeLayout";
 import KakaoLogo from "../../assets/logo/KakaoLogo.png";
-import { useEffect } from "react";
+import { useScrollToTop } from "../../hooks/useScrollTopOnMount";
 
 const Login = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  useScrollToTop();
 
   const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
   const NAVER_REDIRECT_URI = import.meta.env.VITE_NAVER_REDIRECT_URI;

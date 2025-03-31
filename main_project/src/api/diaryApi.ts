@@ -1,4 +1,4 @@
-import { Diary, DiaryContent, Music } from "../models/diary";
+import { Diary, Music } from "../models/diary";
 import { axiosFetcher } from "./axiosFetcher";
 
 const diaryApi = {

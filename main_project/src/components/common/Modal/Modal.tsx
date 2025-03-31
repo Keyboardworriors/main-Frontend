@@ -1,5 +1,5 @@
 import { useModalStore } from "../../../store/modal";
-import BaseModal from "./BaseModal";
+//import BaseModal from "./BaseModal";
 import LoadingModal from "./LoadingModal";
 import ConfirmModal from "./ConfirmModal";
 import CustomConfirmModal from "./CustomConfirmModal";
@@ -19,7 +19,7 @@ const Modal = () => {
           isOpen={isOpen}
           onClose={closeModal}
           message={data?.message ?? ""}
-          onConfirm={data?.onConfirm}
+          onConfirm={data?.onConfirm ?? (() => {})} // 기본값 함수 추가
           confirmText={data?.confirmText}
           cancelText={data?.cancelText}
           isDanger={data?.isDanger}
@@ -34,8 +34,8 @@ const Modal = () => {
           message={data?.message ?? ""}
           confirmText={data?.confirmText}
           cancelText={data?.cancelText}
-          onConfirm={data?.onConfirm}
-          onCancel={data?.onCancel}
+          onConfirm={data?.onConfirm ?? (() => {})} // 기본값 제공
+          onCancel={data?.onCancel ?? (() => {})} // 기본값 제공
           isDanger={data?.isDanger}
         />
       );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import diaryApi from "../api/diaryApi";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -37,6 +37,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
   const [isSaved, setIsSaved] = useState(false);
 
   const { openModal, closeModal } = useModalStore();
+  const queryClient = useQueryClient();
   const analyzeMoodMutation = useMutation({
     mutationFn: ({ title, content }: { title: string; content: string }) =>
       diaryApi.analyzeDiaryMood(title, content),

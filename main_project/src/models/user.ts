@@ -36,6 +36,17 @@ export interface UserViewModel {
     bio: string;
     genres: string[];
   }
+  
+  //프로필 뷰 타입
+  export interface ProfileResponse {
+    profile_image: string;
+    member: {
+      nickname: string;
+      introduce: string;
+      favorite_genre: string[];
+    };
+  }
+  
 
 // 회원가입, 프로필 수정 요청 시 사용 타입
 export interface ProfileSetupRequest {

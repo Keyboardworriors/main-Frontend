@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { SocialLoginUser } from "../../models/profile";
 import LoadingModal from "../common/Modal/LoadingModal";
-import authApi from "../../api/Authapi";
+import authApi from "../../api/authApi";
 
 const NaverCallback = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const NaverCallback = () => {
       }
 
       try {
-        const user: SocialLoginUser = await authApi.socialLoginCallbackNaver(code, state);
+        const user: SocialLoginUser = await authApi.fetchNaverUser(code, state);
         console.log("응답 결과", user);
 
         if (user.is_active) {
@@ -34,7 +34,7 @@ const NaverCallback = () => {
             access_token,
             refresh_token,
             user: loggedInUser,
-          } = await authApi.login(user.email);
+          } = await authApi.loginUser(user.email);
 
           if (!access_token || !refresh_token) {
             alert("토큰 정보가 누락되었습니다. 다시 로그인해주세요.");

@@ -115,11 +115,6 @@ const TopBarContainer = ({
         handleOpenProfile={handleOpenProfile}
         handleOpenLogoutConfirm={() => setShowLogoutModal(true)}
       />
-      <ProfileModal
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-        user={modalUser}
-      />
       <CustomConfirmModal
         type="logout"
         title="로그아웃 하시겠습니까?"
@@ -130,6 +125,11 @@ const TopBarContainer = ({
         isDanger
         confirmText="로그아웃"
         cancelText="취소"
+      />
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        user={modalUser}
       />
     </>
   );

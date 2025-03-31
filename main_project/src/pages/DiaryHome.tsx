@@ -7,6 +7,8 @@ import { SearchResult } from "../models/search";
 import DiaryControl from "./DiaryControl";
 import { useQuery } from "@tanstack/react-query";
 import diaryApi from "../api/diaryApi";
+import { useAuthStore } from "../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 interface DiaryHomeProps {
   searchQuery: string;
@@ -15,9 +17,17 @@ interface DiaryHomeProps {
 }
 
 const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: DiaryHomeProps) => {
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isWriteMode, setIsWriteMode] = useState(false);
   const [selectedDiaryId, setSelectedDiaryId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   const handleDateSelect = (date: Date | null) => {
     setSelectedDate(date);
@@ -80,6 +90,7 @@ const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: Diar
                 setSelectedDiaryId(id);
                 setSelectedDate(new Date(date));
               }}
+              onBackToList={() => setSelectedDiaryId(null)}
             />
           }
         />

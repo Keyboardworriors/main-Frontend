@@ -42,10 +42,10 @@ const CustomConfirmModal = ({
   };
 
   return createPortal(
-    <div className="bg-black/50 rounded-xl w-full h-full p-10 inset-0 flex justify-center items-center pointer-events-auto">
-      <div className="w-full absolute inset-0 rounded-xl"></div>
-      <div className="relative flex flex-col items-center z-10">
-        <div className="p-8 bg-white rounded-xl max-w-md w-full shadow-lg">
+    <>
+      <div className="fixed inset-0 z-[90] bg-black/50" />
+      <div className="fixed inset-0 z-[100] flex justify-center items-center pointer-events-none">
+        <div className="p-8 bg-white rounded-xl max-w-md w-full shadow-lg pointer-events-auto">
           <h3 className="text-center font-bold text-xl mb-5">{title}</h3>
 
           <div className="text-center text-gray-600 mb-8">{message}</div>
@@ -69,7 +69,7 @@ const CustomConfirmModal = ({
           </div>
         </div>
       </div>
-    </div>,
+    </>,
     modalContainer,
   );
 };

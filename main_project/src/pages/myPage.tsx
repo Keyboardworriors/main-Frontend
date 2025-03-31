@@ -4,13 +4,16 @@ import HomeLayout from "../components/layouts/HomeLayout";
 import { useAuthStore } from "../store/useAuthStore";
 import { useModalStore } from "../store/modal";
 import { UserViewModel } from "../models/user";
-import authApi from "../api/Authapi";
+import authApi from "../api/authApi";
+import { useScrollToTop } from "../hooks/useScrollTopOnMount";
 
 const MyPage = () => {
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<UserViewModel | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { openModal, closeModal } = useModalStore();
+
+  useScrollToTop();
 
   useEffect(() => {
     openModal("loading", {
@@ -20,7 +23,7 @@ const MyPage = () => {
 
     const fetchUserProfile = async () => {
       try {
-        const res = await authApi.getUser();
+        const res = await authApi.fetchUserInfo();
         const { user } = useAuthStore.getState();
 
         setUserProfile({

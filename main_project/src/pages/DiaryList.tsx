@@ -44,6 +44,16 @@ const DiaryList = ({ diaries, onDiarySelect }: DiaryListProps) => {
                   )}
                 </>
               )}
+              <div className="flex flex-wrap gap-1">
+                {diary.moods.map((mood, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-100 text-black text-xs font-medium px-2 py-0.5 rounded-full"
+                  >
+                    {mood}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         ))}

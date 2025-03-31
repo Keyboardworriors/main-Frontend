@@ -1,4 +1,5 @@
 import { useModalStore } from "../../../store/modal";
+import BaseModal from "./BaseModal";
 import LoadingModal from "./LoadingModal";
 import ConfirmModal from "./ConfirmModal";
 import CustomConfirmModal from "./CustomConfirmModal";
@@ -63,7 +64,6 @@ const Modal = () => {
       );
     case "profile":
       return <ProfileModal isOpen={isOpen} onClose={closeModal} user={data?.user} />;
-
     case "loading":
       return <LoadingModal isOpen={isOpen} message={data?.message} />;
     default:

@@ -14,6 +14,7 @@ interface DiaryViewProps {
   diaryIdMap: Record<string, string>;
   selectedDiaryId: string | null;
   onDiarySelect: (id: string, date: string) => void;
+  onBackToList?: () => void; // New optional prop
 }
 
 const DiaryView = ({
@@ -24,9 +25,11 @@ const DiaryView = ({
   diaryIdMap,
   selectedDiaryId,
   onDiarySelect,
+  onBackToList, // Destructure new prop
 }: DiaryViewProps) => {
   const { openModal } = useModalStore();
   const [diary, setDiary] = useState<Diary | null>(null);
+  const [showDateWarning, setShowDateWarning] = useState(false);
 
   const handleDeleteDiary = async () => {
     if (!selectedDate) return;
@@ -64,10 +67,19 @@ const DiaryView = ({
 
     return (
       <div className="w-full max-w-md h-full flex flex-col">
-        <div className="flex justify-end mb-2">
+        <div className="w-full flex items-center justify-between mb-2">
+          <div>
+            {isSearchMode && onBackToList && (
+              <button
+                onClick={onBackToList}
+                className="text-m font-semibold text-gray-600 hover:text-[#4A7196] transition-colors"
+              >
+                ←
+              </button>
+            )}
+          </div>
           <button
             onClick={() => {
-              // 컨펌 모달 코드 추가
               openModal("customConfirm", {
                 title: "기록을 삭제할까요?",
                 message: "삭제하고 나면 되돌릴 수 없어요!",
@@ -131,13 +143,21 @@ const DiaryView = ({
   };
 
   const renderWriteButton = () => (
-    <div className="w-full flex items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center gap-2">
       <button
-        onClick={onWriteClick}
-        className="border border-black py-1 px-2 text-xs rounded-full active:scale-95 transition-transform duration-150 cursor-pointer"
+        onClick={() => {
+          if (!selectedDate) {
+            setShowDateWarning(true);
+            return;
+          }
+          setShowDateWarning(false);
+          onWriteClick();
+        }}
+        className="border border-black py-2 px-4 text-sm rounded-full active:scale-95 transition-transform duration-150 cursor-pointer"
       >
         + 감정 기록 작성하기
       </button>
+      {showDateWarning && <p className="text-sm text-red-500">날짜를 선택해주세요!</p>}
     </div>
   );
 

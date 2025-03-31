@@ -5,6 +5,7 @@ import DiaryMusic from "./DiaryMusic";
 import DiaryComplete from "./DiaryComplete";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DiaryControlProps {
   selectedDate: Date;
@@ -38,6 +39,8 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
     setCurrentStep("complete");
   };
 
+  const queryClient = useQueryClient();
+
   const handleComplete = async () => {
     openModal("loading", {
       message: "소중한 감정을 기록중이에요",
@@ -45,6 +48,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
     });
     setTimeout(() => {
       closeModal();
+      queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
       onCancel();
     }, 1500);
   };

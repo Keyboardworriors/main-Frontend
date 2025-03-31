@@ -1,23 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
 import { SocialLoginUser } from "../../models/profile";
-import LoadingModal from "../common/Modal/LoadingModal";
 import authApi from "../../api/authApi";
+import { useModalStore } from "../../store/modal";
+import HomeLayout from "../../components/layouts/HomeLayout";
 
 const KakaoCallback = () => {
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
-  const [isLoading, setIsLoading] = useState(true);
+  const { openModal, closeModal } = useModalStore();
 
   useEffect(() => {
     const getKakaoToken = async () => {
+      openModal("loading", {
+        message: "카카오 로그인 처리 중...",
+        modalPurpose: "login",
+      });
+
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
 
       if (!code) {
         alert("인증 코드를 받아오는데 실패했습니다. 다시 시도해주세요.");
-        setIsLoading(false);
+        closeModal();
         return;
       }
 
@@ -55,14 +61,18 @@ const KakaoCallback = () => {
           alert("카카오 로그인 중 오류가 발생했습니다.");
         }
       } finally {
-        setIsLoading(false);
+        closeModal();
       }
     };
 
     getKakaoToken();
-  }, [navigate, setAuth]);
+  }, [navigate, setAuth, openModal, closeModal]);
 
-  return <LoadingModal isOpen={isLoading} message="카카오 로그인 처리 중..." />;
+  return (
+    <HomeLayout>
+      <div />
+    </HomeLayout>
+  );
 };
 
 export default KakaoCallback;

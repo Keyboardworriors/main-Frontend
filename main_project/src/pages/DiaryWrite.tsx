@@ -147,6 +147,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
         selectedDate={selectedDate}
         diaryContent={diaryContent}
         onEdit={handleEdit}
+        onCompleteMusic={() => {}} // 타입 오류 수정 추가
       />
     );
   }

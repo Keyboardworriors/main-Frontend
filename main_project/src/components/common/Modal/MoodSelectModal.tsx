@@ -9,6 +9,7 @@ interface MoodSelectModalProps {
   moods: Mood[];
   isAnalysisFailed?: boolean;
   analyzedKeywords?: string[];
+  analyzedMood?: string[]; // 타입 에러 추가
   isDirectSelect?: boolean;
   onSave: () => void;
 }

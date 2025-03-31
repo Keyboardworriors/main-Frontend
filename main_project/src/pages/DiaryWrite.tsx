@@ -12,7 +12,7 @@ import { useModalStore } from "../store/modal";
 interface DiaryWriteProps {
   selectedDate: Date;
   onCancel: () => void;
-  onDiaryComplete?: (content: DiaryContent) => void; // 추가
+  onDiaryComplete?: (content: DiaryContent) => void;
 }
 
 const editorConfig = {
@@ -118,6 +118,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setIsSaved(true);
+      queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
       closeModal();
 
       // 콜백 존재 시 실행

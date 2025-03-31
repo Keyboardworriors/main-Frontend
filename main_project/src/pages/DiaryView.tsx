@@ -1,4 +1,5 @@
 import { formatDate, formatDateKorean, getTargetDateOrToday } from "../utils/date";
+import { useQueryClient } from "@tanstack/react-query";
 import { SearchResult } from "../models/search";
 import { Diary } from "../models/diary";
 import { useModalStore } from "../store/modal";
@@ -14,7 +15,7 @@ interface DiaryViewProps {
   diaryIdMap: Record<string, string>;
   selectedDiaryId: string | null;
   onDiarySelect: (id: string, date: string) => void;
-  onBackToList?: () => void; // New optional prop
+  onBackToList?: () => void;
 }
 
 const DiaryView = ({
@@ -25,9 +26,10 @@ const DiaryView = ({
   diaryIdMap,
   selectedDiaryId,
   onDiarySelect,
-  onBackToList, // Destructure new prop
+  onBackToList,
 }: DiaryViewProps) => {
   const { openModal } = useModalStore();
+  const queryClient = useQueryClient();
   const [diary, setDiary] = useState<Diary | null>(null);
   const [showDateWarning, setShowDateWarning] = useState(false);
 
@@ -39,6 +41,7 @@ const DiaryView = ({
     try {
       await diaryApi.deleteDiary(diaryId);
       setDiary(null);
+      queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
     } catch (error) {
       console.error("일기 삭제 실패", error);
     }

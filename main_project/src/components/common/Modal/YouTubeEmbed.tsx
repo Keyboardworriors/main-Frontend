@@ -8,29 +8,23 @@ interface YouTubeEmbedProps {
 
 const YouTubeEmbed = ({ videoId, title = "YouTube 비디오", className = "" }: YouTubeEmbedProps) => {
   const [aspectRatio, setAspectRatio] = useState<string>("56.25%");
-  const [windowWidth, setWindowWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 768,
-  );
 
   useEffect(() => {
     const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      if (window.innerWidth < 480) {
+      const width = window.innerWidth;
+      if (width < 480) {
         setAspectRatio("40%");
-      } else if (window.innerWidth < 768) {
+      } else if (width < 768) {
         setAspectRatio("50%");
       } else {
         setAspectRatio("56.25%");
       }
     };
 
-    handleResize();
+    handleResize(); // 초기 설정
 
     window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (

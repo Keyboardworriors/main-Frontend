@@ -1,7 +1,15 @@
 import { useState, useRef, useCallback, memo } from "react";
 import BaseModal from "./BaseModal";
-import { useModalStore } from "../../../store/modal";
 import { Music } from "../../../models/diary";
+
+// props 타입 명시
+interface SongSelectModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  songs: Music[];
+  onConfirm?: (selected: Music) => void;
+  onRetry?: () => void;
+}
 
 const SongItem = memo(
   ({
@@ -15,7 +23,6 @@ const SongItem = memo(
     isSelected: boolean;
     playingSongId: string | null;
     onSelect: (id: string) => void;
-    onConfirm?: (music: Music) => void;
     onPlayToggle: (e: React.MouseEvent, id: string) => void;
   }) => {
     const isPlaying = playingSongId === song.video_id;
@@ -75,18 +82,13 @@ const SongItem = memo(
   },
 );
 
-const SongSelectModal = () => {
-  const { isOpen, type, data, closeModal, updateModalData } = useModalStore();
+// props 누락 시 발생하던 타입 오류 방지
+const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSelectModalProps) => {
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
   const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState<boolean>(false);
 
-  if (type !== "songSelect" || !isOpen) return null;
-
-  const songs: Music[] = data?.songs || [];
-  const onRetry = data?.onRetry;
-  const onConfirm = data?.onConfirm;
-
+  // 카드 개수 부족 시 빈 카드 채우기
   const filledSongs = [...songs];
   const needToFill = 3 - filledSongs.length;
   if (needToFill > 0) {
@@ -101,22 +103,16 @@ const SongSelectModal = () => {
     }
   }
 
-  const handleSongSelect = useCallback(
-    (songId: string) => {
-      setSelectedSongId(songId);
-      const selected = songs.find((s) => s.video_id === songId);
-      if (selected) {
-        updateModalData({ ...data, selectedSong: selected });
-      }
-    },
-    [songs, updateModalData, data],
-  );
+  const handleSongSelect = useCallback((songId: string) => {
+    setSelectedSongId(songId);
+  }, []);
 
   const togglePlayback = useCallback((e: React.MouseEvent, songId: string) => {
     e.stopPropagation();
     setPlayingSongId((prev) => (prev === songId ? null : songId));
   }, []);
 
+  // 선택된 음악이 없을 때 기본값 전달
   const handleSave = useCallback(() => {
     if (onConfirm) {
       if (selectedSongId) {
@@ -126,7 +122,6 @@ const SongSelectModal = () => {
           return;
         }
       }
-
       // 음악 없이 저장
       onConfirm({
         video_id: "",
@@ -134,14 +129,17 @@ const SongSelectModal = () => {
         artist: "",
         thumbnail: "",
         embedUrl: "",
-      } as Music);
+      });
     }
   }, [selectedSongId, onConfirm, songs]);
 
   const hasRealSongs = songs.some((s) => s.video_id);
 
+  // 모달 오픈 상태가 아니면 null 반환 (렌더링 오류 방지)
+  if (!isOpen) return null;
+
   return (
-    <BaseModal isOpen={isOpen} onClose={closeModal}>
+    <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className="w-full max-w-[900px] mx-auto px-4 sm:px-6 py-6 overflow-y-auto">
         <h2 className="font-bold text-center mb-6 text-xl sm:text-2xl">추천 필로디 🎵</h2>
 

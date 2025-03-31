@@ -4,7 +4,6 @@ import ProfileModal from "./Modal/ProfileModal";
 import CustomConfirmModal from "./Modal/CustomConfirmModal";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import { axiosFetcher } from "../../api/axiosFetcher";
 import authApi from "../../api/authApi";
 
 interface TopBarContainerProps {
@@ -57,18 +56,11 @@ const TopBarContainer = ({
 
   const handleOpenProfile = async () => {
     try {
-      const res = await axiosFetcher.get<{
-        profile_image: string;
-        member: {
-          nickname: string;
-          introduce: string;
-          favorite_genre: string[];
-        };
-      }>("api/members/profile/");
+      const res = await authApi.fetchUserProfile();
 
       setModalUser({
         nickname: res.member.nickname ?? "",
-        profileImage: res.profile_image ?? "",
+        profileImage: res.profile_image ?? "/default-profile.png",
         introduction: res.member.introduce ?? "",
         preferredGenres: res.member.favorite_genre ?? [],
       });

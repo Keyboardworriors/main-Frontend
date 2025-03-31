@@ -19,6 +19,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: .env 파일 생성
+        run: |
+          cat <<EOF > main_project/.env
+          VITE_NAVER_CLIENT_ID=${{ secrets.VITE_NAVER_CLIENT_ID }}
+          VITE_NAVER_REDIRECT_URI=${{ secrets.VITE_NAVER_REDIRECT_URI }}
+          VITE_KAKAO_CLIENT_ID=${{ secrets.VITE_KAKAO_CLIENT_ID }}
+          VITE_KAKAO_REDIRECT_URI=${{ secrets.VITE_KAKAO_REDIRECT_URI }}
+          VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
+          EOF
+
       - name: 의존성 설치
         run: |
           cd main_project
@@ -34,5 +44,5 @@ jobs:
           aws s3 rm --recursive s3://prod-feelody-web
           aws s3 cp ./main_project/dist s3://prod-feelody-web --recursive
 
-      - name: cloudfront 캐시 무효화
+      - name: CloudFront 캐시 무효화
         run: aws cloudfront create-invalidation --distribution-id E26D48U2H6Q45B --paths "/*"

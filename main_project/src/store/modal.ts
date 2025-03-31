@@ -21,7 +21,7 @@ export interface ModalData {
     | "withdraw"
     | "profileLoading"
     | "saveDiary"
-    | "login"
+    | "login";
   user?: User;
   moods?: Mood[];
   songs?: Music[];
@@ -30,7 +30,8 @@ export interface ModalData {
   cancelText?: string;
   isDanger?: boolean;
   hideCloseButton?: boolean;
-  onConfirm?: () => void;
+  //onConfirm?: () => void;
+  onConfirm?: (selected?: Music) => void;
   onCancel?: () => void;
   onRetry?: () => void;
   onSaveWithoutMusic?: () => void;

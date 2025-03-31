@@ -24,21 +24,21 @@ const DiaryComplete = ({
       diary_title: diaryContent.diary_title,
       content: diaryContent.content,
       moods: diaryContent.moods,
-      date: format(selectedDate, "yyyy-MM-dd"), // 기존 에러로 대체
+      date: format(selectedDate, "yyyy-MM-dd"),
       rec_music:
         selectedMusic && selectedMusic.title
           ? {
               ...selectedMusic,
-              title: selectedMusic.title.replace(/^\**/, "").trim(), // ai가 강제로 붙이는 * 제거
+              title: selectedMusic.title.replace(/^\**/, "").trim(), // AI가 붙이는 * 제거
             }
           : null,
     };
 
-    console.log("일기 성공적으로 저장 완료: ", payload);
+    console.log("일기 저장 요청 데이터: ", payload);
 
     try {
       await diaryApi.createDiary(payload);
-      onFinish();
+      onFinish(); // 작성 완료 시 호출
     } catch (error) {
       console.error("일기 저장 실패:", error);
     }
@@ -47,6 +47,7 @@ const DiaryComplete = ({
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       <div className="flex flex-col md:flex-row gap-4">
+        {/* 일기 본문 */}
         <div className="w-full md:w-[60%]">
           <h2 className="text-base font-medium text-gray-800 mb-4 block border-b border-[#4A7196] px-1">
             {diaryContent.diary_title}
@@ -62,6 +63,7 @@ const DiaryComplete = ({
           </div>
         </div>
 
+        {/* 키워드 + 추천 음악 */}
         <div className="w-full md:w-[40%] flex flex-col justify-between md:pl-2.5 md:pt-10 mt-4 md:mt-0">
           <div>
             <h3 className="text-base text-gray-600 font-semibold mb-3">감정 키워드</h3>
@@ -78,7 +80,7 @@ const DiaryComplete = ({
 
             {selectedMusic && selectedMusic.title && (
               <>
-                <h3 className="text-base text-gray-600 font-semibold mb-3">추천된 필로디🎵</h3>
+                <h3 className="text-base text-gray-600 font-semibold mb-3">추천된 필로디 🎵</h3>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-4 py-1.5 bg-[#A6CCF2] text-white rounded-full text-sm font-medium min-w-[80px] text-center">
                     {selectedMusic.title.replace(/^\*/, "").trim()} - {selectedMusic.artist}

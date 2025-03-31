@@ -16,7 +16,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
     "writing",
   );
   const [diaryContent, setDiaryContent] = useState<DiaryContentType>({
-    title: "",
+    diary_title: "", // 타입오류 수정
     content: "",
     moods: [],
   });
@@ -40,13 +40,13 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   };
 
   const handleComplete = async () => {
-    const payload = {
+    /*const payload = {
       date: selectedDate.toISOString(),
       diary_title: diaryContent.diary_title,
       content: diaryContent.content,
       moods: diaryContent.moods,
       rec_music: selectedMusic && selectedMusic.title ? [selectedMusic] : [], // 음악없이 저장한 경우도 안전하게 처리
-    };
+    };*/
 
     openModal("loading", {
       message: "소중한 감정을 기록중이에요",

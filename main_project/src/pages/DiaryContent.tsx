@@ -55,14 +55,13 @@ const DiaryContentPreview = ({
       if (validSongs.length > 0) {
         openModal("songSelect", {
           songs: validSongs,
-          onConfirm: () => {
-            const selected = validSongs[0];
-            const cleaned = {
+          onConfirm: (selected?: Music) => {
+            if (!selected) return;
+            closeModal();
+            onCompleteMusic({
               ...selected,
               title: selected.title.replace(/^\*/, ""),
-            };
-            onCompleteMusic(cleaned);
-            closeModal();
+            });
           },
           onRetry: retryMelodyAnalysis,
         });

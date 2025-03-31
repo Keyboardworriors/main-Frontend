@@ -19,6 +19,7 @@ const SongItem = memo(
   }) => {
     const isPlaying = playingSongId === song.video_id;
     const playerRef = useRef<HTMLIFrameElement | null>(null);
+    const isValidSong = !!song.video_id;
 
     const stateClasses = isSelected
       ? "bg-[#A6CCF2] scale-[1.02] shadow-lg"
@@ -26,23 +27,31 @@ const SongItem = memo(
 
     return (
       <div
-        onClick={() => onSelect(song.video_id)}
-        className={`w-full max-w-[220px] rounded-lg overflow-hidden transition-all cursor-pointer ${stateClasses}`}
+        onClick={() => isValidSong && onSelect(song.video_id)}
+        className={`w-full max-w-[220px] rounded-lg overflow-hidden transition-all ${
+          isValidSong ? "cursor-pointer" : "opacity-50 cursor-default"
+        } ${stateClasses}`}
       >
         <div className="relative w-full h-[120px] bg-black">
-          {isPlaying ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${song.video_id}?autoplay=1&rel=0&controls=1`}
-              title={`${song.title} - ${song.artist}`}
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              className="w-full h-full"
-              ref={playerRef}
-            />
+          {isValidSong ? (
+            isPlaying ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${song.video_id}?autoplay=1&rel=0&controls=1`}
+                title={`${song.title} - ${song.artist}`}
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                className="w-full h-full"
+                ref={playerRef}
+              />
+            ) : (
+              <img src={song.thumbnail} alt={song.title} className="w-full h-full object-cover" />
+            )
           ) : (
-            <img src={song.thumbnail} alt={song.title} className="w-full h-full object-cover" />
+            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm bg-gray-100">
+              추천되지 않음
+            </div>
           )}
-          {!isPlaying && (
+          {isValidSong && !isPlaying && (
             <div
               className="absolute inset-0 flex items-center justify-center"
               onClick={(e) => onPlayToggle(e, song.video_id)}
@@ -55,8 +64,10 @@ const SongItem = memo(
         </div>
 
         <div className="text-center px-2 py-2">
-          <p className="font-semibold text-xs text-gray-900 truncate">{song.title}</p>
-          <p className="text-[11px] text-gray-600 truncate">{song.artist}</p>
+          <p className="font-semibold text-xs text-gray-900 truncate">
+            {song.title?.replace(/^\*/, "") || "제목 없음"}
+          </p>
+          <p className="text-[11px] text-gray-600 truncate">{song.artist || "아티스트 없음"}</p>
         </div>
       </div>
     );
@@ -71,9 +82,23 @@ const SongSelectModal = () => {
 
   if (type !== "songSelect" || !isOpen) return null;
 
-  const songs = data?.songs || [];
+  const songs: Music[] = data?.songs || [];
   const onRetry = data?.onRetry;
   const onConfirm = data?.onConfirm;
+
+  const filledSongs = [...songs];
+  const needToFill = 3 - filledSongs.length;
+  if (needToFill > 0) {
+    for (let i = 0; i < needToFill; i++) {
+      filledSongs.push({
+        video_id: "",
+        title: "",
+        artist: "",
+        thumbnail: "",
+        embedUrl: "",
+      });
+    }
+  }
 
   const handleSongSelect = useCallback(
     (songId: string) => {
@@ -92,23 +117,44 @@ const SongSelectModal = () => {
   }, []);
 
   const handleSave = useCallback(() => {
-    if (selectedSongId && onConfirm) {
-      const selected = songs.find((s) => s.video_id === selectedSongId);
-      if (selected) {
-        onConfirm(selected);
+    if (onConfirm) {
+      if (selectedSongId) {
+        const selected = songs.find((s) => s.video_id === selectedSongId);
+        if (selected) {
+          onConfirm(selected);
+          return;
+        }
       }
+
+      // 음악 없이 저장
+      onConfirm({
+        video_id: "",
+        title: "",
+        artist: "",
+        thumbnail: "",
+        embedUrl: "",
+      } as Music);
     }
   }, [selectedSongId, onConfirm, songs]);
+
+  const hasRealSongs = songs.some((s) => s.video_id);
 
   return (
     <BaseModal isOpen={isOpen} onClose={closeModal}>
       <div className="w-full max-w-[900px] mx-auto px-4 sm:px-6 py-6 overflow-y-auto">
         <h2 className="font-bold text-center mb-6 text-xl sm:text-2xl">추천 필로디 🎵</h2>
 
+        {!hasRealSongs && (
+          <p className="text-center text-sm text-gray-500 mb-6">
+            추천된 노래가 없어요 😭 다시 시도 또는 음악 없이 저장하려면 <strong>저장하기</strong>를
+            눌러주세요
+          </p>
+        )}
+
         <div className="grid grid-cols-3 gap-5 justify-items-center mb-8">
-          {songs.map((song) => (
+          {filledSongs.map((song, idx) => (
             <SongItem
-              key={song.video_id}
+              key={idx}
               song={song}
               isSelected={selectedSongId === song.video_id}
               playingSongId={playingSongId}
@@ -119,7 +165,7 @@ const SongSelectModal = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center sm:justify-end gap-3 mt-4 relative">
-          {selectedSongId && isHoveringSaveBtn && (
+          {hasRealSongs && selectedSongId && isHoveringSaveBtn && (
             <div className="absolute bottom-full right-0 mb-2 bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg w-60 text-xs text-left z-50">
               <div className="absolute bottom-[-6px] right-6 transform rotate-45 w-3 h-3 bg-gray-700"></div>
               선택한 음악은 변경할 수 없어요! <br /> 신중히 선택해주세요
@@ -132,16 +178,12 @@ const SongSelectModal = () => {
           >
             다시 시도
           </button>
+
           <button
             onClick={handleSave}
-            disabled={!selectedSongId}
             onMouseEnter={() => setIsHoveringSaveBtn(true)}
             onMouseLeave={() => setIsHoveringSaveBtn(false)}
-            className={`px-5 py-2.5 rounded-full text-sm font-medium ${
-              selectedSongId
-                ? "bg-[#4A7196] text-white hover:bg-[#3b5a7a]"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
+            className="px-5 py-2.5 rounded-full text-sm font-medium bg-[#4A7196] text-white hover:bg-[#3b5a7a]"
           >
             저장하기
           </button>

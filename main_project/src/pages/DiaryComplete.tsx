@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
-import { formatDateKorean } from "../utils/date";
-import { useModalStore } from "../store/modal";
+import { format } from "date-fns";
 import diaryApi from "../api/diaryApi";
 
 type DiaryCompleteProps = {
@@ -18,8 +17,6 @@ const DiaryComplete = ({
   selectedMusic,
   onFinish,
 }: DiaryCompleteProps) => {
-  const { openModal, closeModal } = useModalStore();
-  const formattedDate = formatDateKorean(selectedDate);
   const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState(false);
 
   const handleSaveDiary = async () => {
@@ -27,16 +24,23 @@ const DiaryComplete = ({
       diary_title: diaryContent.diary_title,
       content: diaryContent.content,
       moods: diaryContent.moods,
-      date: selectedDate.toISOString().slice(0, 10),
-      rec_music: selectedMusic || {},
+      date: format(selectedDate, "yyyy-MM-dd"), // 기존 에러로 대체
+      rec_music:
+        selectedMusic && selectedMusic.title
+          ? {
+              ...selectedMusic,
+              title: selectedMusic.title.replace(/^\**/, "").trim(), // ai가 강제로 붙이는 * 제거
+            }
+          : null,
     };
+
+    console.log("일기 성공적으로 저장 완료: ", payload);
 
     try {
       await diaryApi.createDiary(payload);
-      openModal("success", { message: "일기가 성공적으로 저장되었어요!" });
       onFinish();
     } catch (error) {
-      openModal("error", { message: "일기 저장에 실패했어요. 다시 시도해주세요." });
+      console.error("일기 저장 실패:", error);
     }
   };
 
@@ -77,7 +81,7 @@ const DiaryComplete = ({
                 <h3 className="text-base text-gray-600 font-semibold mb-3">추천된 필로디🎵</h3>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-4 py-1.5 bg-[#A6CCF2] text-white rounded-full text-sm font-medium min-w-[80px] text-center">
-                    {selectedMusic.title} - {selectedMusic.artist}
+                    {selectedMusic.title.replace(/^\*/, "").trim()} - {selectedMusic.artist}
                   </span>
                 </div>
               </>

@@ -8,7 +8,7 @@ type DiaryContentPreviewProps = {
   selectedDate: Date;
   diaryContent: DiaryContentType;
   onEdit: () => void;
-  onCompleteMusic: (selectedMusic: Music) => void; // 추가
+  onCompleteMusic: (selectedMusic: Music) => void;
 };
 
 const DiaryContentPreview = ({
@@ -41,22 +41,33 @@ const DiaryContentPreview = ({
     });
 
     try {
-      const favoriteGenre = []; // 필요시 유저 장르 추가
+      const favoriteGenre = []; // 유저 장르 필요 시 추가
       const songs = await diaryApi.recommendMusic(diaryContent.moods, favoriteGenre);
+
+      // 유효한 곡 필터링
+      const validSongs = songs.filter((song: any) => song.video_id && song.title && !song.error);
+
+      console.log("서버 추천 응답:", songs);
+      console.log("필터링된 유효한 곡:", validSongs);
+      console.log("유효한 곡 수:", validSongs.length);
 
       closeModal();
 
-      if (songs && songs.length > 0) {
+      if (validSongs.length > 0) {
         openModal("songSelect", {
-          songs,
+          songs: validSongs,
           onConfirm: (selected: Music) => {
             closeModal();
-            onCompleteMusic(selected);
+            const cleaned = {
+              ...selected,
+              title: selected.title.replace(/^\*/, ""),
+            };
+            onCompleteMusic(cleaned);
           },
           onRetry: retryMelodyAnalysis,
         });
       } else {
-        openModal("songAnalysisError", {
+        openModal("customConfirm", {
           onRetry: retryMelodyAnalysis,
           onSaveWithoutMusic: () => {
             closeModal();
@@ -67,7 +78,7 @@ const DiaryContentPreview = ({
       }
     } catch (error) {
       closeModal();
-      openModal("songAnalysisError", {
+      openModal("customConfirm", {
         onRetry: retryMelodyAnalysis,
         onSaveWithoutMusic: () => {
           closeModal();
@@ -78,9 +89,8 @@ const DiaryContentPreview = ({
     }
   };
 
-  const handleMelodyRecommendation = async () => {
+  const handleMelodyRecommendation = () => {
     if (isSaving) {
-      console.log("음악 없이 저장하기 실행됨");
       onCompleteMusic({
         video_id: "",
         title: "",
@@ -90,7 +100,6 @@ const DiaryContentPreview = ({
       });
       return;
     }
-
     analyzeMusic();
   };
 

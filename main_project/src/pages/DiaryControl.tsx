@@ -33,10 +33,6 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
     setCurrentStep("writing");
   };
 
-  const handleContinueToMusic = () => {
-    setCurrentStep("music");
-  };
-
   const handleMusicSelected = (music: Music) => {
     setSelectedMusic(music);
     setCurrentStep("complete");
@@ -46,17 +42,16 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   const handleComplete = async () => {
     const payload = {
       date: selectedDate.toISOString(),
-      diary_title: diaryContent.title,
+      diary_title: diaryContent.diary_title,
       content: diaryContent.content,
       moods: diaryContent.moods,
-      rec_music: selectedMusic ? [selectedMusic] : [],
+      rec_music: selectedMusic && selectedMusic.title ? [selectedMusic] : [], // 음악없이 저장한 경우도 안전하게 처리
     };
 
     openModal("loading", {
       message: "소중한 감정을 기록중이에요",
       modalPurpose: "saving",
     });
-
     setTimeout(() => {
       closeModal();
       onCancel();

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, ReactNode } from "react";
 import BaseModal from "./BaseModal";
 
 interface LoadingModalProps {
@@ -28,7 +28,7 @@ const COMMON_NOTE_STYLE = {
 
 interface MusicNoteProps {
   delay: string;
-  svg: JSX.Element;
+  svg: ReactNode;
 }
 
 const MusicNote = ({ delay, svg }: MusicNoteProps) => (

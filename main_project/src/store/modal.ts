@@ -34,6 +34,11 @@ export interface ModalData {
   onCancel?: () => void;
   onRetry?: () => void;
   onSaveWithoutMusic?: () => void;
+  onSelect?: (mood: Mood) => void;
+  onSave?: () => void;
+  analyzedMood?: string[];
+  isDirectSelect?: boolean;
+  isAnalysisFailed?: boolean;
 }
 
 interface ModalState {

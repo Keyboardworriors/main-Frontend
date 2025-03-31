@@ -190,9 +190,11 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       <div className="flex justify-end gap-2">
         <button
           onClick={handleEmotionSelect}
-          disabled={diaryContent.diary_title.trim().length < 1}
+          disabled={
+            diaryContent.diary_title.trim().length < 1 || diaryContent.content.trim().length < 1
+          }
           className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            diaryContent.diary_title.trim().length < 1
+            diaryContent.diary_title.trim().length < 1 || diaryContent.content.trim().length < 1
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-[#A6CCF2] hover:bg-[#5E8FBF] text-white"
           }`}
@@ -201,7 +203,14 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
         </button>
         <button
           onClick={handleEmotionAnalysis}
-          className="px-3 py-1.5 rounded-full text-sm transition-colors bg-[#5E8FBF] hover:bg-[#4A7196] text-white"
+          disabled={
+            diaryContent.diary_title.trim().length < 1 || diaryContent.content.trim().length < 1
+          }
+          className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+            diaryContent.diary_title.trim().length < 1 || diaryContent.content.trim().length < 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-[#5E8FBF] hover:bg-[#4A7196] text-white"
+          }`}
         >
           감정 분석
         </button>

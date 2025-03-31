@@ -51,15 +51,17 @@ const MoodSelectModal = ({
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className="p-4 sm:p-6 w-[95vw] sm:w-[90vw] md:w-full max-w-6xl">
-        {/* 추천 감정 키워드 */}
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-base sm:text-lg text-gray-600 font-semibold">추천 감정 키워드</h2>
+          {!isAnalysisFailed && (
+            <span className="text-xs sm:text-sm text-gray-500">
+              {selectedMoods.length}/3 개의 감정을 선택했어요.
+            </span>
+          )}
+        </div>
+
         {!isAnalysisFailed && analyzedKeywords?.length && analyzedKeywords.length > 0 ? (
           <div className="mb-4 sm:mb-6">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base sm:text-lg text-gray-600 font-semibold">추천 감정 키워드</h2>
-              <span className="text-xs sm:text-sm text-gray-500">
-                {selectedMoods.length}/3 개의 감정을 선택했어요.
-              </span>
-            </div>
             <div className="flex flex-wrap gap-2 sm:gap-2.5 md:gap-3 mb-3">
               {analyzedKeywords.map((keyword, index) => (
                 <button
@@ -78,13 +80,13 @@ const MoodSelectModal = ({
             </div>
           </div>
         ) : isAnalysisFailed ? (
-          <div className="text-sm text-red-600 text-center p-3 bg-red-50 rounded-xl border border-red-200">
-            감정 분석에 실패했어요. 직접 감정 키워드를 선택해주세요!
+          <div className="text-sm text-red-600 text-center p-3 bg-red-50 rounded-xl border border-red-200 mb-4 sm:mb-6">
+            감정 분석에 실패했어요. 감정 키워드를 직접 선택해주세요!
           </div>
         ) : null}
 
         {(isAnalysisFailed || isDirectSelect) && (
-          <div className="min-h-[200px] sm:h-[240px]">
+          <div className="min-h-[200px] sm:h-[220px]">
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-base sm:text-lg text-gray-600 font-semibold">감정 키워드</h2>
               <span className="text-xs sm:text-sm text-gray-500">

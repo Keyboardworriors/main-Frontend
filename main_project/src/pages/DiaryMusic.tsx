@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { formatDateKorean } from "../utils/date";
@@ -15,7 +15,8 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
   const { openModal, closeModal } = useModalStore();
   const formattedDate = formatDateKorean(selectedDate);
 
-  const handleNoMusic = () => {
+  // 음악 없이 저장 처리 함수도 useCallback으로 안정화
+  const handleNoMusic = useCallback(() => {
     closeModal();
     onComplete({
       video_id: "",
@@ -24,9 +25,10 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
       thumbnail: "",
       embedUrl: "",
     });
-  };
+  }, [closeModal, onComplete]);
 
-  const analyzeMusic = async () => {
+  // 음악 분석 함수 useCallback, handleNoMusic 포함
+  const analyzeMusic = useCallback(async () => {
     openModal("loading", {
       message: "추천 필로디 🎵",
       modalPurpose: "melody",
@@ -34,13 +36,11 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
 
     try {
       const recommendedSongs = await diaryApi.recommendMusic(diaryContent.moods, []);
+      const validSongs = recommendedSongs.filter(
+        (s: Music & { error?: boolean }) => s.video_id && s.title && !s.error,
+      );
 
-      // 필터링 로직 추가
-      const validSongs = recommendedSongs.filter((s: any) => s.video_id && s.title && !s.error);
-
-      // 로그 확인
       console.log("서버 추천 응답:", recommendedSongs);
-      console.log("필터링된 유효한 곡:", validSongs);
       console.log("유효한 곡 수:", validSongs.length);
 
       closeModal();
@@ -53,13 +53,14 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
           confirmText: "다시시도",
           cancelText: "저장하기",
           isDanger: false,
-          onConfirm: analyzeMusic,
+          onConfirm: () => analyzeMusic(),
           onCancel: handleNoMusic,
         });
       } else {
         openModal("songSelect", {
           songs: validSongs,
-          onConfirm: (selected: Music) => {
+          onConfirm: (selected?: Music) => {
+            if (!selected) return;
             closeModal();
             onComplete({
               ...selected,
@@ -73,9 +74,8 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         });
       }
     } catch (error) {
-      closeModal();
       console.error("DM 음악 추천 에러:", error);
-
+      closeModal();
       openModal("customConfirm", {
         title: "⚠️ 404 (NOT FOUND)",
         message:
@@ -83,15 +83,16 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         confirmText: "다시시도",
         cancelText: "저장하기",
         isDanger: false,
-        onConfirm: analyzeMusic,
+        onConfirm: () => analyzeMusic(),
         onCancel: handleNoMusic,
       });
     }
-  };
+  }, [diaryContent.moods, closeModal, onComplete, openModal, handleNoMusic]);
 
+  // analyzeMusic 포함
   useEffect(() => {
     analyzeMusic();
-  }, []);
+  }, [analyzeMusic]);
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">

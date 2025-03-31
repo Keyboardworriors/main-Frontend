@@ -5,7 +5,7 @@ import CustomConfirmModal from "./Modal/CustomConfirmModal";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { axiosFetcher } from "../../api/axiosFetcher";
-import authApi from "../../api/Authapi";
+import authApi from "../../api/authApi";
 
 interface TopBarContainerProps {
   tabIndex: number;
@@ -87,7 +87,7 @@ const TopBarContainer = ({
         return;
       }
 
-      await authApi.logout({ refresh_token: refreshToken });
+      await authApi.logoutUser({ refresh_token: refreshToken });
       clearAuth();
       alert("로그아웃되었습니다.");
       navigate("/");

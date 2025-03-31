@@ -15,7 +15,7 @@ const DiaryList = ({ diaries, onDiarySelect }: DiaryListProps) => {
 
   return (
     <div className="w-full h-[342px] overflow-y-auto">
-      <div className="grid gap-2 px-2">
+      <div className="grid gap-2 px-1">
         {diaries.map((diary) => (
           <div
             key={diary.diary_id}
@@ -29,21 +29,22 @@ const DiaryList = ({ diaries, onDiarySelect }: DiaryListProps) => {
               </span>
             </div>
 
-            <div className="mt-1 flex items-center gap-2">
-              <span className="text-xs text-gray-500">감정: {diary.moods.join(", ")}</span>
-              {diary.rec_music && (
-                <>
-                  <span className="text-xs text-gray-500">음악: {diary.rec_music.title}</span>
-                  {/* 음악 썸네일 추가 */}
-                  {diary.rec_music.thumbnail && (
-                    <img
-                      src={diary.rec_music.thumbnail}
-                      alt={diary.rec_music.title}
-                      className="w-8 h-8 object-cover rounded ml-1 border border-gray-200"
-                    />
-                  )}
-                </>
-              )}
+            <div className="mt-1 flex items-center gap-2 justify-between">
+              <div className="flex items-center gap-2">
+                {diary.rec_music?.thumbnail && (
+                  <img
+                    src={diary.rec_music.thumbnail}
+                    alt={diary.rec_music.title}
+                    className="w-8 h-8 object-cover rounded border border-gray-200"
+                  />
+                )}
+                {diary.rec_music?.title && (
+                  <p className="text-xs text-gray-700 font-medium">
+                    {diary.rec_music.title}
+                    {diary.rec_music.artist && ` - ${diary.rec_music.artist}`}
+                  </p>
+                )}
+              </div>
               <div className="flex flex-wrap gap-1">
                 {diary.moods.map((mood, index) => (
                   <span

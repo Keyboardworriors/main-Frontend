@@ -3,6 +3,7 @@ import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { useState } from "react";
 import diaryApi from "../api/diaryApi";
+import { Genre } from "../models/profile";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
@@ -22,7 +23,9 @@ const DiaryContentPreview = ({
   const [buttonText, setButtonText] = useState("필로디");
   const [isSaving, setIsSaving] = useState(false);
 
-  const retryMelodyAnalysis = async () => {
+  const favoriteGenre: Genre[] = [];
+
+  const retryMelodyAnalysis = () => {
     closeModal();
     setTimeout(() => {
       analyzeMusic();
@@ -41,28 +44,25 @@ const DiaryContentPreview = ({
     });
 
     try {
-      const favoriteGenre = []; // 유저 장르 필요 시 추가
-      const songs = await diaryApi.recommendMusic(diaryContent.moods, favoriteGenre);
+      const songs = (await diaryApi.recommendMusic(diaryContent.moods, favoriteGenre)) as (Music & {
+        error?: boolean;
+      })[];
 
-      // 유효한 곡 필터링
-      const validSongs = songs.filter((song: any) => song.video_id && song.title && !song.error);
-
-      console.log("서버 추천 응답:", songs);
-      console.log("필터링된 유효한 곡:", validSongs);
-      console.log("유효한 곡 수:", validSongs.length);
+      const validSongs = songs.filter((song) => song.video_id && song.title && !song.error);
 
       closeModal();
 
       if (validSongs.length > 0) {
         openModal("songSelect", {
           songs: validSongs,
-          onConfirm: (selected: Music) => {
-            closeModal();
+          onConfirm: () => {
+            const selected = validSongs[0];
             const cleaned = {
               ...selected,
               title: selected.title.replace(/^\*/, ""),
             };
             onCompleteMusic(cleaned);
+            closeModal();
           },
           onRetry: retryMelodyAnalysis,
         });
@@ -77,6 +77,7 @@ const DiaryContentPreview = ({
         });
       }
     } catch (error) {
+      console.error("추천 실패:", error);
       closeModal();
       openModal("customConfirm", {
         onRetry: retryMelodyAnalysis,

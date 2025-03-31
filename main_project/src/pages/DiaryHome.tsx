@@ -90,6 +90,7 @@ const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: Diar
                 setSelectedDiaryId(id);
                 setSelectedDate(new Date(date));
               }}
+              onBackToList={() => setSelectedDiaryId(null)}
             />
           }
         />

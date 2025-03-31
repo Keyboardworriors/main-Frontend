@@ -14,6 +14,7 @@ interface DiaryViewProps {
   diaryIdMap: Record<string, string>;
   selectedDiaryId: string | null;
   onDiarySelect: (id: string, date: string) => void;
+  onBackToList?: () => void; // New optional prop
 }
 
 const DiaryView = ({
@@ -24,6 +25,7 @@ const DiaryView = ({
   diaryIdMap,
   selectedDiaryId,
   onDiarySelect,
+  onBackToList, // Destructure new prop
 }: DiaryViewProps) => {
   const { openModal } = useModalStore();
   const [diary, setDiary] = useState<Diary | null>(null);
@@ -65,7 +67,17 @@ const DiaryView = ({
 
     return (
       <div className="w-full max-w-md h-full flex flex-col">
-        <div className="flex justify-end mb-2">
+        <div className="w-full flex items-center justify-between mb-2">
+          <div>
+            {isSearchMode && onBackToList && (
+              <button
+                onClick={onBackToList}
+                className="text-m font-semibold text-gray-600 hover:text-[#4A7196] transition-colors"
+              >
+                ←
+              </button>
+            )}
+          </div>
           <button
             onClick={() => {
               openModal("customConfirm", {

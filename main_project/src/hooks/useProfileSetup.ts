@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Genre } from "../models/profile";
 import { useAuthStore } from "../store/useAuthStore";
 import { User } from "../models/diary";
-import authApi from "../api/Authapi";
+import authApi from "../api/authApi";
 
 const useProfileSetup = (
   nickname: string,

@@ -72,12 +72,20 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  post: async <T>(path: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
+  post: async <T>(
+    path: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> => {
     const response: AxiosResponse<T> = await apiInstance.post(path, data, config);
     return response.data;
   },
 
-  put: async <T>(path: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
+  put: async <T>(
+    path: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> => {
     const response: AxiosResponse<T> = await apiInstance.put(path, data, config);
     return response.data;
   },
@@ -87,7 +95,10 @@ export const axiosFetcher = {
     return response.data;
   },
 
-  delete: async <T>(path: string, config?: AxiosRequestConfig & { data?: any }): Promise<T> => {
+  delete: async <T>(
+    path: string,
+    config?: AxiosRequestConfig & { data?: any }
+  ): Promise<T> => {
     const response: AxiosResponse<T> = await apiInstance.delete(path, config);
     return response.data;
   },

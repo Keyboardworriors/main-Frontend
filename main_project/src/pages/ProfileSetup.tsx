@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ProfileImageUploader from "../components/Profile/ProfileImageUploader";
-import GenreSelector from "../components/Profile/GenreSelector";
-import InputField from "../components/Profile/InputField";
-import useProfileSetup from "../hooks/useProfileSetup";
-import { Genre, SocialLoginUser } from "../models/profile";
 import ProfileLayout from "../components/layouts/ProfileLayout";
-import authApi from "../api/Authapi";
-import { useAuthStore } from "../store/useAuthStore";
+import ProfileImageUploader from "../components/Profile/ProfileImageUploader";
+import InputField from "../components/Profile/InputField";
+import GenreSelector from "../components/Profile/GenreSelector";
+import { SocialLoginUser } from "../models/profile";
+import { useUserProfileForm } from "../hooks/useUserProfileForm";
+import { useInitProfileData } from "../hooks/useInitProfileData";
+import { useCreateUserMutation } from "../hooks/mutations/useCreateUserMutation";
+import { useUpdateUserMutation } from "../hooks/mutations/useUpdateUserMutation";
 
 type ProfileSetupProps = {
   mode: "create" | "edit";
@@ -18,61 +19,39 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
   const location = useLocation();
   const userFromState = location.state?.user as SocialLoginUser | undefined;
 
-  const { user } = useAuthStore();
   const [email, setEmail] = useState<string>("");
   const [profileImage, setProfileImage] = useState<string>("");
 
-  const [nickname, setNickname] = useState<string>("");
-  const [bio, setBio] = useState<string>("");
-  const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
+  const { userProfile, setUserProfile, nicknameError, bioError, validate, handleGenreClick } =
+    useUserProfileForm();
 
-  useEffect(() => {
-    if (mode === "create" && userFromState) {
-      setEmail(userFromState.email);
-      setProfileImage(userFromState.profile_image ?? "/default-profile.png");
-    } else if (mode === "edit" && user) {
-      setEmail(user.email);
-      setProfileImage(user.profile_image ?? "/default-profile.png");
+  const createUserMutation = useCreateUserMutation();
+  const updateUserMutation = useUpdateUserMutation();
+
+  useInitProfileData({
+    mode,
+    userFromState,
+    setEmail,
+    setProfileImage,
+    setUserProfile,
+  });
+
+  const handleSubmit = () => {
+    if (!validate()) return;
+
+    const requestData = {
+      email,
+      nickname: userProfile.nickname,
+      introduce: userProfile.bio,
+      favorite_genre: userProfile.selectedGenres,
+    };
+
+    if (mode === "create") {
+      createUserMutation.mutate(requestData);
+    } else {
+      const { email: _, ...updateData } = requestData;
+      updateUserMutation.mutate(updateData);
     }
-  }, [mode, userFromState, user]);
-
-  useEffect(() => {
-    if (mode === "edit") {
-      const fetchProfile = async () => {
-        try {
-          const res = await authApi.getUser();
-          setNickname(res.nickname);
-          setBio(res.introduce ?? "");
-          setSelectedGenres((res.favorite_genre ?? []).filter(isValidGenre));
-        } catch (error) {
-          console.error("프로필 불러오기 실패", error);
-          alert("프로필 정보를 불러오는 데 실패했습니다.");
-        }
-      };
-      fetchProfile();
-    }
-  }, [mode]);
-
-  const isValidGenre = (genre: string): genre is Genre => {
-    return [
-      "Electronic",
-      "Pop",
-      "Ballad",
-      "K-pop",
-      "Jazz",
-      "Rock",
-      "Classic",
-      "Hip-hop",
-      "Country",
-    ].includes(genre);
-  };
-
-  const { handleSubmit } = useProfileSetup(nickname, selectedGenres, bio, mode);
-
-  const handleGenreClick = (genre: Genre) => {
-    setSelectedGenres((prev) =>
-      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre],
-    );
   };
 
   return (
@@ -86,24 +65,38 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
         <div className="w-0.5 h-20 bg-gray-400 my-4"></div>
 
         <ProfileImageUploader profileImage={profileImage} disabled />
-
         <InputField type="email" value={email} disabled />
 
+        {nicknameError && (
+          <p className="text-red-500 text-sm w-full mt-2 mb-[-15px] text-left">
+            닉네임은 15자 이내로 가능합니다.
+          </p>
+        )}
         <InputField
           type="text"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
+          value={userProfile.nickname}
+          onChange={(e) => setUserProfile((prev) => ({ ...prev, nickname: e.target.value }))}
           placeholder="닉네임 (필수)"
+          isError={nicknameError}
         />
 
         <p className="mt-10 font-semibold text-gray-700">관심있는 음악 장르 선택</p>
-        <GenreSelector selectedGenres={selectedGenres} onGenreClick={handleGenreClick} />
+        <GenreSelector
+          selectedGenres={userProfile.selectedGenres}
+          onGenreClick={handleGenreClick}
+        />
 
+        {bioError && (
+          <p className="text-red-500 text-sm w-full mt-10 mb-[-15px] text-left">
+            한 줄 소개는 25자 이내로 작성해주세요.
+          </p>
+        )}
         <InputField
           type="text"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
+          value={userProfile.bio}
+          onChange={(e) => setUserProfile((prev) => ({ ...prev, bio: e.target.value }))}
           placeholder="한 줄 소개"
+          isError={bioError}
         />
 
         <div className="flex gap-4 mt-8">

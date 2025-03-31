@@ -15,8 +15,6 @@ interface ProfileModalProps {
 }
 
 function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
-  console.log("profile", user);
-
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className="relative flex justify-center items-center min-h-[400px] px-8 max-w-5xl">

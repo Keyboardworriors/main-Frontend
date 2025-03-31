@@ -86,10 +86,8 @@ const SongSelectModal = () => {
   const onRetry = data?.onRetry;
   const onConfirm = data?.onConfirm;
 
-  // 카드는 항상 3개 유지, 3개 미만 추천시 빈박스 반환/클릭불가 처리
   const filledSongs = [...songs];
   const needToFill = 3 - filledSongs.length;
-
   if (needToFill > 0) {
     for (let i = 0; i < needToFill; i++) {
       filledSongs.push({
@@ -119,18 +117,39 @@ const SongSelectModal = () => {
   }, []);
 
   const handleSave = useCallback(() => {
-    if (selectedSongId && onConfirm) {
-      const selected = songs.find((s) => s.video_id === selectedSongId);
-      if (selected) {
-        onConfirm(selected);
+    if (onConfirm) {
+      if (selectedSongId) {
+        const selected = songs.find((s) => s.video_id === selectedSongId);
+        if (selected) {
+          onConfirm(selected);
+          return;
+        }
       }
+
+      // 음악 없이 저장
+      onConfirm({
+        video_id: "",
+        title: "",
+        artist: "",
+        thumbnail: "",
+        embedUrl: "",
+      } as Music);
     }
   }, [selectedSongId, onConfirm, songs]);
+
+  const hasRealSongs = songs.some((s) => s.video_id);
 
   return (
     <BaseModal isOpen={isOpen} onClose={closeModal}>
       <div className="w-full max-w-[900px] mx-auto px-4 sm:px-6 py-6 overflow-y-auto">
         <h2 className="font-bold text-center mb-6 text-xl sm:text-2xl">추천 필로디 🎵</h2>
+
+        {!hasRealSongs && (
+          <p className="text-center text-sm text-gray-500 mb-6">
+            추천된 노래가 없어요 😭 다시 시도 또는 음악 없이 저장하려면 <strong>저장하기</strong>를
+            눌러주세요
+          </p>
+        )}
 
         <div className="grid grid-cols-3 gap-5 justify-items-center mb-8">
           {filledSongs.map((song, idx) => (
@@ -146,7 +165,7 @@ const SongSelectModal = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center sm:justify-end gap-3 mt-4 relative">
-          {selectedSongId && isHoveringSaveBtn && (
+          {hasRealSongs && selectedSongId && isHoveringSaveBtn && (
             <div className="absolute bottom-full right-0 mb-2 bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg w-60 text-xs text-left z-50">
               <div className="absolute bottom-[-6px] right-6 transform rotate-45 w-3 h-3 bg-gray-700"></div>
               선택한 음악은 변경할 수 없어요! <br /> 신중히 선택해주세요
@@ -159,16 +178,12 @@ const SongSelectModal = () => {
           >
             다시 시도
           </button>
+
           <button
             onClick={handleSave}
-            disabled={!selectedSongId}
             onMouseEnter={() => setIsHoveringSaveBtn(true)}
             onMouseLeave={() => setIsHoveringSaveBtn(false)}
-            className={`px-5 py-2.5 rounded-full text-sm font-medium ${
-              selectedSongId
-                ? "bg-[#4A7196] text-white hover:bg-[#3b5a7a]"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
+            className="px-5 py-2.5 rounded-full text-sm font-medium bg-[#4A7196] text-white hover:bg-[#3b5a7a]"
           >
             저장하기
           </button>

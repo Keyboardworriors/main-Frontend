@@ -34,9 +34,18 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
 
     try {
       const recommendedSongs = await diaryApi.recommendMusic(diaryContent.moods, []);
+
+      // 필터링 로직 추가
+      const validSongs = recommendedSongs.filter((s: any) => s.video_id && s.title && !s.error);
+
+      // 로그 확인
+      console.log("서버 추천 응답:", recommendedSongs);
+      console.log("필터링된 유효한 곡:", validSongs);
+      console.log("유효한 곡 수:", validSongs.length);
+
       closeModal();
 
-      if (recommendedSongs.length === 0) {
+      if (validSongs.length === 0) {
         openModal("customConfirm", {
           title: "⚠️ 404 (NOT FOUND)",
           message:
@@ -49,7 +58,7 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         });
       } else {
         openModal("songSelect", {
-          songs: recommendedSongs,
+          songs: validSongs,
           onConfirm: (selected: Music) => {
             closeModal();
             onComplete({
@@ -65,6 +74,8 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
       }
     } catch (error) {
       closeModal();
+      console.error("DM 음악 추천 에러:", error);
+
       openModal("customConfirm", {
         title: "⚠️ 404 (NOT FOUND)",
         message:

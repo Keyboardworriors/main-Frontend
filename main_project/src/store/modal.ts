@@ -20,7 +20,8 @@ export interface ModalData {
     | "saving"
     | "withdraw"
     | "profileLoading"
-    | "saveDiary";
+    | "saveDiary"
+    | "login"
   user?: User;
   moods?: Mood[];
   songs?: Music[];

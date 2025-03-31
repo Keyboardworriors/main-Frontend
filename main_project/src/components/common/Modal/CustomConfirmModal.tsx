@@ -24,7 +24,7 @@ const CustomConfirmModal = ({
   cancelText = "취소",
   onConfirm,
   onCancel,
-  isDanger = false,
+  //isDanger = false,
 }: CustomConfirmModalProps) => {
   const { isOpen: storeIsOpen, type: storeType, closeModal } = useModalStore();
 

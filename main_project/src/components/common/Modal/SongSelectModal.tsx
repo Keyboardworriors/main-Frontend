@@ -15,6 +15,7 @@ const SongItem = memo(
     isSelected: boolean;
     playingSongId: string | null;
     onSelect: (id: string) => void;
+    onConfirm?: (music: Music) => void;
     onPlayToggle: (e: React.MouseEvent, id: string) => void;
   }) => {
     const isPlaying = playingSongId === song.video_id;

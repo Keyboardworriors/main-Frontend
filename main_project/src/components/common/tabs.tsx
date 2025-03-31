@@ -32,7 +32,7 @@ function MyTabs() {
           className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"
           selectedClassName="text-black font-bold bg-white rounded-t-lg"
         >
-          나의 감정일기
+          나의 감정기록
         </Tab>
         <Tab
           className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"

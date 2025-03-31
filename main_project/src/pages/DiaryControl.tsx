@@ -36,18 +36,9 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   const handleMusicSelected = (music: Music) => {
     setSelectedMusic(music);
     setCurrentStep("complete");
-    console.log("선택된 음악:", music);
   };
 
   const handleComplete = async () => {
-    /*const payload = {
-      date: selectedDate.toISOString(),
-      diary_title: diaryContent.diary_title,
-      content: diaryContent.content,
-      moods: diaryContent.moods,
-      rec_music: selectedMusic && selectedMusic.title ? [selectedMusic] : [], // 음악없이 저장한 경우도 안전하게 처리
-    };*/
-
     openModal("loading", {
       message: "소중한 감정을 기록중이에요",
       modalPurpose: "saving",
@@ -74,7 +65,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             selectedDate={selectedDate}
             diaryContent={diaryContent}
             onEdit={handleEditDiary}
-            onCompleteMusic={handleMusicSelected}
+            onCompleteMusic={handleMusicSelected} // 선택된 음악 받음
           />
         );
       case "music":
@@ -83,7 +74,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             selectedDate={selectedDate}
             diaryContent={diaryContent}
             onBack={handleEditDiary}
-            onComplete={handleMusicSelected}
+            onComplete={handleMusicSelected} // 여기서도 정확히 넘김
           />
         );
       case "complete":
@@ -91,7 +82,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
           <DiaryComplete
             selectedDate={selectedDate}
             diaryContent={diaryContent}
-            selectedMusic={selectedMusic}
+            selectedMusic={selectedMusic} // 전달된 음악 사용
             onFinish={handleComplete}
             onBack={() => setCurrentStep("music")}
           />

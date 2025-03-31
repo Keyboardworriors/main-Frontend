@@ -16,7 +16,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
     "writing",
   );
   const [diaryContent, setDiaryContent] = useState<DiaryContentType>({
-    diary_title: "", // 타입오류 수정
+    diary_title: "",
     content: "",
     moods: [],
   });

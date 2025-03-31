@@ -51,14 +51,16 @@ const MoodSelectModal = ({
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className="p-4 sm:p-6 w-[95vw] sm:w-[90vw] md:w-full max-w-6xl">
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-base sm:text-lg text-gray-600 font-semibold">추천 감정 키워드</h2>
-          {!isAnalysisFailed && (
-            <span className="text-xs sm:text-sm text-gray-500">
-              {selectedMoods.length}/3 개의 감정을 선택했어요.
-            </span>
-          )}
-        </div>
+        {!isDirectSelect && (
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-base sm:text-lg text-gray-600 font-semibold">추천 감정 키워드</h2>
+            {!isAnalysisFailed && (
+              <span className="text-xs sm:text-sm text-gray-500">
+                {selectedMoods.length}/3 개의 감정을 선택했어요.
+              </span>
+            )}
+          </div>
+        )}
 
         {!isAnalysisFailed && analyzedKeywords?.length && analyzedKeywords.length > 0 ? (
           <div className="mb-4 sm:mb-6">

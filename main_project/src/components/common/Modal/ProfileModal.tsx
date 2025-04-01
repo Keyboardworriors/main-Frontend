@@ -17,8 +17,7 @@ interface ProfileModalProps {
 function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
-      <div className="relative flex flex-col md:flex-row justify-center items-center md:items-start min-h-[400px] px-8 max-w-5xl w-full gap-6 text-gray-800">
-        
+      <div className="relative flex flex-col md:flex-row justify-center items-center md:items-start min-h-screen px-8 max-w-5xl w-full gap-6 text-gray-800">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
@@ -51,16 +50,6 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
           ) : (
             <span>{user.nickname?.charAt(0).toUpperCase() || "U"}</span>
           )}
-        </div>
-
-        <div className="flex items-center text-lg mb-4">
-          <FaHeart className="mr-2 text-gray-500" />
-          <span className="text-center">{user.preferredGenres?.join(", ") || "-"}</span>
-        </div>
-
-        <div className="flex items-center text-base break-words">
-          <FaPen className="mr-2 text-gray-500" />
-          <span className="text-center">{user.introduction || "-"}</span>
         </div>
       </div>
     </BaseModal>

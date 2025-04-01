@@ -100,7 +100,7 @@ const ChartComponent = ({ periodType }: { periodType: PeriodType }) => {
     };
 
     loadChartData();
-  }, [periodType]);
+  }, [periodType, openModal, closeModal]);
 
   return (
     <div className="w-full">

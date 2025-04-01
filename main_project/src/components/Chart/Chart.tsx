@@ -111,7 +111,7 @@ const ChartComponent = ({ periodType }: { periodType: PeriodType }) => {
 
       {!loading && moodData.length === 0 ? (
         <div className="flex items-center justify-center h-80 bg-white rounded-lg text-center text-gray-500 text-base font-medium">
-          감정 차트는 일기를 기록 하신 후에 확인가능합니다😊
+          감정 통계는 일기를 기록 하신 후에<br /> 확인 가능합니다 <br /> 지금 일기를 기록해보세요 😊
         </div>
       ) : (
         <div className="flex flex-col xl:grid xl:grid-cols-3 xl:gap-8 mb-6">

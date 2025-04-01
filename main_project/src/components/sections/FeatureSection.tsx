@@ -1,7 +1,11 @@
+import imageEmotion from "../../assets/images/imageEmotion.jpg";
+import imageChart from "../../assets/images/imageChart.jpg";
+
 type FeatureSectionProps = {
   title: string;
   description: string[];
   imageOnLeft?: boolean;
+  imageSrc: string;
 };
 
 const sections: FeatureSectionProps[] = [
@@ -13,6 +17,7 @@ const sections: FeatureSectionProps[] = [
       "당신의 감정을 멜로디에 담아보세요!",
     ],
     imageOnLeft: true,
+    imageSrc: imageEmotion,
   },
   {
     title: "당신만의 감정 발자취를 기록해요",
@@ -22,6 +27,7 @@ const sections: FeatureSectionProps[] = [
       "나의 감정 흐름을 발견하는 기쁨을 느껴보세요",
     ],
     imageOnLeft: false,
+    imageSrc: imageChart,
   },
 ];
 
@@ -37,7 +43,11 @@ const FeatureSection = () => {
             }`}
           >
             <div className="w-full md:w-1/2 flex justify-center">
-              <div className="bg-gray-300 w-full h-60 md:h-80 rounded-lg" />
+              <img
+                src={section.imageSrc}
+                alt={section.title}
+                className="w-full h-60 md:h-80 rounded-lg object-contain border border-gray-200 shadow-lg"
+              />
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col items-center text-center md:text-left">

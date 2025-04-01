@@ -21,6 +21,10 @@ function MyTabs() {
     searchResults,
   } = useSearch();
 
+  const tabBaseStyle =
+    "px-4 py-3 bg-[#F0F4F8] text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer rounded-t-lg";
+  const tabSelectedStyle = "text-black font-bold bg-white rounded-t-lg";
+
   return (
     <Tabs
       className="bg-[#A6CCF2] min-h-screen flex flex-col"
@@ -28,16 +32,10 @@ function MyTabs() {
       onSelect={(index) => setTabIndex(index)}
     >
       <TabList className="flex max-w-[1130px] w-full mx-auto pt-0 pr-4 pl-7 items-center">
-        <Tab
-          className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"
-          selectedClassName="text-black font-bold bg-white rounded-t-lg"
-        >
+        <Tab className={tabBaseStyle} selectedClassName={tabSelectedStyle}>
           나의 감정기록
         </Tab>
-        <Tab
-          className="px-4 py-3 text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer"
-          selectedClassName="text-black font-bold bg-white rounded-t-lg"
-        >
+        <Tab className={tabBaseStyle} selectedClassName={tabSelectedStyle}>
           나의 감정발자취
         </Tab>
         <TopBarContainer

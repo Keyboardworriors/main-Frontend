@@ -223,6 +223,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
         moods={Object.values(Mood)}
         isAnalysisFailed={analyzedKeywords.length === 0 && !isDirectSelect}
         isDirectSelect={isDirectSelect}
+        onDirectSelect={() => setIsDirectSelect(true)}
         onSave={handleSave}
         analyzedKeywords={analyzedKeywords}
       />

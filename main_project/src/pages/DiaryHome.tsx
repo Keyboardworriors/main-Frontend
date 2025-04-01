@@ -19,7 +19,7 @@ interface DiaryHomeProps {
 const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: DiaryHomeProps) => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [isWriteMode, setIsWriteMode] = useState(false);
   const [selectedDiaryId, setSelectedDiaryId] = useState<string | null>(null);
 

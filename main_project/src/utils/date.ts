@@ -24,3 +24,12 @@ export const isFutureDate = (date: Date): boolean => {
   target.setHours(0, 0, 0, 0);
   return target > today;
 };
+
+export const isToday = (date: Date): boolean => {
+  const today = new Date();
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+};

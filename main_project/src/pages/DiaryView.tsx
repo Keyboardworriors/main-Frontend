@@ -8,10 +8,18 @@ import { DiaryContent, Mood } from "../models/diary";
 import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
 import DiaryContentPreview from "./DiaryContent";
 import { useModalStore } from "../store/modal";
+import { SearchResult } from "../models/search";
 
 interface DiaryWriteProps {
   selectedDate: Date;
-  onCancel: () => void;
+  isSearchMode: boolean;
+  searchResults: SearchResult[];
+  onWriteClick: () => void;
+  diaryIdMap: Record<string, string>;
+  selectedDiaryId: string | null;
+  onDiarySelect: (id: string, date: string) => void;
+  onBackToList: () => void;
+  onCancel?: () => void;
   onDiaryComplete?: (content: DiaryContent) => void;
 }
 

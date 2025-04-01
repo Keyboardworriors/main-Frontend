@@ -17,7 +17,7 @@ interface ProfileModalProps {
 function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
-      <div className="relative flex flex-col md:flex-row justify-center items-center md:items-start min-h-screen px-8 max-w-5xl w-full gap-6 text-gray-800">
+      <div className="relative bg-white rounded-xl p-10 max-w-5xl w-full flex flex-col md:flex-row items-center justify-center gap-8">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
@@ -26,16 +26,28 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
           ✕
         </button>
 
-        <div className="flex flex-col items-center md:items-start text-center md:text-left gap-4 md:mr-12">
-          <h2 className="text-3xl font-bold">{user.nickname || "닉네임"}</h2>
-
-          <div className="flex items-center text-lg">
-            <FaHeart className="mr-2 text-gray-500" />
-            <span>{user.preferredGenres?.join(", ") || "-"}</span>
+        <div className="flex flex-col items-center md:items-start text-center md:text-left gap-4 mr-10">
+          <h2 className="text-3xl font-bold mb-2">{user.nickname || "닉네임"}</h2>
+          <div className="flex items-start md:items-center gap-2 flex-wrap text-lg w-full">
+            <FaHeart className="text-gray-500 mr-2" />
+            <div className="grid grid-cols-3 gap-2 flex-1">
+              {user.preferredGenres?.length ? (
+                user.preferredGenres.map((genre) => (
+                  <span
+                    key={genre}
+                    className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm text-center whitespace-nowrap"
+                  >
+                    {genre}
+                  </span>
+                ))
+              ) : (
+                <span className="text-sm text-gray-500">-</span>
+              )}
+            </div>
           </div>
 
-          <div className="flex items-center text-base">
-            <FaPen className="mr-2 text-gray-500" />
+          <div className="flex items-center text-base mt-4">
+            <FaPen className="mr-4 text-gray-500" />
             <span>{user.introduction || "-"}</span>
           </div>
         </div>

@@ -109,18 +109,29 @@ const MyPage = () => {
         <div className="flex justify-start pl-20">{userProfile?.email}</div>
 
         <div className="font-medium flex justify-start pl-20">선호하는 음악 장르</div>
-        <div className="flex justify-start pl-20">
-          {userProfile?.genres.length ? userProfile.genres.join(", ") : "-"}
+        <div className="grid grid-cols-3 gap-2 pl-20">
+          {userProfile?.genres.length ? (
+            userProfile.genres.map((genre) => (
+              <span
+                key={genre}
+                className="py-1 bg-blue-100 text-blue-600 rounded-full text-sm text-center whitespace-nowrap"
+              >
+                {genre}
+              </span>
+            ))
+          ) : (
+            <span className="text-sm text-gray-500 col-span-3">-</span>
+          )}
         </div>
 
         <div className="font-medium flex justify-start pl-20">한 줄 소개</div>
         <div className="flex justify-start break-words pl-20">{userProfile?.bio || "-"}</div>
       </div>
 
-      <div className="flex flex-col items-center justify-center mt-12">
+      <div className="flex flex-col items-center justify-center mt-14">
         <button
           onClick={() => navigate("/members/register", { state: { mode: "edit" } })}
-          className="px-6 py-3 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
+          className="px-6 py-2.5 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
         >
           수정하기
         </button>

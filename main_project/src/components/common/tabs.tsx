@@ -22,7 +22,7 @@ function MyTabs() {
   } = useSearch();
 
   const tabBaseStyle =
-    "px-5 py-3 bg-[#F0F4F8] text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer rounded-t-lg";
+    "px-4 py-3 bg-[#F0F4F8] text-gray-700 hover:text-black focus:outline-none whitespace-nowrap text-sm cursor-pointer rounded-t-lg";
   const tabSelectedStyle = "text-black font-bold bg-white rounded-t-lg";
 
   return (

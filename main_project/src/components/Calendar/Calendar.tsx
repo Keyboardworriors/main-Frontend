@@ -11,11 +11,14 @@ export interface MyCalendarProps {
 const MyCalendar = ({ selectedDate, onDateSelect, diaryDates }: MyCalendarProps) => {
   const handleDateChange = (newDate: Date | null) => {
     if (newDate instanceof Date) {
-      if (selectedDate && formatDate(selectedDate) === formatDate(newDate)) {
-        onDateSelect(null);
-      } else {
-        onDateSelect(newDate);
+      const newDateStr = formatDate(newDate);
+      const selectedDateStr = selectedDate ? formatDate(selectedDate) : null;
+
+      if (selectedDateStr === newDateStr) {
+        return;
       }
+
+      onDateSelect(newDate);
     }
   };
 

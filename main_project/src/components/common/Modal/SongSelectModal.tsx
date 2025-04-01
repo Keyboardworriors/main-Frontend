@@ -85,6 +85,7 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
   const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState<boolean>(false);
+  const saveBtnRef = useRef<HTMLButtonElement>(null);
 
   const filledSongs = [...songs];
   const needToFill = 3 - filledSongs.length;
@@ -157,9 +158,12 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
           ))}
         </div>
 
-        <div className="flex flex-row justify-center gap-3 mt-4 relative flex-wrap">
+        <div className="flex flex-row justify-center sm:justify-end gap-3 mt-4 relative flex-wrap">
           {hasRealSongs && selectedSongId && isHoveringSaveBtn && (
-            <div className="absolute bottom-full right-0 mb-2 bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg w-60 text-xs text-left z-50">
+            <div className="absolute bottom-full mb-2 bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg w-60 text-xs text-left z-50" style={{
+              right: window.innerWidth > 640 ? '0' : '50%',
+              transform: window.innerWidth > 640 ? 'none' : 'translateX(50%)'
+            }}>
               <div className="absolute bottom-[-6px] right-6 transform rotate-45 w-3 h-3 bg-gray-700"></div>
               선택한 음악은 변경할 수 없어요! <br /> 신중히 선택해주세요
             </div>
@@ -173,6 +177,7 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
           </button>
 
           <button
+            ref={saveBtnRef}
             onClick={handleSave}
             onMouseEnter={() => setIsHoveringSaveBtn(true)}
             onMouseLeave={() => setIsHoveringSaveBtn(false)}

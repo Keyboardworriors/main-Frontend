@@ -156,8 +156,8 @@ const DiaryView = ({
           const selected = new Date(selectedDate);
           if (isFutureDate(selected)) {
             openModal("customConfirm", {
-              title: "미래 날짜 선택",
-              message: "미래의 날짜는 감정기록을 작성할 수 없어요!",
+              title: "잘못된 날짜 선택",
+              message: "미래의 감정기록은 그날이 오면 함께 써볼까요?",
               confirmText: "확인",
               onConfirm: () => {},
             });

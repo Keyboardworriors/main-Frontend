@@ -4,6 +4,7 @@ export interface MoodData {
   color: string;
 }
 
+
 export type RawEmotionStats = {
   [label: string]: number;
 };
@@ -18,7 +19,7 @@ export interface ChartLayoutProps {
 }
 
 export enum PeriodType {
-  WEEKLY = "주간",
-  MONTHLY = "월간",
-  YEARLY = "연간",
+  WEEKLY = "WEEKLY",
+  MONTHLY = "MONTHLY",
+  YEARLY = "YEARLY",
 }

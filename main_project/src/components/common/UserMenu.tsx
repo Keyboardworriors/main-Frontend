@@ -28,7 +28,7 @@ const UserMenu = ({
         <span className="text-sm hidden md:inline">내 정보</span>
       </button>
       {showDropdown && (
-        <div className="absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg py-2 z-50 border-2 border-[#A6CCF2]">
+        <div className="top-bar-submenu-container absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg py-2 z-50 border-2 border-[#A6CCF2]">
           <button
             onClick={handleOpenProfile}
             className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"

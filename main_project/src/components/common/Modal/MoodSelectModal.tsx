@@ -83,7 +83,7 @@ const MoodSelectModal = ({
           </div>
         ) : isAnalysisFailed ? (
           <div className="text-sm text-red-600 text-center p-3 bg-red-50 rounded-xl border border-red-200 mb-4 sm:mb-6">
-            감정 분석에 실패했어요. 감정 키워드를 직접 선택해주세요!
+            일기 내용이 짧거나 반복적인 경우 감정 분석이 어려워요. 감정을 직접 선택해주세요!
           </div>
         ) : null}
 

@@ -1,7 +1,8 @@
 import Calendar from "react-calendar";
 import "dayjs/locale/ko";
 import "../Calendar/calendar.css";
-import { formatDate } from "../../utils/date";
+import { formatDate, isToday } from "../../utils/date";
+
 export interface MyCalendarProps {
   selectedDate: Date | null;
   onDateSelect: (date: Date | null) => void;
@@ -38,7 +39,7 @@ const MyCalendar = ({ selectedDate, onDateSelect, diaryDates }: MyCalendarProps)
             <div style={{ position: "relative", textAlign: "center" }}>
               {diaryDates.includes(dateString) && (
                 <img
-                  src="/checkIcon.png"
+                  src={isToday(date) ? "/checkIcon-white.png" : "/checkIcon.png"}
                   alt="음표아이콘"
                   className="absolute top-[-25px] right-[-2px] w-[15px] h-[15px]"
                 />

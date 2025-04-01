@@ -6,6 +6,7 @@ import { useModalStore } from "../store/modal";
 import { useEffect, useState } from "react";
 import DiaryList from "./DiaryList";
 import diaryApi from "../api/diaryApi";
+
 interface DiaryViewProps {
   selectedDate: Date | null;
   isSearchMode?: boolean;
@@ -16,6 +17,7 @@ interface DiaryViewProps {
   onDiarySelect: (id: string, date: string) => void;
   onBackToList?: () => void;
 }
+
 const DiaryView = ({
   selectedDate,
   isSearchMode = false,
@@ -30,6 +32,7 @@ const DiaryView = ({
   const queryClient = useQueryClient();
   const [diary, setDiary] = useState<Diary | null>(null);
   const [showDateWarning, setShowDateWarning] = useState(false);
+
   const handleDeleteDiary = async () => {
     if (!selectedDate) return;
     const dateStr = formatDate(getTargetDateOrToday(selectedDate));
@@ -43,6 +46,7 @@ const DiaryView = ({
       console.error("일기 삭제 실패", error);
     }
   };
+
   useEffect(() => {
     const fetchDiaryDetail = async () => {
       const diaryId = selectedDiaryId ?? diaryIdMap[formatDate(getTargetDateOrToday(selectedDate))];
@@ -61,6 +65,7 @@ const DiaryView = ({
     };
     fetchDiaryDetail();
   }, [selectedDate, diaryIdMap, selectedDiaryId]);
+
   const renderDiaryContent = () => {
     if (!diary) return null;
     return (
@@ -144,6 +149,7 @@ const DiaryView = ({
       </div>
     );
   };
+
   const renderWriteButton = () => (
     <div className="w-full flex flex-col items-center justify-center gap-2">
       <button
@@ -174,6 +180,7 @@ const DiaryView = ({
       {showDateWarning && <p className="text-sm text-red-500">날짜를 선택해주세요!</p>}
     </div>
   );
+
   return (
     <div className="p-2 md:p-4 bg-transparent w-full h-full flex items-center justify-center">
       <div className="w-full h-full flex flex-col items-center justify-center overflow-auto">
@@ -190,4 +197,5 @@ const DiaryView = ({
     </div>
   );
 };
+
 export default DiaryView;

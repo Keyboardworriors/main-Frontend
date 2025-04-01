@@ -52,6 +52,7 @@ const DiaryView = ({
       const diaryId = selectedDiaryId ?? diaryIdMap[formatDate(getTargetDateOrToday(selectedDate))];
       if (!diaryId) {
         setDiary(null);
+        console.log({ diaryId });
         return;
       }
       try {
@@ -110,11 +111,18 @@ const DiaryView = ({
           </button>
         </div>
         {diary.rec_music?.thumbnail && (
-          <img
-            src={diary.rec_music.thumbnail}
-            alt="추천 음악"
-            className="w-16 h-16 object-cover rounded-full mx-auto mb-2 border border-gray-200"
-          />
+          <a
+            href={`https://www.youtube.com/watch?v=${diary.rec_music.video_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-fit mx-auto mb-2"
+          >
+            <img
+              src={diary.rec_music.thumbnail}
+              alt="추천 음악"
+              className="w-16 h-16 object-cover rounded-full border border-gray-200"
+            />
+          </a>
         )}
         <div className="text-center">
           <p className="text-sm font-semibold text-gray-700">{diary.rec_music?.title}</p>

@@ -52,6 +52,16 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
             <span>{user.nickname?.charAt(0).toUpperCase() || "U"}</span>
           )}
         </div>
+
+        <div className="flex items-center text-lg mb-4">
+          <FaHeart className="mr-2 text-gray-500" />
+          <span className="text-center">{user.preferredGenres?.join(", ") || "-"}</span>
+        </div>
+
+        <div className="flex items-center text-base break-words">
+          <FaPen className="mr-2 text-gray-500" />
+          <span className="text-center">{user.introduction || "-"}</span>
+        </div>
       </div>
     </BaseModal>
   );

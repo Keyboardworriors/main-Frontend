@@ -14,7 +14,7 @@ const GENRES: readonly Genre[] = [
 
 function GenreSelector({ selectedGenres, onGenreClick }: GenreSelectorProps) {
   return (
-    <div className="grid grid-cols-3 gap-6 mt-4">
+    <div className="grid grid-cols-3 gap-4 mt-4 w-full">
       {GENRES.map((genre) => (
         <button
           key={genre}
@@ -33,5 +33,6 @@ function GenreSelector({ selectedGenres, onGenreClick }: GenreSelectorProps) {
     </div>
   );
 }
+
 
 export default GenreSelector;

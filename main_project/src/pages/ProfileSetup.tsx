@@ -57,10 +57,11 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
   return (
     <ProfileLayout>
       <div className="min-h-full flex flex-col items-center p-8 max-w-xl mx-auto">
-        <h1 className="text-3xl font-semibold text-gray-700 mt-5">
+        <h1 className="text-xl md:text-3xl font-semibold text-gray-700 mt-5">
           {mode === "edit" ? "회원 정보를 수정해주세요" : "회원 정보를 작성해주세요"}
         </h1>
-        <p className="text-gray-500 text-sm mt-2">필수 입력 값은 반드시 작성해주세요</p>
+
+        <p className="text-gray-500 md:text-sm mt-2">필수 입력 값은 반드시 작성해주세요</p>
 
         <div className="w-0.5 h-20 bg-gray-400 my-4"></div>
 
@@ -102,7 +103,7 @@ const ProfileSetup = ({ mode }: ProfileSetupProps) => {
         <div className="flex gap-4 mt-8">
           <button
             onClick={handleSubmit}
-            className="px-6 py-3 bg-blue-500 text-white rounded-3xl hover:bg-blue-600"
+            className="px-5 py-2 bg-blue-500 text-white rounded-3xl hover:bg-blue-600"
           >
             {mode === "edit" ? "수정 완료" : "작성 완료"}
           </button>

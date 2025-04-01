@@ -1,51 +1,22 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeLayout from "../components/layouts/HomeLayout";
 import { useAuthStore } from "../store/useAuthStore";
 import { useModalStore } from "../store/modal";
-import { UserViewModel } from "../models/user";
-import authApi from "../api/authApi";
 import { useScrollToTop } from "../hooks/useScrollTopOnMount";
+import { useDeleteUserMutation } from "../hooks/mutations/useDeleteUserMutation";
+import { useUserProfileQuery } from "../hooks/queries/useUserProfileQuery";
 
 const MyPage = () => {
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useState<UserViewModel | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const { openModal, closeModal } = useModalStore();
+  const { openModal } = useModalStore();
+  const { refreshToken, clearAuth } = useAuthStore.getState();
+
+  const { data: userProfile, isLoading } = useUserProfileQuery();
+  const deleteUserMutation = useDeleteUserMutation();
 
   useScrollToTop();
 
-  useEffect(() => {
-    openModal("loading", {
-      message: "프로필 정보를 불러오는 중이에요",
-      modalPurpose: "profileLoading",
-    });
-
-    const fetchUserProfile = async () => {
-      try {
-        const res = await authApi.fetchUserInfo();
-        const { user } = useAuthStore.getState();
-
-        setUserProfile({
-          nickname: res.nickname,
-          bio: res.introduce ?? "",
-          genres: res.favorite_genre ?? [],
-          email: user?.email ?? "",
-          profile_image: user?.profile_image ?? "/default-profile.png",
-        });
-      } catch (error) {
-        console.error("마이페이지 정보 불러오기 실패", error);
-        alert("프로필 정보를 불러오는 데 실패했어요.");
-      } finally {
-        closeModal();
-        setIsLoading(false);
-      }
-    };
-
-    fetchUserProfile();
-  }, [openModal, closeModal]);
-
-  const handleDeleteAccount = async () => {
+  const handleDeleteAccount = () => {
     openModal("customConfirm", {
       title: "기록을 중단하시겠습니까?",
       message: "모든 데이터가 삭제되며 이 작업은 되돌릴 수 없어요",
@@ -53,23 +24,21 @@ const MyPage = () => {
       cancelText: "취소하기",
       isDanger: true,
       onConfirm: async () => {
-        try {
-          const { refreshToken, clearAuth } = useAuthStore.getState();
-
-          if (!refreshToken) {
-            alert("토큰이 유효하지 않습니다. 다시 로그인해주세요.");
-            return;
-          }
-
-          await authApi.deleteUser({ refresh_token: refreshToken });
-
-          alert("회원 탈퇴가 완료되었습니다.");
-          clearAuth();
-          navigate("/");
-        } catch (error) {
-          console.error("회원 탈퇴 실패", error);
-          alert("회원 탈퇴 중 오류가 발생했습니다.");
+        if (!refreshToken) {
+          alert("토큰이 유효하지 않습니다. 다시 로그인해주세요.");
+          return;
         }
+
+        deleteUserMutation.mutate(refreshToken, {
+          onSuccess: () => {
+            alert("회원 탈퇴가 완료되었습니다.");
+            clearAuth();
+            navigate("/");
+          },
+          onError: () => {
+            alert("회원 탈퇴 중 오류가 발생했습니다.");
+          },
+        });
       },
     });
   };
@@ -77,7 +46,7 @@ const MyPage = () => {
   if (isLoading) {
     return (
       <HomeLayout>
-        <div className="flex justify-center items-center w-full h-[55vh]"></div>
+        <div className="flex justify-center items-center w-full h-[55vh]">로딩 중...</div>
       </HomeLayout>
     );
   }
@@ -114,7 +83,7 @@ const MyPage = () => {
             userProfile.genres.map((genre) => (
               <span
                 key={genre}
-                className="py-1 bg-blue-100 text-blue-600 rounded-full text-sm text-center whitespace-nowrap"
+                className="py-1 px-3 bg-blue-100 text-blue-600 rounded-full text-sm text-center whitespace-nowrap"
               >
                 {genre}
               </span>

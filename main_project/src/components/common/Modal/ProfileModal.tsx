@@ -17,7 +17,7 @@ interface ProfileModalProps {
 function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
-      <div className="relative flex flex-col md:flex-row justify-center items-center md:items-center md:h-full min-h-[400px] px-8 max-w-5xl w-full gap-6 text-gray-800">
+      <div className="relative flex flex-col md:flex-row justify-center items-center md:items-start min-h-screen px-8 max-w-5xl w-full gap-6 text-gray-800">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"

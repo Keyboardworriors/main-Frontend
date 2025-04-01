@@ -32,7 +32,7 @@ const BaseModal = ({ isOpen, onClose, children = false }: BaseModalProps) => {
   };
 
   const restoreScrollbar = () => {
-    // document.body.style.paddingRight = "";
+    //document.body.style.paddingRight = "";
   };
 
   useEffect(() => {

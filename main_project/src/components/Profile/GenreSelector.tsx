@@ -19,9 +19,12 @@ function GenreSelector({ selectedGenres, onGenreClick }: GenreSelectorProps) {
         <button
           key={genre}
           type="button"
-          className={`px-4 py-2 w-full rounded-3xl ${
-            selectedGenres.includes(genre) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-600"
-          }`}
+          className={`
+          px-4 py-2 rounded-3xl text-base
+          sm:px-3 sm:py-1.5 sm:text-sm
+          text-center whitespace-nowrap break-keep w-full
+          ${selectedGenres.includes(genre) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-600"}
+        `}
           onClick={() => onGenreClick(genre)}
         >
           {genre}

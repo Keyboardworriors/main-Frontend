@@ -16,3 +16,11 @@ export const getToday = (): Date => {
 export const getTargetDateOrToday = (selectedDate: Date | null): Date => {
   return selectedDate || getToday();
 };
+
+export const isFutureDate = (date: Date): boolean => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(date);
+  target.setHours(0, 0, 0, 0);
+  return target > today;
+};

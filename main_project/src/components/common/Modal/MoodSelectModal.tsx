@@ -9,7 +9,7 @@ interface MoodSelectModalProps {
   moods: Mood[];
   isAnalysisFailed?: boolean;
   analyzedKeywords?: string[];
-  analyzedMood?: string[]; // 타입 에러 추가
+  analyzedMood?: string[];
   isDirectSelect?: boolean;
   onSave: () => void;
 }
@@ -50,7 +50,7 @@ const MoodSelectModal = ({
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
-      <div className="p-4 sm:p-6 w-full max-w-[95vw] overflow-x-hidden max-h-[80vh] overflow-y-auto">
+      <div className="p-2 sm:p-4 w-full max-w-4xl mx-auto overflow-x-hidden max-h-[80vh] overflow-y-auto">
         {!isDirectSelect && (
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-base sm:text-lg text-gray-600 font-semibold">추천 감정 키워드</h2>
@@ -69,7 +69,7 @@ const MoodSelectModal = ({
                 <button
                   key={index}
                   onClick={() => handleMoodSelect(keyword as Mood)}
-                  className={`min-w-[80px] px-3 py-2 sm:px-3 sm:py-2 md:px-4 md:py-2.5 border rounded-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer text-center break-words max-w-full
+                  className={`min-w-[60px] px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 md:py-2.5 border rounded-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer text-center break-words max-w-full
                     text-xs sm:text-sm font-medium ${
                       selectedMoods.includes(keyword as Mood)
                         ? "bg-[#4A7196] text-white border-[#4A7196] shadow-md hover:bg-[#3A5A7A] hover:border-[#3A5A7A]"
@@ -83,7 +83,7 @@ const MoodSelectModal = ({
           </div>
         ) : isAnalysisFailed ? (
           <div className="text-sm text-red-600 text-center p-3 bg-red-50 rounded-xl border border-red-200 mb-4 sm:mb-6">
-            일기 내용이 짧거나 반복적인 경우 감정 분석이 어려워요. 감정을 직접 선택해주세요!
+            감정기록의 내용이 짧거나 반복적인 경우 감정 분석이 어려워요. 감정을 직접 선택해주세요!
           </div>
         ) : null}
 
@@ -116,7 +116,6 @@ const MoodSelectModal = ({
           </div>
         )}
 
-        {/* Save Button */}
         <div className="flex justify-end relative">
           {selectedMoods.length > 0 && isHoveringSaveBtn && (
             <div className="absolute bottom-full right-0 mb-2 bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg w-63 text-xs md:text-sm text-left z-50">

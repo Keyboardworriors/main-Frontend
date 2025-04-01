@@ -69,8 +69,11 @@ const NaverCallback = () => {
     getNaverToken();
   }, [navigate, setAuth, openModal, closeModal]);
 
-  return <HomeLayout><div /></HomeLayout>;
-
+  return (
+    <HomeLayout>
+      <div />
+    </HomeLayout>
+  );
 };
 
 export default NaverCallback;

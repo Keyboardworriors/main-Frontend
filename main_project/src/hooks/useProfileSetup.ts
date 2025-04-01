@@ -45,7 +45,7 @@ const useProfileSetup = (
           nickname: user.nickname,
           introduce: user.introduce ?? "",
           favorite_genre: user.favorite_genre ?? [],
-          is_active: true, // create 시 활성화된 상태
+          is_active: true,
         };
 
         setAuth(accessToken, refreshToken, parsedUser);

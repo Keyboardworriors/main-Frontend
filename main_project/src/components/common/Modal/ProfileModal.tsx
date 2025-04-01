@@ -84,7 +84,7 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
       ref={modalRef}
     >
       <div className="bg-white w-full absolute inset-0 rounded-xl"></div>
-      
+
       <div
         ref={contentRef}
         className="relative flex flex-col items-center"
@@ -104,11 +104,24 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
               <h2 className="text-4xl font-bold mb-10">{user.nickname || "닉네임"}</h2>
 
               <div className="flex items-center text-lg">
-                <FaHeart className="mr-4 text-gray-500" />
-                <span>{user.preferredGenres?.join(", ") || "-"}</span>
+                <FaHeart className="text-gray-500 mr-2" />
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 flex-1">
+                  {user.preferredGenres?.length ? (
+                    user.preferredGenres.map((genre) => (
+                      <span
+                        key={genre}
+                        className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm text-center whitespace-nowrap"
+                      >
+                        {genre}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-sm text-gray-500">-</span>
+                  )}
+                </div>
               </div>
 
-              <div className="flex items-center text-base">
+              <div className="flex items-center text-base mt-4">
                 <FaPen className="mr-4 text-gray-500" />
                 <span>{user.introduction || "-"}</span>
               </div>
@@ -129,7 +142,7 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
         </div>
       </div>
     </div>,
-    topLevelModalContainer
+    topLevelModalContainer,
   );
 }
 

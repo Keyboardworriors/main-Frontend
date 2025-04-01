@@ -1,7 +1,6 @@
 import { formatDateKorean } from "../utils/date";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
-import { useState } from "react";
 import diaryApi from "../api/diaryApi";
 import { Genre } from "../models/profile";
 
@@ -20,8 +19,7 @@ const DiaryContentPreview = ({
 }: DiaryContentPreviewProps) => {
   const formattedDate = formatDateKorean(selectedDate);
   const { openModal, closeModal } = useModalStore();
-  const [buttonText, setButtonText] = useState("필로디");
-  const [isSaving, setIsSaving] = useState(false);
+  const buttonText = "필로디";
 
   const favoriteGenre: Genre[] = [];
 
@@ -75,8 +73,13 @@ const DiaryContentPreview = ({
           onConfirm: retryMelodyAnalysis,
           onCancel: () => {
             closeModal();
-            setButtonText("저장하기");
-            setIsSaving(true);
+            onCompleteMusic({
+              video_id: "",
+              title: "",
+              artist: "",
+              thumbnail: "",
+              embedUrl: "",
+            });
           },
         });
       }
@@ -92,24 +95,19 @@ const DiaryContentPreview = ({
         onConfirm: retryMelodyAnalysis,
         onCancel: () => {
           closeModal();
-          setButtonText("저장하기");
-          setIsSaving(true);
+          onCompleteMusic({
+            video_id: "",
+            title: "",
+            artist: "",
+            thumbnail: "",
+            embedUrl: "",
+          });
         },
       });
     }
   };
 
   const handleMelodyRecommendation = () => {
-    if (isSaving) {
-      onCompleteMusic({
-        video_id: "",
-        title: "",
-        artist: "",
-        thumbnail: "",
-        embedUrl: "",
-      });
-      return;
-    }
     analyzeMusic();
   };
 

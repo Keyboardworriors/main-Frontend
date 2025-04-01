@@ -98,10 +98,8 @@ const MyPage = () => {
       </div>
 
       <div className="flex flex-col items-center justify-center mt-14">
-      <div className="flex flex-col items-center justify-center mt-14">
         <button
           onClick={() => navigate("/members/register", { state: { mode: "edit" } })}
-          className="px-6 py-2.5 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
           className="px-6 py-2.5 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition"
         >
           수정하기

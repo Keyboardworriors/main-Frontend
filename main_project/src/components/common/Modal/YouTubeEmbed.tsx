@@ -21,7 +21,7 @@ const YouTubeEmbed = ({ videoId, title = "YouTube 비디오", className = "" }: 
       }
     };
 
-    handleResize(); // 초기 설정
+    handleResize(); 
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

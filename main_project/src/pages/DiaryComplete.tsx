@@ -29,7 +29,7 @@ const DiaryComplete = ({
         selectedMusic && selectedMusic.title
           ? {
               ...selectedMusic,
-              title: selectedMusic.title.replace(/^\**/, "").trim(), // AI가 붙이는 * 제거
+              title: selectedMusic.title.replace(/^\**/, "").trim(), 
             }
           : null,
     };
@@ -38,7 +38,7 @@ const DiaryComplete = ({
 
     try {
       await diaryApi.createDiary(payload);
-      onFinish(); // 작성 완료 시 호출
+      onFinish(); 
     } catch (error) {
       console.error("일기 저장 실패:", error);
     }
@@ -47,7 +47,6 @@ const DiaryComplete = ({
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       <div className="flex flex-col md:flex-row gap-4">
-        {/* 일기 본문 */}
         <div className="w-full md:w-[60%]">
           <h2 className="text-base font-medium text-gray-800 mb-4 block border-b border-[#4A7196] px-1">
             {diaryContent.diary_title}
@@ -63,7 +62,6 @@ const DiaryComplete = ({
           </div>
         </div>
 
-        {/* 키워드 + 추천 음악 */}
         <div className="w-full md:w-[40%] flex flex-col justify-between md:pl-2.5 md:pt-10 mt-4 md:mt-0">
           <div>
             <h3 className="text-base text-gray-600 font-semibold mb-3">감정 키워드</h3>

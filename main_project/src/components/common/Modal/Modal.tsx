@@ -19,7 +19,7 @@ const Modal = () => {
           isOpen={isOpen}
           onClose={closeModal}
           message={data?.message ?? ""}
-          onConfirm={data?.onConfirm ?? (() => {})} // undefined일 경우를 대비한 기본값 추가
+          onConfirm={data?.onConfirm ?? (() => {})} 
           confirmText={data?.confirmText}
           cancelText={data?.cancelText}
           isDanger={data?.isDanger}
@@ -35,8 +35,8 @@ const Modal = () => {
           message={data?.message ?? ""}
           confirmText={data?.confirmText}
           cancelText={data?.cancelText}
-          onConfirm={data?.onConfirm ?? (() => {})} // 기본값 함수 추가
-          onCancel={data?.onCancel ?? (() => {})} // 기본값 함수 추가
+          onConfirm={data?.onConfirm ?? (() => {})} 
+          onCancel={data?.onCancel ?? (() => {})} 
           isDanger={data?.isDanger}
         />
       );
@@ -47,8 +47,8 @@ const Modal = () => {
           isOpen={isOpen}
           onClose={closeModal}
           songs={data?.songs ?? []}
-          onConfirm={data?.onConfirm} // 타입에서 선택적이므로 그대로 전달
-          onRetry={data?.onRetry} // 타입에서 선택적이므로 그대로 전달
+          onConfirm={data?.onConfirm} 
+          onRetry={data?.onRetry} 
         />
       );
 
@@ -57,21 +57,21 @@ const Modal = () => {
         <MoodSelectModal
           isOpen={isOpen}
           onClose={closeModal}
-          onSelect={data?.onSelect ?? (() => {})} // 타입 에러 방지를 위한 기본 함수 추가
-          onSave={data?.onSave ?? (() => {})} // 타입 에러 방지를 위한 기본 함수 추가
+          onSelect={data?.onSelect ?? (() => {})}
+          onSave={data?.onSave ?? (() => {})} 
           moods={data?.moods ?? []}
           isAnalysisFailed={data?.isAnalysisFailed ?? false}
-          analyzedMood={data?.analyzedMood} // 타입 수정 (MoodSelectModal에서 analyzedMood: string[] | undefined 허용되도록 수정)
+          analyzedMood={data?.analyzedMood} 
           isDirectSelect={data?.isDirectSelect ?? false}
         />
       );
 
     case "profile":
-      if (!data?.user) return null; // user가 undefined일 경우 ProfileModal 렌더링 방지
+      if (!data?.user) return null; 
       return <ProfileModal isOpen={isOpen} onClose={closeModal} user={data.user} />;
 
     case "loading":
-      if (!data?.message) return null; // message가 없으면 LoadingModal 렌더링 방지
+      if (!data?.message) return null; 
       return <LoadingModal isOpen={isOpen} message={data.message} />;
 
     default:

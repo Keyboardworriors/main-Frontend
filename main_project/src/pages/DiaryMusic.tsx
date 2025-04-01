@@ -15,7 +15,6 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
   const { openModal, closeModal } = useModalStore();
   const formattedDate = formatDateKorean(selectedDate);
 
-  // 음악 없이 저장 처리 함수도 useCallback으로 안정화
   const handleNoMusic = useCallback(() => {
     closeModal();
     onComplete({
@@ -27,7 +26,6 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
     });
   }, [closeModal, onComplete]);
 
-  // 음악 분석 함수 useCallback, handleNoMusic 포함
   const analyzeMusic = useCallback(async () => {
     openModal("loading", {
       message: "추천 필로디 🎵",

@@ -2,7 +2,6 @@ import { useState, useRef, useCallback, memo } from "react";
 import BaseModal from "./BaseModal";
 import { Music } from "../../../models/diary";
 
-// props 타입 명시
 interface SongSelectModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -82,13 +81,11 @@ const SongItem = memo(
   },
 );
 
-// props 누락 시 발생하던 타입 오류 방지
 const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSelectModalProps) => {
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
   const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState<boolean>(false);
 
-  // 카드 개수 부족 시 빈 카드 채우기
   const filledSongs = [...songs];
   const needToFill = 3 - filledSongs.length;
   if (needToFill > 0) {
@@ -112,7 +109,6 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
     setPlayingSongId((prev) => (prev === songId ? null : songId));
   }, []);
 
-  // 선택된 음악이 없을 때 기본값 전달
   const handleSave = useCallback(() => {
     if (onConfirm) {
       if (selectedSongId) {
@@ -122,7 +118,6 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
           return;
         }
       }
-      // 음악 없이 저장
       onConfirm({
         video_id: "",
         title: "",
@@ -135,7 +130,6 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
 
   const hasRealSongs = songs.some((s) => s.video_id);
 
-  // 모달 오픈 상태가 아니면 null 반환 (렌더링 오류 방지)
   if (!isOpen) return null;
 
   return (

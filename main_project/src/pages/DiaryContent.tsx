@@ -66,7 +66,6 @@ const DiaryContentPreview = ({
           onRetry: retryMelodyAnalysis,
         });
       } else {
-        // customConfirm 모달에 title, message 누락 추가
         openModal("customConfirm", {
           title: "⚠️ 추천 실패",
           message: "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",
@@ -84,8 +83,6 @@ const DiaryContentPreview = ({
     } catch (error) {
       console.error("추천 실패:", error);
       closeModal();
-
-      // customConfirm 모달에 title, message 누락 추가
       openModal("customConfirm", {
         title: "⚠️ 추천 실패",
         message: "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",

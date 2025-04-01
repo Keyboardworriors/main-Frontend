@@ -92,7 +92,7 @@ const ChartComponent = ({ periodType }: { periodType: PeriodType }) => {
         setMoodData(transformed);
       } catch (error) {
         console.error("차트 데이터 에러:", error);
-        setMoodData(generateDummyData(periodType)); // 실패 시 더미 데이터 사용
+        setMoodData(generateDummyData(periodType)); 
       } finally {
         closeModal();
         setLoading(false);
@@ -100,7 +100,7 @@ const ChartComponent = ({ periodType }: { periodType: PeriodType }) => {
     };
 
     loadChartData();
-  }, [periodType]);
+  }, [periodType, openModal, closeModal]);
 
   return (
     <div className="w-full">
@@ -108,47 +108,54 @@ const ChartComponent = ({ periodType }: { periodType: PeriodType }) => {
         나의 감정 발자취{" "}
         <span className="bg-[#A6CCF2] text-white px-2 py-1 rounded-md text-sm">{periodType}</span>
       </h2>
-      <div className="flex flex-col xl:grid xl:grid-cols-3 xl:gap-8 mb-6">
-        <div className="w-full xl:col-span-2 h-72 md:h-80 relative p-5 bg-white rounded-lg">
+
+      {!loading && moodData.length === 0 ? (
+        <div className="flex items-center justify-center h-80 bg-white rounded-lg text-center text-gray-500 text-base font-medium">
+          감정 차트는 일기를 기록 하신 후에 확인가능합니다😊
+        </div>
+      ) : (
+        <div className="flex flex-col xl:grid xl:grid-cols-3 xl:gap-8 mb-6">
+          <div className="w-full xl:col-span-2 h-72 md:h-80 relative p-5 bg-white rounded-lg">
+            {!loading && (
+              <Doughnut
+                data={createChartData()}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: "bottom",
+                      labels: {
+                        padding: 20,
+                        font: { size: 12 },
+                      },
+                    },
+                    tooltip: {
+                      callbacks: {
+                        label: (context: TooltipItem<"doughnut">) =>
+                          `${context.label}: ${context.raw}회`,
+                      },
+                    },
+                  },
+                }}
+              />
+            )}
+          </div>
+
           {!loading && (
-            <Doughnut
-              data={createChartData()}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    position: "bottom",
-                    labels: {
-                      padding: 20,
-                      font: { size: 12 },
-                    },
-                  },
-                  tooltip: {
-                    callbacks: {
-                      label: (context: TooltipItem<"doughnut">) =>
-                        `${context.label}: ${context.raw}회`,
-                    },
-                  },
-                },
-              }}
-            />
+            <div className="mt-6 xl:mt-0 bg-gray-50 p-6 rounded-lg max-w-full">
+              <h3 className="text-lg font-medium mb-4">나의 감정 요약</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                {periodType} 동안 가장 많이 느낀 감정은 <strong>{getMostFrequentMood()}</strong>
+                입니다.
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-2 gap-y-1 gap-x-2 text-sm">
+                {moodData.map(renderMoodItem)}
+              </div>
+            </div>
           )}
         </div>
-
-        {!loading && (
-          <div className="mt-6 xl:mt-0 bg-gray-50 p-6 rounded-lg max-w-full">
-            <h3 className="text-lg font-medium mb-4">나의 감정 요약</h3>
-            <p className="text-sm text-gray-600 mb-3">
-              {periodType} 동안 가장 많이 느낀 감정은 <strong>{getMostFrequentMood()}</strong>
-              입니다.
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-2 gap-y-1 gap-x-2 text-sm">
-              {moodData.map(renderMoodItem)}
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 };

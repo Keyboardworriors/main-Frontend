@@ -69,7 +69,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             selectedDate={selectedDate}
             diaryContent={diaryContent}
             onEdit={handleEditDiary}
-            onCompleteMusic={handleMusicSelected} // 선택된 음악 받음
+            onCompleteMusic={handleMusicSelected} 
           />
         );
       case "music":
@@ -78,7 +78,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             selectedDate={selectedDate}
             diaryContent={diaryContent}
             onBack={handleEditDiary}
-            onComplete={handleMusicSelected} // 여기서도 정확히 넘김
+            onComplete={handleMusicSelected} 
           />
         );
       case "complete":
@@ -86,7 +86,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
           <DiaryComplete
             selectedDate={selectedDate}
             diaryContent={diaryContent}
-            selectedMusic={selectedMusic} // 전달된 음악 사용
+            selectedMusic={selectedMusic} 
             onFinish={handleComplete}
             onBack={() => setCurrentStep("music")}
           />

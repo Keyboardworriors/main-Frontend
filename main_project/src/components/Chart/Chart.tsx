@@ -1,57 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, TooltipItem } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { PeriodType, MoodData, RawEmotionStats } from "../../models/chart";
+import { MoodData, ChartComponentProps } from "../../models/chart";
 import { useModalStore } from "../../store/modal";
 import { MOOD_COLORS } from "../../models/constants";
-import { Mood } from "../../models/diary";
 import chartApi from "../../api/chartApi";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const ChartComponent = ({ periodType }: { periodType: PeriodType }) => {
+const ChartComponent = ({ periodType }: ChartComponentProps) => {
   const [moodData, setMoodData] = useState<MoodData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
   const { openModal, closeModal } = useModalStore();
 
-  const transformToMoodData = (stats: RawEmotionStats): MoodData[] => {
+  const transformToMoodData = (stats: { [label: string]: number }): MoodData[] => {
     return Object.entries(stats).map(([label, value]) => ({
       label,
       value: Number(value),
       color: MOOD_COLORS[label] || "#AAAAAA",
     }));
-  };
-
-  const generateDummyData = (type: PeriodType): MoodData[] => {
-    if (type === PeriodType.WEEKLY) {
-      return [
-        { label: Mood.Happiness, value: 12, color: MOOD_COLORS[Mood.Happiness] },
-        { label: Mood.Sadness, value: 5, color: MOOD_COLORS[Mood.Sadness] },
-        { label: Mood.Anxiety, value: 8, color: MOOD_COLORS[Mood.Anxiety] },
-        { label: Mood.Anger, value: 3, color: MOOD_COLORS[Mood.Anger] },
-        { label: Mood.Hope, value: 7, color: MOOD_COLORS[Mood.Hope] },
-      ];
-    }
-    if (type === PeriodType.MONTHLY) {
-      return [
-        { label: Mood.Happiness, value: 45, color: MOOD_COLORS[Mood.Happiness] },
-        { label: Mood.Sadness, value: 23, color: MOOD_COLORS[Mood.Sadness] },
-        { label: Mood.Anxiety, value: 30, color: MOOD_COLORS[Mood.Anxiety] },
-        { label: Mood.Anger, value: 15, color: MOOD_COLORS[Mood.Anger] },
-        { label: Mood.Hope, value: 38, color: MOOD_COLORS[Mood.Hope] },
-        { label: Mood.Restlessness, value: 20, color: MOOD_COLORS[Mood.Restlessness] },
-      ];
-    }
-    return [
-      { label: Mood.Happiness, value: 210, color: MOOD_COLORS[Mood.Happiness] },
-      { label: Mood.Sadness, value: 145, color: MOOD_COLORS[Mood.Sadness] },
-      { label: Mood.Anxiety, value: 175, color: MOOD_COLORS[Mood.Anxiety] },
-      { label: Mood.Anger, value: 80, color: MOOD_COLORS[Mood.Anger] },
-      { label: Mood.Hope, value: 100, color: MOOD_COLORS[Mood.Hope] },
-      { label: Mood.Restlessness, value: 120, color: MOOD_COLORS[Mood.Restlessness] },
-      { label: Mood.Excitement, value: 95, color: MOOD_COLORS[Mood.Excitement] },
-      { label: Mood.Regret, value: 65, color: MOOD_COLORS[Mood.Regret] },
-    ];
   };
 
   const createChartData = () => ({
@@ -78,29 +46,32 @@ const ChartComponent = ({ periodType }: { periodType: PeriodType }) => {
     </div>
   );
 
-  useEffect(() => {
-    const loadChartData = async () => {
-      setLoading(true);
-      openModal("loading", {
-        message: "차트를 분석중이에요",
-        modalPurpose: "chart",
-      });
+  const loadChartData = useCallback(async () => {
+    setLoading(true);
+    setError(false);
 
-      try {
-        const stats = await chartApi.fetchEmotionsByPeriod(periodType);
-        const transformed = transformToMoodData(stats);
-        setMoodData(transformed);
-      } catch (error) {
-        console.error("차트 데이터 에러:", error);
-        setMoodData(generateDummyData(periodType)); 
-      } finally {
-        closeModal();
-        setLoading(false);
-      }
-    };
+    openModal("loading", {
+      message: "차트를 분석중이에요",
+      modalPurpose: "chart",
+    });
 
-    loadChartData();
+    try {
+      const stats = await chartApi.fetchEmotionsByPeriod(periodType);
+      const transformed = transformToMoodData(stats);
+      setMoodData(transformed);
+    } catch (error) {
+      console.error("차트 데이터 에러:", error);
+      setError(true);
+      setMoodData([]);
+    } finally {
+      closeModal();
+      setLoading(false);
+    }
   }, [periodType, openModal, closeModal]);
+
+  useEffect(() => {
+    loadChartData();
+  }, [loadChartData]);
 
   return (
     <div className="w-full">
@@ -109,9 +80,19 @@ const ChartComponent = ({ periodType }: { periodType: PeriodType }) => {
         <span className="bg-[#A6CCF2] text-white px-2 py-1 rounded-md text-sm">{periodType}</span>
       </h2>
 
-      {!loading && moodData.length === 0 ? (
+      {!loading && error ? (
+        <div className="flex flex-col items-center justify-center h-80 bg-white rounded-lg text-center text-gray-500 text-base font-medium space-y-4">
+          <p className="mt[-30px]">일기를 불러오는데 실패했어요🥲<br />다시 시도해주세요!</p>
+          <button
+            onClick={loadChartData}
+            className="mt-2 px-4 py-2 bg-[#7698CC] text-white rounded-full hover:bg-[#6387BB] transition"
+          >
+            다시 시도
+          </button>
+        </div>
+      ) : !loading && moodData.length === 0 ? (
         <div className="flex items-center justify-center h-80 bg-white rounded-lg text-center text-gray-500 text-base font-medium">
-          감정 통계는 일기를 기록 하신 후에<br /> 확인 가능합니다 <br /> 지금 일기를 기록해보세요 😊
+          <p className="mt[-30px]">감정 통계는 일기를 기록 하신 후에<br /> 확인 가능합니다 <br /> 지금 일기를 기록해보세요 😊</p>
         </div>
       ) : (
         <div className="flex flex-col xl:grid xl:grid-cols-3 xl:gap-8 mb-6">

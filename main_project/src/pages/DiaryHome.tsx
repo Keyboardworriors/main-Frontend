@@ -79,19 +79,21 @@ const DiaryHome = ({ searchQuery = "", searchResults = [], onClearSearch }: Diar
             />
           }
           resultContent={
-            <DiaryView
-              selectedDate={selectedDate}
-              isSearchMode={searchQuery !== ""}
-              searchResults={searchResults}
-              onWriteClick={handleWriteClick}
-              diaryIdMap={diaryIdMap}
-              selectedDiaryId={selectedDiaryId}
-              onDiarySelect={(id, date) => {
-                setSelectedDiaryId(id);
-                setSelectedDate(new Date(date));
-              }}
-              onBackToList={() => setSelectedDiaryId(null)}
-            />
+            selectedDate ? (
+              <DiaryView
+                selectedDate={selectedDate!}
+                isSearchMode={searchQuery !== ""}
+                searchResults={searchResults}
+                onWriteClick={handleWriteClick}
+                diaryIdMap={diaryIdMap}
+                selectedDiaryId={selectedDiaryId}
+                onDiarySelect={(id: string, date: string) => {
+                  setSelectedDiaryId(id);
+                  setSelectedDate(new Date(date));
+                }}
+                onBackToList={() => setSelectedDiaryId(null)}
+              />
+            ) : null
           }
         />
       )}

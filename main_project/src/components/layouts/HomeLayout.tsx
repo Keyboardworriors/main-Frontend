@@ -14,7 +14,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
     <main className="relative min-h-screen bg-[#A6CCF2] pt-0 pr-4 pb-4 pl-4">
       <div
         className={`bg-white rounded-xl p-7 max-w-6xl mx-auto relative ${
-          isCallbackPage ? "min-h-[400px]" : "min-h-[calc(100vh-180px)] lg:min-h-fit"
+          isCallbackPage ? "min-h-[400px]" : "min-h-[calc(100vh-220px)] lg:min-h-fit"
         }`}
       >
         {children}

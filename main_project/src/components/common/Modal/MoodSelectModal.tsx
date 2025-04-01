@@ -69,7 +69,7 @@ const MoodSelectModal = ({
                 <button
                   key={index}
                   onClick={() => handleMoodSelect(keyword as Mood)}
-                  className={`min-w-[60px] px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 md:py-2.5 border rounded-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer text-center break-words max-w-full
+                  className={`min-w-[60px] px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 border rounded-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer text-center break-words max-w-full
                     text-xs sm:text-sm font-medium ${
                       selectedMoods.includes(keyword as Mood)
                         ? "bg-[#4A7196] text-white border-[#4A7196] shadow-md hover:bg-[#3A5A7A] hover:border-[#3A5A7A]"
@@ -102,7 +102,7 @@ const MoodSelectModal = ({
                 <button
                   key={mood}
                   onClick={() => handleMoodSelect(mood)}
-                  className={`min-w-[80px] px-3 py-2 sm:px-3 sm:py-2 md:px-4 md:py-2.5 border rounded-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer text-center break-words max-w-full
+                  className={`min-w-[80px] px-3 py-1.5 sm:px-3 sm:py-1.5 md:px-4 md:py-2 border rounded-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer text-center break-words max-w-full
                             text-xs sm:text-sm font-medium ${
                               selectedMoods.includes(mood)
                                 ? "bg-[#4A7196] text-white border-[#4A7196] shadow-md hover:bg-[#3A5A7A] hover:border-[#3A5A7A]"

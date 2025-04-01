@@ -17,10 +17,61 @@ interface ProfileModalProps {
 
 function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
+  // 탭 클릭 및 외부 클릭 감지
   useEffect(() => {
     if (!isOpen) return;
-  }, [isOpen]);
+    
+    const tabElements = document.querySelectorAll('.react-tabs__tab');
+    
+    const handleTabClick = () => {
+      onClose();
+    };
+    
+    tabElements.forEach(tab => {
+      tab.addEventListener('click', handleTabClick);
+    });
+    
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        contentRef.current && 
+        !contentRef.current.contains(event.target as Node) &&
+        event.target instanceof Node &&
+        document.getElementById('top-level-modal-container')?.contains(event.target)
+      ) {
+        onClose();
+      }
+    };
+    
+    const checkSubMenuExists = () => {
+      const subMenuContainer = document.querySelector('.top-bar-submenu-container');
+      if (!subMenuContainer) {
+        onClose();
+      }
+    };
+    
+    const subMenuCheckInterval = setInterval(checkSubMenuExists, 100);
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      clearInterval(subMenuCheckInterval);
+      tabElements.forEach(tab => {
+        tab.removeEventListener('click', handleTabClick);
+      });
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -28,11 +79,14 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
   if (!topLevelModalContainer) return null;
 
   return createPortal(
-    <div className="rounded-xl bg-white w-full h-full p-10 inset-0 flex justify-center items-center pointer-events-auto">
+    <div 
+      className="rounded-xl bg-white w-full h-full p-10 inset-0 flex justify-center items-center pointer-events-auto"
+      ref={modalRef}
+    >
       <div className="bg-white w-full absolute inset-0 rounded-xl"></div>
       
       <div
-        ref={modalRef}
+        ref={contentRef}
         className="relative flex flex-col items-center"
         role="dialog"
         aria-modal="true"
@@ -60,7 +114,7 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
               </div>
             </div>
 
-            <div className="w-32 h-32 rounded-full border border-blue-300 overflow-hidden bg-blue-100 flex items-center justify-center text-blue-500 text-4xl ml-30">
+            <div className="w-32 h-32 rounded-full border border-blue-300 overflow-hidden bg-blue-100 flex items-center justify-center text-blue-500 text-4xl ml-0 md:ml-30">
               {user.profileImage ? (
                 <img
                   src={user.profileImage}

@@ -19,7 +19,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
       >
         {children}
         <div id="modal-container" className="absolute inset-0 z-5 pointer-events-none"></div>
-        <div id="top-level-modal-container" className="absolute inset-0 z-50 pointer-events-none"></div>
+        <div id="top-level-modal-container" className="absolute inset-0 z-30 pointer-events-none"></div>
       </div>
     </main>
   );

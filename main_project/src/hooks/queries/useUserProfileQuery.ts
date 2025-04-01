@@ -17,6 +17,6 @@ export const useUserProfileQuery = () => {
         profile_image: user?.profile_image ?? "/default-profile.png",
       };
     },
-    staleTime: 1000 * 60 * 5,
+    staleTime:0
   });
 };

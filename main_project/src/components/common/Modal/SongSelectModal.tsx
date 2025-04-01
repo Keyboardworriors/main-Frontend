@@ -134,7 +134,7 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
-      <div className="w-full max-w-[900px] mx-auto px-4 sm:px-6 py-6 overflow-y-auto">
+      <div className="w-full max-w-[700px] sm:max-w-[900px] mx-auto px-2 sm:px-6 py-6">
         <h2 className="font-bold text-center mb-6 text-xl sm:text-2xl">추천 필로디 🎵</h2>
 
         {!hasRealSongs && (
@@ -144,7 +144,7 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
           </p>
         )}
 
-        <div className="grid grid-cols-3 gap-5 justify-items-center mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 justify-items-center mb-8 px-2 sm:px-0">
           {filledSongs.map((song, idx) => (
             <SongItem
               key={idx}
@@ -157,7 +157,7 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
           ))}
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-center sm:justify-end gap-3 mt-4 relative">
+        <div className="flex flex-row justify-center gap-3 mt-4 relative flex-wrap">
           {hasRealSongs && selectedSongId && isHoveringSaveBtn && (
             <div className="absolute bottom-full right-0 mb-2 bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg w-60 text-xs text-left z-50">
               <div className="absolute bottom-[-6px] right-6 transform rotate-45 w-3 h-3 bg-gray-700"></div>

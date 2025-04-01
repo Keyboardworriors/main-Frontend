@@ -27,12 +27,12 @@ const BaseModal = ({ isOpen, onClose, children = false }: BaseModalProps) => {
     previousOverflowStyle.current = document.body.style.overflow;
 
     if (scrollbarWidth > 0) {
-      // document.body.style.paddingRight = `${scrollbarWidth}px`;
+      //document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
   };
 
   const restoreScrollbar = () => {
-    // document.body.style.paddingRight = "";
+    //document.body.style.paddingRight = "";
   };
 
   useEffect(() => {

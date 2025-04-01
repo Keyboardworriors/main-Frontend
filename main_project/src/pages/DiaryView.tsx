@@ -1,4 +1,4 @@
-import { formatDate, formatDateKorean, getTargetDateOrToday } from "../utils/date";
+import { formatDate, formatDateKorean, getTargetDateOrToday, isFutureDate } from "../utils/date";
 import { useQueryClient } from "@tanstack/react-query";
 import { SearchResult } from "../models/search";
 import { Diary } from "../models/diary";
@@ -152,6 +152,18 @@ const DiaryView = ({
             setShowDateWarning(true);
             return;
           }
+
+          const selected = new Date(selectedDate);
+          if (isFutureDate(selected)) {
+            openModal("customConfirm", {
+              title: "잘못된 날짜 선택",
+              message: "미래의 감정기록은 그날이 오면 함께 써볼까요?",
+              confirmText: "확인",
+              onConfirm: () => {},
+            });
+            return;
+          }
+
           setShowDateWarning(false);
           onWriteClick();
         }}

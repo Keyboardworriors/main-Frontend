@@ -1,9 +1,12 @@
+import { useEffect, useRef, useState } from "react";
 import { formatDateKorean } from "../utils/date";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
+import { useDiaryStore } from "../store/diary";
 import diaryApi from "../api/diaryApi";
 import { Genre } from "../models/profile";
 import { AxiosError } from "axios";
+import SongSelectModal from "../components/common/Modal/SongSelectModal";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
@@ -20,9 +23,17 @@ const DiaryContentPreview = ({
 }: DiaryContentPreviewProps) => {
   const formattedDate = formatDateKorean(selectedDate);
   const { openModal, closeModal } = useModalStore();
+  const setIsWriting = useDiaryStore((state) => state.setIsWriting);
   const buttonText = "필로디";
-
   const favoriteGenre: Genre[] = [];
+
+  const cachedValidSongs = useRef<Music[]>([]);
+  const [isSongSelectOpen, setIsSongSelectOpen] = useState(false); // ✅ 독립적 상태 관리
+
+  useEffect(() => {
+    setIsWriting(true);
+    return () => setIsWriting(false);
+  }, [setIsWriting]);
 
   const retryMelodyAnalysis = () => {
     closeModal();
@@ -43,89 +54,64 @@ const DiaryContentPreview = ({
     });
 
     try {
-      const songs = (await diaryApi.recommendMusic(diaryContent.moods, favoriteGenre)) as (Music & {
-        error?: boolean;
-      })[];
+      const songs = (await diaryApi.recommendMusic(
+        diaryContent.moods,
+        favoriteGenre
+      )) as (Music & { error?: boolean })[];
 
-      const validSongs = songs.filter((song) => song.video_id && song.title && !song.error);
+      const validSongs = songs.filter(
+        (song) => song.video_id && song.title && !song.error
+      );
 
+      cachedValidSongs.current = validSongs;
       closeModal();
 
       if (validSongs.length > 0) {
-        openModal("songSelect", {
-          songs: validSongs,
-          onConfirm: (selected?: Music) => {
-            if (!selected) return;
-            closeModal();
-            onCompleteMusic({
-              ...selected,
-              title: selected.title.replace(/^\*/, ""),
-            });
-          },
-          onRetry: retryMelodyAnalysis,
-        });
+        setIsSongSelectOpen(true);
       } else {
         openModal("customConfirm", {
           title: "⚠️ 추천 실패",
-          message: "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",
+          message:
+            "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",
           confirmText: "다시 시도",
           cancelText: "저장하기",
           isDanger: false,
           onConfirm: retryMelodyAnalysis,
           onCancel: () => {
-            closeModal();
-            onCompleteMusic({
-              video_id: "",
-              title: "",
-              artist: "",
-              thumbnail: "",
-              embedUrl: "",
-            });
+            setTimeout(() => {
+              setIsSongSelectOpen(true); // ✅ 다시 열기
+            }, 50);
           },
         });
       }
     } catch (error) {
       const err = error as AxiosError;
-      console.error("🎵 [DiaryContentPreview] 음악 추천 실패:");
-      if (err.response) {
-        console.error("서버 응답 상태:", err.response.status);
-        console.error("서버 응답 데이터:", err.response.data);
-      } else if (err.request) {
-        console.error("요청은 되었지만 응답이 없습니다:", err.request);
-      } else {
-        console.error("요청 설정 중 에러 발생:", err.message);
-      }
+      console.error("🎵 [DiaryContentPreview] 음악 추천 실패:", err);
 
       closeModal();
       openModal("customConfirm", {
         title: "⚠️ 추천 실패",
-        message: "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",
+        message:
+          "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",
         confirmText: "다시 시도",
         cancelText: "저장하기",
         isDanger: false,
         onConfirm: retryMelodyAnalysis,
         onCancel: () => {
-          closeModal();
-          onCompleteMusic({
-            video_id: "",
-            title: "",
-            artist: "",
-            thumbnail: "",
-            embedUrl: "",
-          });
+          setTimeout(() => {
+            setIsSongSelectOpen(true); // ✅ 다시 열기
+          }, 50);
         },
       });
     }
   };
 
-  const handleMelodyRecommendation = () => {
-    analyzeMusic();
-  };
-
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       <div className="flex justify-between items-center mb-3">
-        <div className="text-medium text-[#5E8FBF] font-medium">{formattedDate}</div>
+        <div className="text-medium text-[#5E8FBF] font-medium">
+          {formattedDate}
+        </div>
         <button
           onClick={onEdit}
           className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -168,7 +154,7 @@ const DiaryContentPreview = ({
 
           <div className="flex justify-end mt-4 md:mt-8">
             <button
-              onClick={handleMelodyRecommendation}
+              onClick={analyzeMusic}
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
               <span>{buttonText}</span>
@@ -188,6 +174,21 @@ const DiaryContentPreview = ({
           </div>
         </div>
       </div>
+
+      {/* ✅ 독립적으로 songSelectModal 직접 제어 */}
+      <SongSelectModal
+        isOpen={isSongSelectOpen}
+        onClose={() => setIsSongSelectOpen(false)}
+        songs={cachedValidSongs.current}
+        onConfirm={(selected) => {
+          setIsSongSelectOpen(false);
+          onCompleteMusic({
+            ...selected,
+            title: selected.title.replace(/^\*/, ""),
+          });
+        }}
+        onRetry={retryMelodyAnalysis}
+      />
     </div>
   );
 };

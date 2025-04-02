@@ -6,7 +6,9 @@ import DiaryComplete from "./DiaryComplete";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDiaryStore } from "../store/diary"; 
+import { useDiaryStore } from "../store/diary";
+import diaryApi from "../api/diaryApi";
+import { format } from "date-fns";
 
 interface DiaryControlProps {
   selectedDate: Date;
@@ -14,9 +16,7 @@ interface DiaryControlProps {
 }
 
 const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
-  const [currentStep, setCurrentStep] = useState<"writing" | "content" | "music" | "complete">(
-    "writing",
-  );
+  const [currentStep, setCurrentStep] = useState<"writing" | "content" | "music" | "complete">("writing");
   const [diaryContent, setDiaryContent] = useState<DiaryContentType>({
     diary_title: "",
     content: "",
@@ -26,12 +26,11 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
 
   const { openModal, closeModal } = useModalStore();
   const queryClient = useQueryClient();
-
-  const setIsWriting = useDiaryStore((state) => state.setIsWriting); 
+  const setIsWriting = useDiaryStore((state) => state.setIsWriting);
 
   useEffect(() => {
     setIsWriting(true);
-    return () => setIsWriting(false); 
+    //return () => setIsWriting(false);
   }, [setIsWriting]);
 
   const handleDiaryWriteComplete = (content: DiaryContentType) => {
@@ -48,19 +47,37 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
     setCurrentStep("complete");
   };
 
-  const handleComplete = async () => {
-    openModal("loading", {
-      message: "소중한 감정을 기록중이에요",
-      modalPurpose: "saving",
-    });
+  const handleSaveDiary = async () => {
+    const payload = {
+      diary_title: diaryContent.diary_title,
+      content: diaryContent.content,
+      moods: diaryContent.moods,
+      date: format(selectedDate, "yyyy-MM-dd"),
+      rec_music:
+        selectedMusic && selectedMusic.title
+          ? {
+              ...selectedMusic,
+              title: selectedMusic.title.replace(/^\*+/, "").trim(),
+            }
+          : null,
+    };
 
-    setTimeout(() => {
+    try {
+      openModal("loading", {
+        message: "소중한 감정을 기록중이에요",
+        modalPurpose: "saving",
+      });
+
+      await diaryApi.createDiary(payload);
+
       closeModal();
       queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
-
-      setIsWriting(false); 
+      setIsWriting(false);
       onCancel();
-    }, 1500);
+    } catch (error) {
+      console.error("일기 저장 실패:", error);
+      closeModal();
+    }
   };
 
   const renderStep = () => {
@@ -97,8 +114,8 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             selectedDate={selectedDate}
             diaryContent={diaryContent}
             selectedMusic={selectedMusic}
-            onFinish={handleComplete}
             onBack={() => setCurrentStep("music")}
+            onSave={handleSaveDiary} 
           />
         );
     }

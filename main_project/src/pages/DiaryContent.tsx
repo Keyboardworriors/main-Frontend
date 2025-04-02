@@ -7,6 +7,7 @@ import diaryApi from "../api/diaryApi";
 import { Genre } from "../models/profile";
 import { AxiosError } from "axios";
 import SongSelectModal from "../components/common/Modal/SongSelectModal";
+import { useConfirmDiaryExit } from "../utils/stopConfirm";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
@@ -101,27 +102,19 @@ const DiaryContentPreview = ({
     }
   };
 
-  const handleTryClose = () => {
-    openModal("customConfirm", {
-      title: "작성 중인 감정기록이 있어요!",
-      message: "작성 중인 내용은 저장되지 않습니다.\n 작성을 중단하시겠어요?",
-      onConfirm: () => {
-        setIsWriting(false);
-        onEdit();
-      },
-      onCancel: () => {},
-      confirmText: "중단하기",
-      cancelText: "취소",
-      isDanger: true,
-    });
-  };
+  const handleTryClose = useConfirmDiaryExit(onEdit, {
+    title: "작성 중인 감정기록이 있어요!",
+    message: "작성 중인 내용은 저장되지 않습니다.\n작성을 중단하시겠어요?",
+    confirmText: "중단하기",
+    cancelText: "취소",
+  });
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       <div className="flex justify-between items-center mb-3">
         <div className="text-medium text-[#5E8FBF] font-medium">{formattedDate}</div>
         <button
-          onClick={handleTryClose}
+          onClick={() => handleTryClose()}
           className="text-gray-500 hover:text-gray-700 transition-colors"
           aria-label="창닫기"
         >

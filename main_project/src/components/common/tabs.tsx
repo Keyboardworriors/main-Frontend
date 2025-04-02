@@ -5,6 +5,8 @@ import MoodChart from "../../pages/moodChart";
 import TopBarContainer from "./TopBarContainer";
 import { useSearch } from "../../hooks/useSearch";
 import { useState } from "react";
+import { useDiaryStore } from "../../store/diary";
+import { useModalStore } from "../../store/modal";
 
 function MyTabs() {
   const [tabIndex, setTabIndex] = useState(0);
@@ -29,7 +31,27 @@ function MyTabs() {
     <Tabs
       className="bg-[#A6CCF2] min-h-screen flex flex-col"
       selectedIndex={tabIndex}
-      onSelect={(index) => setTabIndex(index)}
+      onSelect={(index) => {
+        const { isWriting } = useDiaryStore.getState();
+        console.log("🔍 탭 이동 시도 - isWriting 상태:", isWriting);
+        const { openModal } = useModalStore.getState();
+
+        if (isWriting) {
+          openModal("customConfirm", {
+            title: "작성 중인 감정기록이 있어요!",
+            message: "이동하면 작성 중인 내용이 사라질 수 있어요.\n정말 이동하시겠어요?",
+            onConfirm: () => setTabIndex(index),
+            onCancel: () => {},
+            confirmText: "확인",
+            cancelText: "취소",
+            isDanger: true,
+          });
+          return false;
+        }
+
+        setTabIndex(index);
+        return true;
+      }}
     >
       <TabList className="flex max-w-[1130px] w-full mx-auto pt-0 pr-4 pl-7 items-center">
         <Tab className={tabBaseStyle} selectedClassName={tabSelectedStyle}>

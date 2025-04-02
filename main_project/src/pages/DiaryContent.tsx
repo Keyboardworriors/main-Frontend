@@ -28,7 +28,7 @@ const DiaryContentPreview = ({
   const favoriteGenre: Genre[] = [];
 
   const cachedValidSongs = useRef<Music[]>([]);
-  const [isSongSelectOpen, setIsSongSelectOpen] = useState(false); // ✅ 독립적 상태 관리
+  const [isSongSelectOpen, setIsSongSelectOpen] = useState(false);
 
   useEffect(() => {
     setIsWriting(true);
@@ -54,14 +54,11 @@ const DiaryContentPreview = ({
     });
 
     try {
-      const songs = (await diaryApi.recommendMusic(
-        diaryContent.moods,
-        favoriteGenre
-      )) as (Music & { error?: boolean })[];
+      const songs = (await diaryApi.recommendMusic(diaryContent.moods, favoriteGenre)) as (Music & {
+        error?: boolean;
+      })[];
 
-      const validSongs = songs.filter(
-        (song) => song.video_id && song.title && !song.error
-      );
+      const validSongs = songs.filter((song) => song.video_id && song.title && !song.error);
 
       cachedValidSongs.current = validSongs;
       closeModal();
@@ -71,15 +68,14 @@ const DiaryContentPreview = ({
       } else {
         openModal("customConfirm", {
           title: "⚠️ 추천 실패",
-          message:
-            "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",
+          message: "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",
           confirmText: "다시 시도",
           cancelText: "저장하기",
           isDanger: false,
           onConfirm: retryMelodyAnalysis,
           onCancel: () => {
             setTimeout(() => {
-              setIsSongSelectOpen(true); // ✅ 다시 열기
+              setIsSongSelectOpen(true);
             }, 50);
           },
         });
@@ -91,15 +87,14 @@ const DiaryContentPreview = ({
       closeModal();
       openModal("customConfirm", {
         title: "⚠️ 추천 실패",
-        message:
-          "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",
+        message: "음악 추천에 실패했어요\n다시 시도하시거나 음악 없이 저장할 수 있어요!",
         confirmText: "다시 시도",
         cancelText: "저장하기",
         isDanger: false,
         onConfirm: retryMelodyAnalysis,
         onCancel: () => {
           setTimeout(() => {
-            setIsSongSelectOpen(true); // ✅ 다시 열기
+            setIsSongSelectOpen(true);
           }, 50);
         },
       });
@@ -109,9 +104,7 @@ const DiaryContentPreview = ({
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       <div className="flex justify-between items-center mb-3">
-        <div className="text-medium text-[#5E8FBF] font-medium">
-          {formattedDate}
-        </div>
+        <div className="text-medium text-[#5E8FBF] font-medium">{formattedDate}</div>
         <button
           onClick={onEdit}
           className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -175,7 +168,6 @@ const DiaryContentPreview = ({
         </div>
       </div>
 
-      {/* ✅ 독립적으로 songSelectModal 직접 제어 */}
       <SongSelectModal
         isOpen={isSongSelectOpen}
         onClose={() => setIsSongSelectOpen(false)}

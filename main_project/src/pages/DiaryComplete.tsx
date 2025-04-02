@@ -1,52 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDiaryStore } from "../store/diary";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
-import { format } from "date-fns";
-import diaryApi from "../api/diaryApi";
-import { useDiaryStore } from "../store/diary"; 
 
-type DiaryCompleteProps = {
+interface DiaryCompleteProps {
   selectedDate: Date;
   diaryContent: DiaryContentType;
   selectedMusic: Music | null;
   onBack: () => void;
-  onFinish: () => void;
-};
+  onSave: () => void;
+}
 
 const DiaryComplete = ({
-  selectedDate,
   diaryContent,
   selectedMusic,
-  onFinish,
+  onSave,
 }: DiaryCompleteProps) => {
   const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState(false);
-  const setIsWriting = useDiaryStore((state) => state.setIsWriting); 
+  const setIsWriting = useDiaryStore((state) => state.setIsWriting);
 
-  const handleSaveDiary = async () => {
-    const payload = {
-      diary_title: diaryContent.diary_title,
-      content: diaryContent.content,
-      moods: diaryContent.moods,
-      date: format(selectedDate, "yyyy-MM-dd"),
-      rec_music:
-        selectedMusic && selectedMusic.title
-          ? {
-              ...selectedMusic,
-              title: selectedMusic.title.replace(/^\**/, "").trim(),
-            }
-          : null,
-    };
-
-    console.log("일기 저장 요청 데이터: ", payload);
-
-    try {
-      await diaryApi.createDiary(payload);
-
-      setIsWriting(false); 
-      onFinish(); 
-    } catch (error) {
-      console.error("일기 저장 실패:", error);
-    }
-  };
+  useEffect(() => {
+    setIsWriting(true);
+  }, [setIsWriting]);
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -101,7 +75,7 @@ const DiaryComplete = ({
             )}
 
             <button
-              onClick={handleSaveDiary}
+              onClick={onSave}
               onMouseEnter={() => setIsHoveringSaveBtn(true)}
               onMouseLeave={() => setIsHoveringSaveBtn(false)}
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"

@@ -97,12 +97,12 @@
 
 ### FE
 
-| <a href="https://github.com/KIMDOTS"><img src="https://avatars.githubusercontent.com/u/168804702?v=4" width=100px/><br/><sub><b>@KIMDOTS</b></sub></a><br/> | <a href="https://github.com/chiyo-an"><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@chiyo-an</b></sub></a><br/> | <a href="https://github.com/minhui-p"><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@minhui-p</b></sub></a><br/> |
+| <a href="https://github.com/KIMDOTS"><img src="https://avatars.githubusercontent.com/u/168804702?v=4" width=100px/><br/><sub><b>@KIMDOTS</b></sub></a><br/> | <a href="https://github.com/chiyo-an"><img src="https://avatars.githubusercontent.com/u/52526916?v=4" width=100px/><br/><sub><b>@chiyo-an</b></sub></a><br/> | <a href="https://github.com/minhui-p"><img src="https://avatars.githubusercontent.com/u/186126648?v=4" width=100px/><br/><sub><b>@minhui-p</b></sub></a><br/> |
 |:------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------:|
 | 김민정 | 안정은 | 박민희 |
 ### BE
 
-| <a href="https://github.com/shinezeee"><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@shinezeee</b></sub></a><br/> | <a href="https://github.com/rodzlen"><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@rodzlen</b></sub></a><br/> | <a href="https://github.com/parkh12"><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@parkh12</b></sub></a><br/> |
+| <a href="https://github.com/shinezeee"><img src="https://avatars.githubusercontent.com/u/188424203?v=4" width=100px/><br/><sub><b>@shinezeee</b></sub></a><br/> | <a href="https://github.com/rodzlen"><img src="https://avatars.githubusercontent.com/u/162860800?v=4" width=100px/><br/><sub><b>@rodzlen</b></sub></a><br/> | <a href="https://github.com/parkh12"><img src="https://avatars.githubusercontent.com/u/186007221?v=4" width=100px/><br/><sub><b>@parkh12</b></sub></a><br/> |
 |:-------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|
 | 신혜지 | 김휘수 | 박현성 |
 

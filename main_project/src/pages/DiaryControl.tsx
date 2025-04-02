@@ -16,9 +16,7 @@ interface DiaryControlProps {
 }
 
 const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
-  const [currentStep, setCurrentStep] = useState<"writing" | "content" | "music" | "complete">(
-    "writing",
-  );
+  const [currentStep, setCurrentStep] = useState<"writing" | "content" | "music" | "complete">("writing");
   const [diaryContent, setDiaryContent] = useState<DiaryContentType>({
     diary_title: "",
     content: "",
@@ -44,6 +42,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   };
 
   const handleMusicSelected = (music: Music) => {
+    console.log("[DiaryControl] handleMusicSelected 실행됨", music);
     setSelectedMusic(music);
     setCurrentStep("complete");
   };
@@ -73,7 +72,6 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
 
       closeModal();
       queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
-
       setIsWriting(false);
       onCancel();
     } catch (error) {
@@ -117,7 +115,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             diaryContent={diaryContent}
             selectedMusic={selectedMusic}
             onBack={() => setCurrentStep("music")}
-            onSave={handleSaveDiary}
+            onSave={handleSaveDiary} 
           />
         );
     }

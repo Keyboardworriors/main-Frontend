@@ -78,7 +78,7 @@ const SongItem = memo(
         </div>
       </div>
     );
-  },
+  }
 );
 
 const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSelectModalProps) => {
@@ -87,19 +87,7 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
   const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState<boolean>(false);
   const saveBtnRef = useRef<HTMLButtonElement>(null);
 
-  const filledSongs = [...songs];
-  const needToFill = 3 - filledSongs.length;
-  if (needToFill > 0) {
-    for (let i = 0; i < needToFill; i++) {
-      filledSongs.push({
-        video_id: "",
-        title: "",
-        artist: "",
-        thumbnail: "",
-        embedUrl: "",
-      });
-    }
-  }
+  const hasRealSongs = songs.some((s) => s.video_id);
 
   const handleSongSelect = useCallback((songId: string) => {
     setSelectedSongId(songId);
@@ -129,24 +117,21 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
     }
   }, [selectedSongId, onConfirm, songs]);
 
-  const hasRealSongs = songs.some((s) => s.video_id);
-
-  if (!isOpen) return null;
+  if (!isOpen || songs.length === 0) return null;
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
-      <div className="w-full max-w-[700px] sm:max-w-[900px] mx-auto px-2 sm:px-6 py-6">
+      <div
+        className="w-full max-w-[700px] sm:max-w-[900px] mx-auto px-2 sm:px-6 py-6"
+        style={{
+          position: "relative",
+          zIndex: hasRealSongs ? "auto" : 1,
+        }}
+      >
         <h2 className="font-bold text-center mb-6 text-xl sm:text-2xl">추천 필로디 🎵</h2>
 
-        {!hasRealSongs && (
-          <p className="text-center text-sm text-gray-500 mb-6">
-            추천된 노래가 없어요 😭 다시 시도 또는 음악 없이 저장하려면 <strong>저장하기</strong>를
-            눌러주세요
-          </p>
-        )}
-
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 justify-items-center mb-8 px-2 sm:px-0">
-          {filledSongs.map((song, idx) => (
+          {songs.map((song, idx) => (
             <SongItem
               key={idx}
               song={song}
@@ -160,17 +145,22 @@ const SongSelectModal = ({ isOpen, onClose, songs, onConfirm, onRetry }: SongSel
 
         <div className="flex flex-row justify-center sm:justify-end gap-3 mt-4 relative flex-wrap">
           {hasRealSongs && selectedSongId && isHoveringSaveBtn && (
-            <div className="absolute bottom-full mb-2 bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg w-60 text-xs text-left z-50" style={{
-              right: window.innerWidth > 640 ? '0' : '50%',
-              transform: window.innerWidth > 640 ? 'none' : 'translateX(50%)'
-            }}>
+            <div
+              className="absolute bottom-full mb-2 bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg w-60 text-xs text-left z-50"
+              style={{
+                right: window.innerWidth > 640 ? "0" : "50%",
+                transform: window.innerWidth > 640 ? "none" : "translateX(50%)",
+              }}
+            >
               <div className="absolute bottom-[-6px] right-6 transform rotate-45 w-3 h-3 bg-gray-700"></div>
               선택한 음악은 변경할 수 없어요! <br /> 신중히 선택해주세요
             </div>
           )}
 
           <button
-            onClick={onRetry}
+            onClick={() => {
+              if (onRetry) onRetry(); 
+            }}
             className="px-4 py-2 rounded-full text-sm font-medium bg-gray-200 hover:bg-gray-300 text-gray-800"
           >
             다시 시도

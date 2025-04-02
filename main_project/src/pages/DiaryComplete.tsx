@@ -54,16 +54,16 @@ const DiaryComplete = ({
               ))}
             </div>
 
-            {selectedMusic && selectedMusic.title && (
-              <>
-                <h3 className="text-base text-gray-600 font-semibold mb-3">추천된 필로디 🎵</h3>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-4 py-1.5 bg-[#A6CCF2] text-white rounded-full text-sm font-medium min-w-[80px] text-center">
-                    {selectedMusic.title.replace(/^\*/, "").trim()} - {selectedMusic.artist}
-                  </span>
-                </div>
-              </>
-            )}
+            {selectedMusic && (selectedMusic.title || selectedMusic.video_id) && (
+  <>
+    <h3 className="text-base text-gray-600 font-semibold mb-3">추천된 필로디 🎵</h3>
+    <div className="flex flex-wrap gap-2">
+      <span className="px-4 py-1.5 bg-[#A6CCF2] text-white rounded-full text-sm font-medium min-w-[80px] text-center">
+        {selectedMusic.title.replace(/^\*/, "").trim() || "무제"} - {selectedMusic.artist || "아티스트 없음"}
+      </span>
+    </div>
+  </>
+)}
           </div>
 
           <div className="flex justify-end mt-4 md:mt-8 relative">

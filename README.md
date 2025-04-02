@@ -6,12 +6,12 @@
 ---
 ## :link: 배포 링크
 
-> ### [⛪ 배포 링크 예시 - 네이버](https:www.naver.com)
+> ### https://www.feelody.site/
 
 ---
 ## 🗣️ 프로젝트 발표 영상 & 발표 문서
 
-> ### 🗓️ 2024.00-.00 - 2024.00.00
+> ### 🗓️ 2025.04.03
 > ### [📺 발표 영상 예시]()
 > ### [📑 발표 문서 예시]()
 
@@ -99,14 +99,14 @@
 
 | <a href=https://github.com/><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | <a href=https://github.com/><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | <a href=https://github.com/><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | <a href=https://github.com/><img src="https://avatars.githubusercontent.com/u/111436967?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> |
 |:----------------------------------:|:----------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------:|
-|                홍길동                 |    김00     |                                                                            강00                                                                            |    송00     |
+|                김민정                 |    안정은     |                                                                            박민희                                                                            |    송00     |
 
 
 ### BE
 
 | <a href=https://github.com/><img src="https://avatars.githubusercontent.com/u/85716720?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | <a href=https://github.com/orioncsy><img src="https://avatars.githubusercontent.com/u/90237119?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | <a href=https://github.com/><img src="https://avatars.githubusercontent.com/u/77969043?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> |
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------:|
-|                                                                            박00                                                                             |                                                                            이00                                                                             |                                          한00                                           |
+|                                                                            신혜지                                                                             |                                                                            김휘수                                                                           |                                          박현성                                           |
 
 ## 📑 프로젝트 규칙
 

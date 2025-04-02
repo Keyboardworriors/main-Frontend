@@ -42,7 +42,7 @@ function MyTabs() {
             message: "이동하면 작성 중인 내용이 사라질 수 있어요.\n정말 이동하시겠어요?",
             onConfirm: () => setTabIndex(index),
             onCancel: () => {},
-            confirmText: "확인",
+            confirmText: "이동하기",
             cancelText: "취소",
             isDanger: true,
           });

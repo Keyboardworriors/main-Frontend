@@ -158,6 +158,21 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
     editor?.commands.setContent("");
   };
 
+  const handleTryClose = () => {
+    openModal("customConfirm", {
+      title: "작성 중인 감정기록이 있어요!",
+      message: "이동하면 작성 중인 내용이 사라질 수 있어요.\n정말 이동하시겠어요?",
+      onConfirm: () => {
+        setIsWriting(false);
+        onCancel();
+      },
+      onCancel: () => {},
+      confirmText: "이동하기",
+      cancelText: "취소",
+      isDanger: true,
+    });
+  };
+
   if (isSaved) {
     return (
       <DiaryContentPreview
@@ -174,7 +189,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       <div className="flex justify-between items-center mb-3">
         <div className="text-medium text-[#5E8FBF] font-medium">{formattedDate}</div>
         <button
-          onClick={onCancel}
+          onClick={handleTryClose}
           className="text-gray-500 hover:text-gray-700 transition-colors"
           aria-label="닫기"
         >

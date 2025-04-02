@@ -161,7 +161,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
   const handleTryClose = () => {
     openModal("customConfirm", {
       title: "작성 중인 감정기록이 있어요!",
-      message: "작성을 중단하시겠어요?",
+      message: "작성 중인 내용은 저장되지 않습니다.\n 작성을 중단하시겠어요?",
       onConfirm: () => {
         setIsWriting(false);
         onCancel();

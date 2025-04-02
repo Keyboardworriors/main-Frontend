@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DiaryWrite from "./DiaryWrite";
 import DiaryContentPreview from "./DiaryContent";
 import DiaryMusic from "./DiaryMusic";
@@ -6,6 +6,7 @@ import DiaryComplete from "./DiaryComplete";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDiaryStore } from "../store/diary"; 
 
 interface DiaryControlProps {
   selectedDate: Date;
@@ -24,6 +25,14 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   const [selectedMusic, setSelectedMusic] = useState<Music | null>(null);
 
   const { openModal, closeModal } = useModalStore();
+  const queryClient = useQueryClient();
+
+  const setIsWriting = useDiaryStore((state) => state.setIsWriting); 
+
+  useEffect(() => {
+    setIsWriting(true);
+    return () => setIsWriting(false); 
+  }, [setIsWriting]);
 
   const handleDiaryWriteComplete = (content: DiaryContentType) => {
     setDiaryContent(content);
@@ -39,16 +48,17 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
     setCurrentStep("complete");
   };
 
-  const queryClient = useQueryClient();
-
   const handleComplete = async () => {
     openModal("loading", {
       message: "소중한 감정을 기록중이에요",
       modalPurpose: "saving",
     });
+
     setTimeout(() => {
       closeModal();
       queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
+
+      setIsWriting(false); 
       onCancel();
     }, 1500);
   };
@@ -69,7 +79,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             selectedDate={selectedDate}
             diaryContent={diaryContent}
             onEdit={handleEditDiary}
-            onCompleteMusic={handleMusicSelected} 
+            onCompleteMusic={handleMusicSelected}
           />
         );
       case "music":
@@ -78,7 +88,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
             selectedDate={selectedDate}
             diaryContent={diaryContent}
             onBack={handleEditDiary}
-            onComplete={handleMusicSelected} 
+            onComplete={handleMusicSelected}
           />
         );
       case "complete":
@@ -86,7 +96,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
           <DiaryComplete
             selectedDate={selectedDate}
             diaryContent={diaryContent}
-            selectedMusic={selectedMusic} 
+            selectedMusic={selectedMusic}
             onFinish={handleComplete}
             onBack={() => setCurrentStep("music")}
           />

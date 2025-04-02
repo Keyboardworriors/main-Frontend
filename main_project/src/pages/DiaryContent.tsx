@@ -3,6 +3,7 @@ import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import diaryApi from "../api/diaryApi";
 import { Genre } from "../models/profile";
+import { AxiosError } from "axios";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
@@ -84,7 +85,17 @@ const DiaryContentPreview = ({
         });
       }
     } catch (error) {
-      console.error("추천 실패:", error);
+      const err = error as AxiosError;
+      console.error("🎵 [DiaryContentPreview] 음악 추천 실패:");
+      if (err.response) {
+        console.error("서버 응답 상태:", err.response.status);
+        console.error("서버 응답 데이터:", err.response.data);
+      } else if (err.request) {
+        console.error("요청은 되었지만 응답이 없습니다:", err.request);
+      } else {
+        console.error("요청 설정 중 에러 발생:", err.message);
+      }
+
       closeModal();
       openModal("customConfirm", {
         title: "⚠️ 추천 실패",

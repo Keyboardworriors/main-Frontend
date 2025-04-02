@@ -40,6 +40,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
 
   const { openModal, closeModal } = useModalStore();
   const queryClient = useQueryClient();
+
   const analyzeMoodMutation = useMutation({
     mutationFn: ({ title, content }: { title: string; content: string }) =>
       diaryApi.analyzeDiaryMood(title, content),

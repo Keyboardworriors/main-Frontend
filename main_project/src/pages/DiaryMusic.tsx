@@ -3,6 +3,7 @@ import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { formatDateKorean } from "../utils/date";
 import diaryApi from "../api/diaryApi";
+import { AxiosError } from "axios";
 
 interface DiaryMusicProps {
   selectedDate: Date;
@@ -38,7 +39,7 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         (s: Music & { error?: boolean }) => s.video_id && s.title && !s.error,
       );
 
-      console.log("서버 추천 응답:", recommendedSongs);
+      console.log("[DiaryMusic] 서버 추천 응답:", recommendedSongs);
       console.log("유효한 곡 수:", validSongs.length);
 
       closeModal();
@@ -72,7 +73,17 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         });
       }
     } catch (error) {
-      console.error("DM 음악 추천 에러:", error);
+      const err = error as AxiosError;
+      console.error("[DiaryMusic] 음악 추천 에러:");
+      if (err.response) {
+        console.error("서버 응답 상태:", err.response.status);
+        console.error("서버 응답 데이터:", err.response.data);
+      } else if (err.request) {
+        console.error("요청은 되었지만 응답이 없습니다:", err.request);
+      } else {
+        console.error("요청 설정 중 에러 발생:", err.message);
+      }
+
       closeModal();
       openModal("customConfirm", {
         title: "⚠️ 404 (NOT FOUND)",
@@ -87,7 +98,6 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
     }
   }, [diaryContent.moods, closeModal, onComplete, openModal, handleNoMusic]);
 
-  // analyzeMusic 포함
   useEffect(() => {
     analyzeMusic();
   }, [analyzeMusic]);

@@ -21,12 +21,15 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
 
   const [isSongSelectOpen, setIsSongSelectOpen] = useState(false);
   const [songs, setSongs] = useState<Music[]>([]);
+  const [isRetry, setIsRetry] = useState(false); // 🔥 retry 여부 상태
 
   const analyzeMusic = useCallback(async () => {
-    openModal("loading", {
-      message: "추천 필로디 🎵",
-      modalPurpose: "melody",
-    });
+    if (!isRetry) {
+      openModal("loading", {
+        message: "추천 필로디 🎵",
+        modalPurpose: "melody",
+      });
+    }
 
     try {
       const recommendedSongs = await diaryApi.recommendMusic(diaryContent.moods, []);
@@ -35,6 +38,7 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
       );
 
       closeModal();
+      setIsRetry(false);
 
       if (validSongs.length === 0) {
         openModal("customConfirm", {
@@ -43,7 +47,10 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
           confirmText: "다시시도",
           cancelText: "저장하기",
           isDanger: false,
-          onConfirm: () => analyzeMusic(),
+          onConfirm: () => {
+            setIsRetry(true);
+            analyzeMusic();
+          },
           onCancel: () => {
             setTimeout(() => {
               setIsSongSelectOpen(true);
@@ -66,7 +73,10 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         confirmText: "다시시도",
         cancelText: "저장하기",
         isDanger: false,
-        onConfirm: () => analyzeMusic(),
+        onConfirm: () => {
+          setIsRetry(true);
+          analyzeMusic();
+        },
         onCancel: () => {
           setTimeout(() => {
             setIsSongSelectOpen(true);
@@ -74,7 +84,7 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         },
       });
     }
-  }, [diaryContent.moods, closeModal, openModal]);
+  }, [diaryContent.moods, closeModal, openModal, isRetry]);
 
   useEffect(() => {
     setIsWriting(true);
@@ -127,7 +137,7 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         </div>
       </div>
 
-      <SongSelectModal // 음악모달만 독립적으로 분리함...
+      <SongSelectModal
         isOpen={isSongSelectOpen}
         onClose={() => setIsSongSelectOpen(false)}
         songs={songs}
@@ -139,6 +149,7 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
           });
         }}
         onRetry={() => {
+          setIsRetry(true);
           setIsSongSelectOpen(false);
           setTimeout(analyzeMusic, 200);
         }}

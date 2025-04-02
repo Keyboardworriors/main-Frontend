@@ -38,33 +38,33 @@ const DiaryContentPreview = ({
   const retryMelodyAnalysis = () => {
     closeModal();
     setTimeout(() => {
-      analyzeMusic();
+      analyzeMusic(true);
     }, 300);
   };
 
-  const analyzeMusic = async () => {
+  const analyzeMusic = async (isRetrying = false) => {
     if (!diaryContent.moods || diaryContent.moods.length === 0) {
       console.warn("감정 키워드가 비어있어서 추천을 실행하지 않습니다.");
       return;
     }
 
-    openModal("loading", {
-      message: "추천 필로디 🎵",
-      modalPurpose: "melody",
-    });
+    if (!isRetrying) {
+      openModal("loading", {
+        message: "추천 필로디 🎵",
+        modalPurpose: "melody",
+      });
+    }
 
     try {
-      const songs = (await diaryApi.recommendMusic(
-        diaryContent.moods,
-        favoriteGenre
-      )) as (Music & { error?: boolean })[];
-
-      const validSongs = songs.filter(
+      const songs = await diaryApi.recommendMusic(diaryContent.moods, favoriteGenre);
+      const validSongs = (songs as (Music & { error?: boolean })[]).filter(
         (song) => song.video_id && song.title && !song.error
       );
 
       cachedValidSongs.current = validSongs;
       closeModal();
+
+      console.log("추천된 곡 수:", validSongs.length);
 
       if (validSongs.length > 0) {
         setIsSongSelectOpen(true);
@@ -78,15 +78,20 @@ const DiaryContentPreview = ({
           isDanger: false,
           onConfirm: retryMelodyAnalysis,
           onCancel: () => {
-            setTimeout(() => {
-              setIsSongSelectOpen(true);
-            }, 50);
+            closeModal();
+            onCompleteMusic({
+              video_id: "",
+              title: "",
+              artist: "",
+              thumbnail: "",
+              embedUrl: "",
+            });
           },
         });
       }
     } catch (error) {
       const err = error as AxiosError;
-      console.error("🎵 [DiaryContentPreview] 음악 추천 실패:", err);
+      console.error("[DiaryContentPreview] 음악 추천 실패:", err);
 
       closeModal();
       openModal("customConfirm", {
@@ -98,9 +103,14 @@ const DiaryContentPreview = ({
         isDanger: false,
         onConfirm: retryMelodyAnalysis,
         onCancel: () => {
-          setTimeout(() => {
-            setIsSongSelectOpen(true);
-          }, 50);
+          closeModal();
+          onCompleteMusic({
+            video_id: "",
+            title: "",
+            artist: "",
+            thumbnail: "",
+            embedUrl: "",
+          });
         },
       });
     }
@@ -109,9 +119,7 @@ const DiaryContentPreview = ({
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       <div className="flex justify-between items-center mb-3">
-        <div className="text-medium text-[#5E8FBF] font-medium">
-          {formattedDate}
-        </div>
+        <div className="text-medium text-[#5E8FBF] font-medium">{formattedDate}</div>
         <button
           onClick={onEdit}
           className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -154,7 +162,7 @@ const DiaryContentPreview = ({
 
           <div className="flex justify-end mt-4 md:mt-8">
             <button
-              onClick={analyzeMusic}
+              onClick={() => analyzeMusic(false)}
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
               <span>{buttonText}</span>

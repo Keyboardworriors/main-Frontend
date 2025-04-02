@@ -42,6 +42,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   };
 
   const handleMusicSelected = (music: Music) => {
+    console.log("[DiaryControl] handleMusicSelected 실행됨", music);
     setSelectedMusic(music);
     setCurrentStep("complete");
   };

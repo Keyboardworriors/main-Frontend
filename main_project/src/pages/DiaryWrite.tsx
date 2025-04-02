@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import diaryApi from "../api/diaryApi";
 import { useEditor, EditorContent } from "@tiptap/react";
@@ -8,7 +8,6 @@ import { DiaryContent, Mood } from "../models/diary";
 import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
 import DiaryContentPreview from "./DiaryContent";
 import { useModalStore } from "../store/modal";
-import { useDiaryStore } from "../store/diary";
 
 interface DiaryWriteProps {
   selectedDate: Date;
@@ -27,7 +26,6 @@ const editorConfig = {
 };
 
 const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps) => {
-  const setIsWriting = useDiaryStore((state) => state.setIsWriting);
   const [diaryContent, setDiaryContent] = useState<DiaryContent>({
     diary_title: "",
     content: "",
@@ -40,6 +38,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
 
   const { openModal, closeModal } = useModalStore();
   const queryClient = useQueryClient();
+
   const analyzeMoodMutation = useMutation({
     mutationFn: ({ title, content }: { title: string; content: string }) =>
       diaryApi.analyzeDiaryMood(title, content),
@@ -56,11 +55,6 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       setIsMoodModalOpen(true);
     },
   });
-
-  useEffect(() => {
-    setIsWriting(true); // 마운트 시 작성 상태 true
-    return () => setIsWriting(false); // 언마운트 시 false
-  }, [setIsWriting]);
 
   const editor = useEditor({
     ...editorConfig,

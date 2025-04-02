@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { format } from "date-fns";
 import diaryApi from "../api/diaryApi";
+import { useDiaryStore } from "../store/diary"; 
 
 type DiaryCompleteProps = {
   selectedDate: Date;
@@ -18,6 +19,7 @@ const DiaryComplete = ({
   onFinish,
 }: DiaryCompleteProps) => {
   const [isHoveringSaveBtn, setIsHoveringSaveBtn] = useState(false);
+  const setIsWriting = useDiaryStore((state) => state.setIsWriting); 
 
   const handleSaveDiary = async () => {
     const payload = {
@@ -29,7 +31,7 @@ const DiaryComplete = ({
         selectedMusic && selectedMusic.title
           ? {
               ...selectedMusic,
-              title: selectedMusic.title.replace(/^\**/, "").trim(), 
+              title: selectedMusic.title.replace(/^\**/, "").trim(),
             }
           : null,
     };
@@ -38,6 +40,8 @@ const DiaryComplete = ({
 
     try {
       await diaryApi.createDiary(payload);
+
+      setIsWriting(false); 
       onFinish(); 
     } catch (error) {
       console.error("일기 저장 실패:", error);

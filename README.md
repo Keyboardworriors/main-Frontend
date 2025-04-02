@@ -97,9 +97,9 @@
 
 ### FE
 
-| <a href=https://github.com/KIMDOTS/><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | <a href=https://github.com/chiyo-an/><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | <a href=https://github.com/minhui-p/><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | 
-|:----------------------------------:|:----------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------:|
-|                김민정                 |    안정은     |                                                                            박민희                                                                            |
+| <a href="https://github.com/KIMDOTS"><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@KIMDOTS</b></sub></a><br/> | <a href="https://github.com/chiyo-an"><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@chiyo-an</b></sub></a><br/> | <a href="https://github.com/minhui-p"><img src="https://avatars.githubusercontent.com/u/93540726?v=4" width=100px/><br/><sub><b>@minhui-p</b></sub></a><br/> |
+|:------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------:|
+| 김민정 | 안정은 | 박민희 |
 ### BE
 
 | <a href=https://github.com/><img src="https://avatars.githubusercontent.com/u/85716720?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | <a href=https://github.com/orioncsy><img src="https://avatars.githubusercontent.com/u/90237119?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> | <a href=https://github.com/><img src="https://avatars.githubusercontent.com/u/77969043?v=4" width=100px/><br/><sub><b>@GithubID</b></sub></a><br/> |

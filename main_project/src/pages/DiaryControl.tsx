@@ -6,7 +6,7 @@ import DiaryComplete from "./DiaryComplete";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDiaryStore } from "../store/diary"; 
+import { useDiaryStore } from "../store/diary";
 
 interface DiaryControlProps {
   selectedDate: Date;
@@ -27,12 +27,11 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
   const { openModal, closeModal } = useModalStore();
   const queryClient = useQueryClient();
 
-  const setIsWriting = useDiaryStore((state) => state.setIsWriting); 
+  const setIsWriting = useDiaryStore((state) => state.setIsWriting);
 
   useEffect(() => {
     setIsWriting(true);
-    return () => setIsWriting(false); 
-  }, [setIsWriting]);
+  }, [currentStep, setIsWriting]);
 
   const handleDiaryWriteComplete = (content: DiaryContentType) => {
     setDiaryContent(content);
@@ -58,7 +57,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
       closeModal();
       queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
 
-      setIsWriting(false); 
+      setIsWriting(false);
       onCancel();
     }, 1500);
   };

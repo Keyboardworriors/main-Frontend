@@ -1,11 +1,11 @@
 import { formatDate, formatDateKorean, getTargetDateOrToday, isFutureDate } from "../utils/date";
 import { useQueryClient } from "@tanstack/react-query";
 import { SearchResult } from "../models/search";
-import { Diary } from "../models/diary";
 import { useModalStore } from "../store/modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DiaryList from "./DiaryList";
 import diaryApi from "../api/diaryApi";
+import { useDiaryQuery } from "../hooks/queries/useDiaryQuery";
 
 interface DiaryViewProps {
   selectedDate: Date | null;
@@ -30,7 +30,6 @@ const DiaryView = ({
 }: DiaryViewProps) => {
   const { openModal } = useModalStore();
   const queryClient = useQueryClient();
-  const [diary, setDiary] = useState<Diary | null>(null);
   const [showDateWarning, setShowDateWarning] = useState(false);
 
   const handleDeleteDiary = async () => {
@@ -40,34 +39,17 @@ const DiaryView = ({
     if (!diaryId) return;
     try {
       await diaryApi.deleteDiary(diaryId);
-      setDiary(null);
       queryClient.invalidateQueries({ queryKey: ["diaryDates"] });
     } catch (error) {
       console.error("일기 삭제 실패", error);
     }
   };
 
-  useEffect(() => {
-    const fetchDiaryDetail = async () => {
-      const diaryId = selectedDiaryId ?? diaryIdMap[formatDate(getTargetDateOrToday(selectedDate))];
-      if (!diaryId) {
-        setDiary(null);
-        console.log({ diaryId });
-        return;
-      }
-      try {
-        const res = await diaryApi.getDiary(diaryId);
-        setDiary(res.data);
-      } catch (err) {
-        console.error("일기 조회 실패", err);
-        setDiary(null);
-      }
-    };
-    fetchDiaryDetail();
-  }, [selectedDate, diaryIdMap, selectedDiaryId]);
+  const diaryId = selectedDiaryId ?? diaryIdMap[formatDate(getTargetDateOrToday(selectedDate))];
+  const { data: diary, isLoading } = useDiaryQuery(diaryId ?? null);
 
   const renderDiaryContent = () => {
-    if (!diary) return null;
+    if (isLoading || !diary) return null;
     return (
       <div className="w-full max-w-md h-full flex flex-col">
         <div className="w-full flex items-center justify-between mb-2">

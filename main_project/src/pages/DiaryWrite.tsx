@@ -59,8 +59,8 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
   });
 
   useEffect(() => {
-    setIsWriting(true); // 마운트 시 작성 상태 true
-    return () => setIsWriting(false); // 언마운트 시 false
+    setIsWriting(true);
+    return () => setIsWriting(false);
   }, [setIsWriting]);
 
   const editor = useEditor({

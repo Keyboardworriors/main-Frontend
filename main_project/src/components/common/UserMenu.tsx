@@ -20,13 +20,13 @@ const UserMenu = ({
 }: UserMenuProps) => {
   const navigate = useNavigate();
   const { openModal, closeModal } = useModalStore();
-  const isWriting = useDiaryStore((state) => state.isWriting); 
+  const isWriting = useDiaryStore((state) => state.isWriting);
 
   const handleMyPageClick = () => {
     if (isWriting) {
       openModal("customConfirm", {
-        title: "일기를 종료할까요?",
-        message: "다이어리 화면을 벗어나면 작성 중인 일기가 사라져요.\n그래도 이동하시겠어요?",
+        title: "작성 중인 감정기록이 있어요!",
+        message: "이동하면 작성 중인 내용이 사라질 수 있어요.\n정말 이동하시겠어요?",
         confirmText: "이동하기",
         cancelText: "취소",
         onConfirm: () => navigate("/members/mypage/"),

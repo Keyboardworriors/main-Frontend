@@ -30,8 +30,7 @@ const DiaryControl = ({ selectedDate, onCancel }: DiaryControlProps) => {
 
   useEffect(() => {
     setIsWriting(true);
-    //return () => setIsWriting(false);
-  }, [setIsWriting]);
+  }, [currentStep, setIsWriting]);
 
   const handleDiaryWriteComplete = (content: DiaryContentType) => {
     setDiaryContent(content);

@@ -28,7 +28,7 @@ const DiaryContentPreview = ({
   const favoriteGenre: Genre[] = [];
 
   const cachedValidSongs = useRef<Music[]>([]);
-  const [isSongSelectOpen, setIsSongSelectOpen] = useState(false); // ✅ 독립적 상태 관리
+  const [isSongSelectOpen, setIsSongSelectOpen] = useState(false);
 
   useEffect(() => {
     setIsWriting(true);
@@ -79,7 +79,7 @@ const DiaryContentPreview = ({
           onConfirm: retryMelodyAnalysis,
           onCancel: () => {
             setTimeout(() => {
-              setIsSongSelectOpen(true); // ✅ 다시 열기
+              setIsSongSelectOpen(true);
             }, 50);
           },
         });
@@ -99,7 +99,7 @@ const DiaryContentPreview = ({
         onConfirm: retryMelodyAnalysis,
         onCancel: () => {
           setTimeout(() => {
-            setIsSongSelectOpen(true); // ✅ 다시 열기
+            setIsSongSelectOpen(true);
           }, 50);
         },
       });
@@ -175,7 +175,6 @@ const DiaryContentPreview = ({
         </div>
       </div>
 
-      {/* ✅ 독립적으로 songSelectModal 직접 제어 */}
       <SongSelectModal
         isOpen={isSongSelectOpen}
         onClose={() => setIsSongSelectOpen(false)}

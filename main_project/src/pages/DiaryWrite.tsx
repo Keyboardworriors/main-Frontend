@@ -9,6 +9,7 @@ import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
 import DiaryContentPreview from "./DiaryContent";
 import { useModalStore } from "../store/modal";
 import { useDiaryStore } from "../store/diary";
+import { useConfirmDiaryExit } from "../utils/stopConfirm";
 
 interface DiaryWriteProps {
   selectedDate: Date;
@@ -158,6 +159,13 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
     editor?.commands.setContent("");
   };
 
+  const handleTryClose = useConfirmDiaryExit(onCancel, {
+    title: "작성 중인 감정기록이 있어요!",
+    message: "작성 중인 내용은 저장되지 않습니다.\n작성을 중단하시겠어요?",
+    confirmText: "중단하기",
+    cancelText: "취소",
+  });
+
   if (isSaved) {
     return (
       <DiaryContentPreview
@@ -174,7 +182,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       <div className="flex justify-between items-center mb-3">
         <div className="text-medium text-[#5E8FBF] font-medium">{formattedDate}</div>
         <button
-          onClick={onCancel}
+          onClick={() => handleTryClose()}
           className="text-gray-500 hover:text-gray-700 transition-colors"
           aria-label="닫기"
         >

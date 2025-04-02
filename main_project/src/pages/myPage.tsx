@@ -77,13 +77,15 @@ const MyPage = () => {
         <div className="font-bold flex justify-start pl-20">이메일</div>
         <div className="flex justify-start pl-20">{userProfile?.email}</div>
 
-        <div className="font-bold flex justify-start pl-20">선호하는 음악 장르</div>
-        <div className="grid grid-cols-3 gap-5 pl-20">
+        <div className="font-bold flex justify-center md:justify-start md:pl-20 text-center">
+          선호하는 음악 장르
+        </div>
+        <div className="grid grid-cols-3 gap-x-3 md:gap-x-14 gap-y-2 justify-center md:justify-start md:pl-20 text-center">
           {userProfile?.genres.length ? (
             userProfile.genres.map((genre) => (
               <span
                 key={genre}
-                className="inline-flex items-center justify-center px-4 md:px-5 lg:px-8 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium whitespace-nowrap break-keep"
+                className="inline-flex items-center justify-center px-4 md:px-8 lg:px-10 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium whitespace-nowrap break-keep"
               >
                 {genre}
               </span>

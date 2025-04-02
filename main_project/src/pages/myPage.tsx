@@ -74,8 +74,8 @@ const MyPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-4 text-gray-700 max-w-xl mx-auto">
-        <div className="font-bold flex justify-start pl-20">이메일</div>
-        <div className="flex justify-start pl-20">{userProfile?.email}</div>
+        <div className="font-bold flex justify-center md:justify-start md:pl-20">이메일</div>
+        <div className="flex justify-center md:justify-start md:pl-20">{userProfile?.email}</div>
 
         <div className="font-bold flex justify-center md:justify-start md:pl-20 text-center">
           선호하는 음악 장르
@@ -85,7 +85,7 @@ const MyPage = () => {
             userProfile.genres.map((genre) => (
               <span
                 key={genre}
-                className="inline-flex items-center justify-center px-4 md:px-8 lg:px-10 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium whitespace-nowrap break-keep"
+                className="inline-flex items-center justify-center px-4 md:px-10 lg:px-10 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium whitespace-nowrap break-keep"
               >
                 {genre}
               </span>
@@ -95,8 +95,10 @@ const MyPage = () => {
           )}
         </div>
 
-        <div className="font-bold flex justify-start pl-20">한 줄 소개</div>
-        <div className="flex justify-start break-words pl-20">{userProfile?.bio || "-"}</div>
+        <div className="font-bold flex justify-center md:justify-start md:pl-20">한 줄 소개</div>
+        <div className="flex justify-center md:justify-start break-words md:pl-20">
+          {userProfile?.bio || "-"}
+        </div>
       </div>
 
       <div className="flex flex-col items-center justify-center mt-14">

@@ -6,6 +6,7 @@ import ProfileSetup from "../pages/ProfileSetup";
 import KakaoCallback from "../components/members/KakaoCallback";
 import MyTabs from "../components/common/tabs";
 import MyPage from "../pages/myPage";
+import NotFound from "../pages/NotFound";
 
 const ProfileSetupWrapper = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const AppRoutes = () => {
         <Route path="/members/register" element={<ProfileSetupWrapper />} />
         <Route path="/diary/" element={<MyTabs />} />
         <Route path="/members/mypage/" element={<MyPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

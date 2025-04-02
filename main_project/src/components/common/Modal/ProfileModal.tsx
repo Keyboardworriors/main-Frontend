@@ -22,54 +22,54 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
   // 탭 클릭 및 외부 클릭 감지
   useEffect(() => {
     if (!isOpen) return;
-    
-    const tabElements = document.querySelectorAll('.react-tabs__tab');
-    
+
+    const tabElements = document.querySelectorAll(".react-tabs__tab");
+
     const handleTabClick = () => {
       onClose();
     };
-    
-    tabElements.forEach(tab => {
-      tab.addEventListener('click', handleTabClick);
+
+    tabElements.forEach((tab) => {
+      tab.addEventListener("click", handleTabClick);
     });
-    
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        contentRef.current && 
+        contentRef.current &&
         !contentRef.current.contains(event.target as Node) &&
         event.target instanceof Node &&
-        document.getElementById('top-level-modal-container')?.contains(event.target)
+        document.getElementById("top-level-modal-container")?.contains(event.target)
       ) {
         onClose();
       }
     };
-    
+
     const checkSubMenuExists = () => {
-      const subMenuContainer = document.querySelector('.top-bar-submenu-container');
+      const subMenuContainer = document.querySelector(".top-bar-submenu-container");
       if (!subMenuContainer) {
         onClose();
       }
     };
-    
+
     const subMenuCheckInterval = setInterval(checkSubMenuExists, 100);
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    
+
+    document.addEventListener("mousedown", handleClickOutside);
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
-    
-    document.addEventListener('keydown', handleKeyDown);
-    
+
+    document.addEventListener("keydown", handleKeyDown);
+
     return () => {
       clearInterval(subMenuCheckInterval);
-      tabElements.forEach(tab => {
-        tab.removeEventListener('click', handleTabClick);
+      tabElements.forEach((tab) => {
+        tab.removeEventListener("click", handleTabClick);
       });
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
 
@@ -79,7 +79,7 @@ function ProfileModal({ isOpen, onClose, user }: ProfileModalProps) {
   if (!topLevelModalContainer) return null;
 
   return createPortal(
-    <div 
+    <div
       className="rounded-xl bg-white w-full h-full p-10 inset-0 flex justify-center items-center pointer-events-auto"
       ref={modalRef}
     >

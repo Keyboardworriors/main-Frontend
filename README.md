@@ -111,41 +111,35 @@
 ### Branch Strategy
 > - main / dev 브랜치 기본 생성 
 > - main과 dev로 직접 push 제한
-> - PR 전 최소 1인 이상 승인 필수
+> - PR 전 최소 2인 이상 승인 필수
 
 ### Git Convention
 > 1. 적절한 커밋 접두사 작성
 > 2. 커밋 메시지 내용 작성
-> 3. 내용 뒤에 이슈 (#이슈 번호)와 같이 작성하여 이슈 연결
 
-> | 접두사        | 설명                           |
-> | ------------- | ------------------------------ |
-> | Feat :     | 새로운 기능 구현               |
-> | Add :      | 에셋 파일 추가                 |
-> | Fix :      | 버그 수정                      |
-> | Docs :     | 문서 추가 및 수정              |
-> | Style :    | 스타일링 작업                  |
-> | Refactor : | 코드 리팩토링 (동작 변경 없음) |
-> | Test :     | 테스트                         |
-> | Deploy :   | 배포                           |
-> | Conf :     | 빌드, 환경 설정                |
-> | Chore :    | 기타 작업                      |
+>| 접두사       | 이모지 | 설명                                                                 |
+>| ------------ | ------ | -------------------------------------------------------------------- |
+>| Feat       | ✨     | 새로운 기능 추가                                                    |
+>| Fix        | 🐛     | 기능 수정 및 버그 수정                                              |
+>| Chore      | 💡     | 오타 수정, 주석 추가 등 기능 변경 없이 코드 수정                    |
+>| Docs       | 📝     | 문서 수정 (예: README.md)                                           |
+>| Build      | 🚚     | 빌드 관련 파일 수정 또는 삭제                                       |
+>| Test       | ✅     | 테스트 코드 추가 및 수정 (프로덕션 코드 변경 없음)                 |
+>| Refactor    | ♻️     | 코드 리팩토링 (기능 변화 없이 구조 개선)                            |
+>| Hotfix     | 🚑     | 긴급 수정                          
 
 
 ### Pull Request
 > ### Title
-> * 제목은 '[Feat] 홈 페이지 구현'과 같이 작성합니다.
+> * 제목은 '[Feat]/#이슈번호/홈 페이지 구현'과 같이 작성합니다 [FE]
+> * 제목은 '✨/홈 페이지 구현'과 같이 작성합니다 [BE]
 
 > ### PR Type
   > - [ ] FEAT: 새로운 기능 구현
-  > - [ ] ADD : 에셋 파일 추가
   > - [ ] FIX: 버그 수정
   > - [ ] DOCS: 문서 추가 및 수정
   > - [ ] STYLE: 포맷팅 변경
   > - [ ] REFACTOR: 코드 리팩토링
-  > - [ ] TEST: 테스트 관련
-  > - [ ] DEPLOY: 배포 관련
-  > - [ ] CONF: 빌드, 환경 설정
   > - [ ] CHORE: 기타 작업
 
 > ### Description
@@ -158,34 +152,32 @@
 ### Code Convention
 >BE
 > - 패키지명 전체 소문자
-> - 클래스명, 인터페이스명 CamelCase
-> - 클래스 이름 명사 사용
-> - 상수명 SNAKE_CASE
-> - Controller, Service, Dto, Repository, mapper 앞에 접미사로 통일(ex. MemberController)
-> - service 계층 메서드명 create, update, find, delete로 CRUD 통일(ex. createMember) 
-> - Test 클래스는 접미사로 Test 사용(ex. memberFindTest)
 
 
 > FE
-> - styled-Component 변수명 S + 변수명 (ex. Swrap)
-> - styled-Component는 return문 위에 작성
-> - 크게는 styled-Component, 그 안에서 className 사용 
-> - Event handler 사용 (ex. handle ~)
-> - export방식 (ex. export default ~)
-> - 화살표 함수 사용
+> - ESLint, Prettier 사용하여 들여쓰기, 따옴표 통일
+> - 파일 및 폴더명: camelCase (ex. userProfile.tsx)
+> - 컴포넌트: PascalCase (ex. UserProfile.tsx)
+> - 변수 및 함수: camelCase (ex. fetchUserData)
+> - 상수:UPPER_SNAKE_CASE (ex. API_BASE_URL)
+> - 이벤트 핸들러:handleEventName (ex. handleClick)
+> - axios 기반 API 모듈화
+> - 전역 상태관리 : Zustand
+> - 서버 상태관리: React Query
+> - 불필요한 리렌더링 최소화
 
 ### Communication Rules
-> - Discord 활용 
-> - 정기 회의
+> - Zep, Discord 활용
+> - 오전 10시 20분 정기 회의 (30분)
 
 
 ## :clipboard: Documents
-> [📜 API 명세서 예시](https://docs.google.com/spreadsheets/d/1XODUQC8tFNQjoZS7I4rcyaQpin6WzuuruZIVmdMwmeU/edit#gid=0)
+> [📜 API 명세서 예시](https://docs.google.com/spreadsheets/d/1ynKVoqpdxPTjerqVMO59an5_LRWUg7ScV0sKOrcsWW8/edit?pli=1&gid=0#gid=0)
 > 
-> [📜 요구사항 정의서 예시](https://docs.google.com/spreadsheets/d/1BaDEpeytl_rQ_vckIXGJtCL4NcmPvemCSnXJnhckzLU/edit?usp=sharing)
+> [📜 요구사항 정의서 예시](https://docs.google.com/spreadsheets/d/16NxIRtVKNKBIU6D6Txv1DGcBgbecE8WlzV_HuVEQ3kk/edit?gid=261493658#gid=261493658)
 > 
-> [📜 ERD 예시](https://drive.google.com/file/d/1jvaFIwfOkKLRriFZxzOwJTE-FJ7H3IFe/view?usp=sharing)
+> [📜 ERD 예시](https://dbdiagram.io/d/Feelody_ERD-67cff03775d75cc8449f7131)
 > 
-> [📜 테이블 명세서 예시](https://docs.google.com/spreadsheets/d/13y8xi67UQYCzX1xgSORtlA1_vXRFq6OQuVDG2o7fhO0/edit#gid=0)
+> [📜 테이블 명세서 예시](https://docs.google.com/spreadsheets/d/1bEoNlzGVHw5u4WAybpD8CVNMAZ5UJqiEEv85K6HCZmo/edit?pli=1&gid=0#gid=0)
 >
-> [📜 화면 정의서 예시](https://docs.google.com/spreadsheets/d/1vud5xV8rB9Y6akOIma49hSzdZsoj8DVG0-fYE4NdP_g/edit?usp=sharing)
+> [📜 화면 정의서 예시](https://www.figma.com/design/zLikgH2MW0UQPEYPEwSQoX/Feelody-와이어프레임?node-id=0-1&p=f&t=I29TKVdnxzT7jAiN-0)

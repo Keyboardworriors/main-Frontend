@@ -1,9 +1,13 @@
+import { useEffect, useRef, useState } from "react";
 import { formatDateKorean } from "../utils/date";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
-import { useState } from "react";
+import { useDiaryStore } from "../store/diary";
 import diaryApi from "../api/diaryApi";
 import { Genre } from "../models/profile";
+import { AxiosError } from "axios";
+import SongSelectModal from "../components/common/Modal/SongSelectModal";
+import { useConfirmDiaryExit } from "../utils/stopConfirm";
 
 type DiaryContentPreviewProps = {
   selectedDate: Date;
@@ -20,10 +24,17 @@ const DiaryContentPreview = ({
 }: DiaryContentPreviewProps) => {
   const formattedDate = formatDateKorean(selectedDate);
   const { openModal, closeModal } = useModalStore();
-  const [buttonText, setButtonText] = useState("필로디");
-  const [isSaving, setIsSaving] = useState(false);
-
+  const setIsWriting = useDiaryStore((state) => state.setIsWriting);
+  const buttonText = "필로디";
   const favoriteGenre: Genre[] = [];
+
+  const cachedValidSongs = useRef<Music[]>([]);
+  const [isSongSelectOpen, setIsSongSelectOpen] = useState(false);
+
+  useEffect(() => {
+    setIsWriting(true);
+    return () => setIsWriting(false);
+  }, [setIsWriting]);
 
   const retryMelodyAnalysis = () => {
     closeModal();
@@ -50,21 +61,11 @@ const DiaryContentPreview = ({
 
       const validSongs = songs.filter((song) => song.video_id && song.title && !song.error);
 
+      cachedValidSongs.current = validSongs;
       closeModal();
 
       if (validSongs.length > 0) {
-        openModal("songSelect", {
-          songs: validSongs,
-          onConfirm: (selected?: Music) => {
-            if (!selected) return;
-            closeModal();
-            onCompleteMusic({
-              ...selected,
-              title: selected.title.replace(/^\*/, ""),
-            });
-          },
-          onRetry: retryMelodyAnalysis,
-        });
+        setIsSongSelectOpen(true);
       } else {
         openModal("customConfirm", {
           title: "⚠️ 추천 실패",
@@ -74,14 +75,16 @@ const DiaryContentPreview = ({
           isDanger: false,
           onConfirm: retryMelodyAnalysis,
           onCancel: () => {
-            closeModal();
-            setButtonText("저장하기");
-            setIsSaving(true);
+            setTimeout(() => {
+              setIsSongSelectOpen(true);
+            }, 50);
           },
         });
       }
     } catch (error) {
-      console.error("추천 실패:", error);
+      const err = error as AxiosError;
+      console.error("🎵 [DiaryContentPreview] 음악 추천 실패:", err);
+
       closeModal();
       openModal("customConfirm", {
         title: "⚠️ 추천 실패",
@@ -91,34 +94,27 @@ const DiaryContentPreview = ({
         isDanger: false,
         onConfirm: retryMelodyAnalysis,
         onCancel: () => {
-          closeModal();
-          setButtonText("저장하기");
-          setIsSaving(true);
+          setTimeout(() => {
+            setIsSongSelectOpen(true);
+          }, 50);
         },
       });
     }
   };
 
-  const handleMelodyRecommendation = () => {
-    if (isSaving) {
-      onCompleteMusic({
-        video_id: "",
-        title: "",
-        artist: "",
-        thumbnail: "",
-        embedUrl: "",
-      });
-      return;
-    }
-    analyzeMusic();
-  };
+  const handleTryClose = useConfirmDiaryExit(onEdit, {
+    title: "작성 중인 감정기록이 있어요!",
+    message: "작성 중인 내용은 저장되지 않습니다.\n작성을 중단하시겠어요?",
+    confirmText: "중단하기",
+    cancelText: "취소",
+  });
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       <div className="flex justify-between items-center mb-3">
         <div className="text-medium text-[#5E8FBF] font-medium">{formattedDate}</div>
         <button
-          onClick={onEdit}
+          onClick={() => handleTryClose()}
           className="text-gray-500 hover:text-gray-700 transition-colors"
           aria-label="창닫기"
         >
@@ -159,7 +155,7 @@ const DiaryContentPreview = ({
 
           <div className="flex justify-end mt-4 md:mt-8">
             <button
-              onClick={handleMelodyRecommendation}
+              onClick={analyzeMusic}
               className="px-4 py-2 bg-[#4A7196] text-white rounded-full hover:bg-[#3A5A7A] transition-colors text-sm font-medium flex items-center gap-2"
             >
               <span>{buttonText}</span>
@@ -179,6 +175,20 @@ const DiaryContentPreview = ({
           </div>
         </div>
       </div>
+
+      <SongSelectModal
+        isOpen={isSongSelectOpen}
+        onClose={() => setIsSongSelectOpen(false)}
+        songs={cachedValidSongs.current}
+        onConfirm={(selected) => {
+          setIsSongSelectOpen(false);
+          onCompleteMusic({
+            ...selected,
+            title: selected.title.replace(/^\*/, ""),
+          });
+        }}
+        onRetry={retryMelodyAnalysis}
+      />
     </div>
   );
 };

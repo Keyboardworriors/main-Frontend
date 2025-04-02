@@ -6,8 +6,8 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
   useScrollToTop();
   const location = useLocation();
 
-  const isCallbackPage = ["/oauth/kakao/callback", "/oauth/naver/callback"].some((path) =>
-    location.pathname.startsWith(path),
+  const isCallbackPage = ["/oauth/kakao/callback", "/oauth/naver/callback"].some(
+    (path) => location.pathname.startsWith(path),
   );
 
   return (
@@ -19,6 +19,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
       >
         {children}
         <div id="modal-container" className="absolute inset-0 z-5 pointer-events-none"></div>
+        <div id="top-level-modal-container" className="absolute inset-0 z-30 pointer-events-none"></div>
       </div>
     </main>
   );

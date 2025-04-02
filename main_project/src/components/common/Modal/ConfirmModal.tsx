@@ -3,6 +3,7 @@ import BaseModal from "./BaseModal";
 interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onCancel?: () => void;
   message: string;
   onConfirm: () => void;
   confirmText?: string;
@@ -13,6 +14,7 @@ interface ConfirmModalProps {
 const ConfirmModal = ({
   isOpen,
   onClose,
+  onCancel,
   message,
   onConfirm,
   confirmText = "확인",
@@ -22,7 +24,7 @@ const ConfirmModal = ({
   const renderButtons = () => (
     <div className="flex justify-end mt-6 space-x-3">
       <button
-        onClick={onClose}
+        onClick={onCancel ?? onClose}
         className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
       >
         {cancelText}

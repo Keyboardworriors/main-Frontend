@@ -1,8 +1,11 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { DiaryContent as DiaryContentType, Music } from "../models/diary";
 import { useModalStore } from "../store/modal";
+import { useDiaryStore } from "../store/diary";
 import { formatDateKorean } from "../utils/date";
 import diaryApi from "../api/diaryApi";
+import { AxiosError } from "axios";
+import SongSelectModal from "../components/common/Modal/SongSelectModal";
 
 interface DiaryMusicProps {
   selectedDate: Date;
@@ -13,18 +16,11 @@ interface DiaryMusicProps {
 
 const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMusicProps) => {
   const { openModal, closeModal } = useModalStore();
+  const setIsWriting = useDiaryStore((state) => state.setIsWriting);
   const formattedDate = formatDateKorean(selectedDate);
 
-  const handleNoMusic = useCallback(() => {
-    closeModal();
-    onComplete({
-      video_id: "",
-      title: "",
-      artist: "",
-      thumbnail: "",
-      embedUrl: "",
-    });
-  }, [closeModal, onComplete]);
+  const [isSongSelectOpen, setIsSongSelectOpen] = useState(false);
+  const [songs, setSongs] = useState<Music[]>([]);
 
   const analyzeMusic = useCallback(async () => {
     openModal("loading", {
@@ -38,59 +34,52 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
         (s: Music & { error?: boolean }) => s.video_id && s.title && !s.error,
       );
 
-      console.log("서버 추천 응답:", recommendedSongs);
-      console.log("유효한 곡 수:", validSongs.length);
-
       closeModal();
 
       if (validSongs.length === 0) {
         openModal("customConfirm", {
           title: "⚠️ 404 (NOT FOUND)",
-          message:
-            "음악 추천에 실패했어요\n다시 분석을 원하시면 다시 시도,\n그렇지 않다면 저장하기를 눌러주세요!",
+          message: "음악 추천에 실패했어요\n다시 분석을 원하시면 다시 시도,\n그렇지 않다면 저장하기를 눌러주세요!",
           confirmText: "다시시도",
           cancelText: "저장하기",
           isDanger: false,
           onConfirm: () => analyzeMusic(),
-          onCancel: handleNoMusic,
+          onCancel: () => {
+            setTimeout(() => {
+              setIsSongSelectOpen(true);
+            }, 50);
+          },
         });
       } else {
-        openModal("songSelect", {
-          songs: validSongs,
-          onConfirm: (selected?: Music) => {
-            if (!selected) return;
-            closeModal();
-            onComplete({
-              ...selected,
-              title: selected.title.replace(/^\*/, ""),
-            });
-          },
-          onRetry: () => {
-            closeModal();
-            setTimeout(analyzeMusic, 300);
-          },
-        });
+        setSongs(validSongs);
+        setIsSongSelectOpen(true);
       }
     } catch (error) {
-      console.error("DM 음악 추천 에러:", error);
+      const err = error as AxiosError;
+      console.error("[DiaryMusic] 음악 추천 에러:", err);
+
       closeModal();
+
       openModal("customConfirm", {
         title: "⚠️ 404 (NOT FOUND)",
-        message:
-          "음악 추천에 실패했어요\n다시 분석을 원하시면 다시 시도,\n그렇지 않다면 저장하기를 눌러주세요!",
+        message: "음악 추천에 실패했어요\n다시 분석을 원하시면 다시 시도,\n그렇지 않다면 저장하기를 눌러주세요!",
         confirmText: "다시시도",
         cancelText: "저장하기",
         isDanger: false,
         onConfirm: () => analyzeMusic(),
-        onCancel: handleNoMusic,
+        onCancel: () => {
+          setTimeout(() => {
+            setIsSongSelectOpen(true);
+          }, 50);
+        },
       });
     }
-  }, [diaryContent.moods, closeModal, onComplete, openModal, handleNoMusic]);
+  }, [diaryContent.moods, closeModal, openModal]);
 
-  // analyzeMusic 포함
   useEffect(() => {
+    setIsWriting(true);
     analyzeMusic();
-  }, [analyzeMusic]);
+  }, [analyzeMusic, setIsWriting]);
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -137,6 +126,23 @@ const DiaryMusic = ({ selectedDate, diaryContent, onBack, onComplete }: DiaryMus
           </div>
         </div>
       </div>
+
+      <SongSelectModal // 음악모달만 독립적으로 분리함...
+        isOpen={isSongSelectOpen}
+        onClose={() => setIsSongSelectOpen(false)}
+        songs={songs}
+        onConfirm={(selected: Music) => {
+          setIsSongSelectOpen(false);
+          onComplete({
+            ...selected,
+            title: selected.title.replace(/^\*/, ""),
+          });
+        }}
+        onRetry={() => {
+          setIsSongSelectOpen(false);
+          setTimeout(analyzeMusic, 200);
+        }}
+      />
     </div>
   );
 };

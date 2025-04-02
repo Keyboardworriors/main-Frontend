@@ -19,7 +19,8 @@ const Modal = () => {
           isOpen={isOpen}
           onClose={closeModal}
           message={data?.message ?? ""}
-          onConfirm={data?.onConfirm ?? (() => {})} 
+          onConfirm={data?.onConfirm ?? (() => {})}
+          onCancel={data?.onCancel ?? (() => {})}
           confirmText={data?.confirmText}
           cancelText={data?.cancelText}
           isDanger={data?.isDanger}
@@ -32,11 +33,13 @@ const Modal = () => {
           isOpen={isOpen}
           onClose={closeModal}
           title={data?.title ?? ""}
-          message={data?.message ?? ""}
+          message={
+            data?.message ?? "이동하면 작성 중인 내용이 사라질 수 있어요.\n정말 이동하시겠어요?"
+          }
           confirmText={data?.confirmText}
           cancelText={data?.cancelText}
-          onConfirm={data?.onConfirm ?? (() => {})} 
-          onCancel={data?.onCancel ?? (() => {})} 
+          onConfirm={data?.onConfirm ?? (() => {})}
+          onCancel={data?.onCancel ?? (() => {})}
           isDanger={data?.isDanger}
         />
       );
@@ -47,8 +50,8 @@ const Modal = () => {
           isOpen={isOpen}
           onClose={closeModal}
           songs={data?.songs ?? []}
-          onConfirm={data?.onConfirm} 
-          onRetry={data?.onRetry} 
+          onConfirm={data?.onConfirm}
+          onRetry={data?.onRetry}
         />
       );
 
@@ -58,20 +61,20 @@ const Modal = () => {
           isOpen={isOpen}
           onClose={closeModal}
           onSelect={data?.onSelect ?? (() => {})}
-          onSave={data?.onSave ?? (() => {})} 
+          onSave={data?.onSave ?? (() => {})}
           moods={data?.moods ?? []}
           isAnalysisFailed={data?.isAnalysisFailed ?? false}
-          analyzedMood={data?.analyzedMood} 
+          analyzedMood={data?.analyzedMood}
           isDirectSelect={data?.isDirectSelect ?? false}
         />
       );
 
     case "profile":
-      if (!data?.user) return null; 
+      if (!data?.user) return null;
       return <ProfileModal isOpen={isOpen} onClose={closeModal} user={data.user} />;
 
     case "loading":
-      if (!data?.message) return null; 
+      if (!data?.message) return null;
       return <LoadingModal isOpen={isOpen} message={data.message} />;
 
     default:

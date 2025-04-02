@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import diaryApi from "../api/diaryApi";
 import { useEditor, EditorContent } from "@tiptap/react";
@@ -8,6 +8,8 @@ import { DiaryContent, Mood } from "../models/diary";
 import MoodSelectModal from "../components/common/Modal/MoodSelectModal";
 import DiaryContentPreview from "./DiaryContent";
 import { useModalStore } from "../store/modal";
+import { useDiaryStore } from "../store/diary";
+import { useConfirmDiaryExit } from "../utils/stopConfirm";
 
 interface DiaryWriteProps {
   selectedDate: Date;
@@ -26,6 +28,7 @@ const editorConfig = {
 };
 
 const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps) => {
+  const setIsWriting = useDiaryStore((state) => state.setIsWriting);
   const [diaryContent, setDiaryContent] = useState<DiaryContent>({
     diary_title: "",
     content: "",
@@ -38,6 +41,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
 
   const { openModal, closeModal } = useModalStore();
   const queryClient = useQueryClient();
+
   const analyzeMoodMutation = useMutation({
     mutationFn: ({ title, content }: { title: string; content: string }) =>
       diaryApi.analyzeDiaryMood(title, content),
@@ -54,6 +58,11 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       setIsMoodModalOpen(true);
     },
   });
+
+  useEffect(() => {
+    setIsWriting(true);
+    return () => setIsWriting(false);
+  }, [setIsWriting]);
 
   const editor = useEditor({
     ...editorConfig,
@@ -150,6 +159,13 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
     editor?.commands.setContent("");
   };
 
+  const handleTryClose = useConfirmDiaryExit(onCancel, {
+    title: "작성 중인 감정기록이 있어요!",
+    message: "작성 중인 내용은 저장되지 않습니다.\n작성을 중단하시겠어요?",
+    confirmText: "중단하기",
+    cancelText: "취소",
+  });
+
   if (isSaved) {
     return (
       <DiaryContentPreview
@@ -166,7 +182,7 @@ const DiaryWrite = ({ selectedDate, onCancel, onDiaryComplete }: DiaryWriteProps
       <div className="flex justify-between items-center mb-3">
         <div className="text-medium text-[#5E8FBF] font-medium">{formattedDate}</div>
         <button
-          onClick={onCancel}
+          onClick={() => handleTryClose()}
           className="text-gray-500 hover:text-gray-700 transition-colors"
           aria-label="닫기"
         >

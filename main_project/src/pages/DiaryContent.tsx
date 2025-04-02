@@ -104,13 +104,13 @@ const DiaryContentPreview = ({
   const handleTryClose = () => {
     openModal("customConfirm", {
       title: "작성 중인 감정기록이 있어요!",
-      message: "이동하면 작성 중인 내용이 사라질 수 있어요.\n정말 이동하시겠어요?",
+      message: "작성을 중단하시겠어요?",
       onConfirm: () => {
         setIsWriting(false);
         onEdit();
       },
       onCancel: () => {},
-      confirmText: "이동하기",
+      confirmText: "중단하기",
       cancelText: "취소",
       isDanger: true,
     });

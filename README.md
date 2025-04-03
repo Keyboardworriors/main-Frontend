@@ -18,9 +18,44 @@
 ---
 
 ## 🖥️ 서비스 소개
+|  메인홈  |
+|:------:|
+|   <img src="https://github.com/user-attachments/assets/e97ba775-58c3-41c2-af0c-acf2ba252b87" alt="메인홈">  | 
+
+
 |   소개페이지  |  소셜로그인  |
 |:--------:|:------:|
-| <img src="https://github.com/user-attachments/assets/920a3e07-f177-426b-b7bf-7036110510f4" alt="MainPage1"> |   <img src="https://github.com/user-attachments/assets/12a85b74-c9ec-405b-bcbe-18178faee3ec" alt="MainPage2">  | 
+| <img src="https://github.com/user-attachments/assets/920a3e07-f177-426b-b7bf-7036110510f4" alt="소개페이지"> |   <img src="https://github.com/user-attachments/assets/12a85b74-c9ec-405b-bcbe-18178faee3ec" alt="소셜로그인">  | 
+|   로그인 상태 처리  |  동일 이메일 처리  |
+|:--------:|:------:|
+| <img src="https://github.com/user-attachments/assets/d3135966-28f0-4e40-8c00-807fa04a9f8c" alt="로그인 상태 처리"> |   <img src="https://github.com/user-attachments/assets/f85bfa60-5d81-48b0-8a69-f285ad477cfe" alt="동일 이메일 처리">  | 
+|   회원가입  |  마이페이지  |
+|:--------:|:------:|
+| <img src="https://github.com/user-attachments/assets/bfeb529d-c089-47eb-b0d6-a44fdc1d11ac" alt="회원가입"> |   <img src="https://github.com/user-attachments/assets/8b7b772d-756c-43ea-aaeb-a9069aa4ae95" alt="마이페이지">  | 
+|   마이페이지 수정  |  프로필  |
+|:--------:|:------:|
+| <img src="https://github.com/user-attachments/assets/702ffac0-8c8a-44e3-a464-25283fec9bd6" alt="마이페이지 수정"> |   <img src="https://github.com/user-attachments/assets/ff5811e6-6147-4b84-acd9-689caa657631" alt="프로필">  | 
+|   로그아웃  |  회원탈퇴  |
+|:--------:|:------:|
+| <img src="https://github.com/user-attachments/assets/294cbfbc-497c-4004-bc79-3b0adfadd8f4" alt="로그아웃"> |   <img src="https://github.com/user-attachments/assets/7ee3524d-8585-48e9-bc1d-a0ee2d44680f" alt="회원탈퇴">  | 
+
+### 일기
+|   일기작성 - 감정분석  |  일기작성 - 분석실패  |
+|:--------:|:------:|
+| <img src="https://github.com/user-attachments/assets/54c54b16-161f-4754-a64c-7f906b00ae50" alt="일기작성 - 감정분석"> |   <img src="" alt="일기작성 - 분석실패">  | 
+|   일기작성 - 기본감정  |  감정 선택 - 일기 프리뷰  |
+|:--------:|:------:|
+| <img src="https://github.com/user-attachments/assets/50f398ee-1304-4bfd-81dd-bda661ec95c3" alt="일기작성 - 기본감정"> |   <img src="https://github.com/user-attachments/assets/dc05b90d-9106-4ba6-adcd-8019e768e0cf" alt="일기작성 - 감정 선택 - 일기 프리뷰">  | 
+|   음악추천 성공 - 일기저장  |  음악추천 실패 - 일기저장  |
+|:--------:|:------:|
+| <img src="" alt="음악추천 성공 - 일기저장"> |   <img src="https://github.com/user-attachments/assets/ed9704d0-9455-49b1-87aa-5bbd975f7f29" alt="음악추천 실패 - 일기저장">  | 
+|   일기검색  |  감정차트  |
+|:--------:|:------:|
+| <img src="https://github.com/user-attachments/assets/3ff653d9-4709-49e9-9a7a-86ed483fee99" alt="일기검색"> |   <img src="https://github.com/user-attachments/assets/5f1334d4-3dca-403b-ad1c-5b402fa99aca" alt="감정차트">  | 
+|   탭이동 컨펌창  |  작성중단 컨펌창  |
+|:--------:|:------:|
+| <img src="https://github.com/user-attachments/assets/a52c283a-ab1a-4f58-a7d0-2296a45e6662" alt="탭이동 컨펌창"> |   <img src="" alt="작성중단 컨펌창">  | 
+
 
 
 ---

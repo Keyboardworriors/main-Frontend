@@ -18,15 +18,11 @@
 ---
 
 ## 🖥️ 서비스 소개
-|   메인 화면 1  |  메인 화면 2  |
+|   소개페이지  |  소셜로그인  |
 |:--------:|:------:|
-| <img src="https://lh6.googleusercontent.com/M7RxaY_ZsF5sQcqiIOafdBGHuVGqKrQ0c07hzOtLgkhxYTK-aRKWdhkMfi8DaoZxyDWLZKhdUEDKBIEpETcm2_sH5JdW69mrOXzASMQYHFEiaP0QbgCEHa5bnKzITG-v9ztn0QfbCeZtznJ8q-SDo2qoEA=s2048" alt="MainPage1"> |   <img src="https://lh6.googleusercontent.com/WSSZM-N1tpBvXui0ivLMaSJv5u-Jn8oUNXik40GOW7thMqmNdMPrjfO4-halmEZ80GuBBlI5ENm8TtDovjSOMRqHE6Z5w7F5yYxdplO643k3wfhyW4wT0IUT15Rv6kk_FAnST07-50NOOeXHjRfjh6dEBA=s2048" alt="MainPage2">  | 
+| <img src="https://github.com/user-attachments/assets/920a3e07-f177-426b-b7bf-7036110510f4" alt="MainPage1"> |   <img src="https://github.com/user-attachments/assets/12a85b74-c9ec-405b-bcbe-18178faee3ec" alt="MainPage2">  | 
 
 
-
->하루의 기분을 글로 남기면, AI가 감정을 분석해 나에게 꼭 맞는 감정 키워드를 추천해줘요.
-마음에 드는 감정을 고르면, 지금의 나와 어울리는 음악까지 함께 추천해주는 감정 기반 일기 서비스, Feelody!
-감정과 음악을 연결해주는 특별한 일기 습관, Feelody에서 당신의 하루를 기록해보세요. 🎧📓💙
 ---
 ## :link: 배포 링크
 

@@ -217,4 +217,4 @@
 > 
 > [📜 테이블 명세서 예시](https://docs.google.com/spreadsheets/d/1bEoNlzGVHw5u4WAybpD8CVNMAZ5UJqiEEv85K6HCZmo/edit?pli=1&gid=0#gid=0)
 >
-> [📜 화면 정의서 예시](https://www.figma.com/design/zLikgH2MW0UQPEYPEwSQoX/Feelody-와이어프레임?node-id=0-1&p=f&t=I29TKVdnxzT7jAiN-0)) |
+> [📜 화면 정의서 예시](https://www.figma.com/design/zLikgH2MW0UQPEYPEwSQoX/Feelody-와이어프레임?node-id=0-1&p=f&t=I29TKVdnxzT7jAiN-0))

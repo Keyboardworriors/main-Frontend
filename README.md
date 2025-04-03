@@ -18,8 +18,11 @@
 ---
 
 ## 🖥️ 서비스 소개
-|------|----------|
-| 소개페이지 | ![소개페이지](## 📖 프로젝트 소개
+|   메인 화면 1  |  메인 화면 2  |
+|:--------:|:------:|
+| <img src="https://lh6.googleusercontent.com/M7RxaY_ZsF5sQcqiIOafdBGHuVGqKrQ0c07hzOtLgkhxYTK-aRKWdhkMfi8DaoZxyDWLZKhdUEDKBIEpETcm2_sH5JdW69mrOXzASMQYHFEiaP0QbgCEHa5bnKzITG-v9ztn0QfbCeZtznJ8q-SDo2qoEA=s2048" alt="MainPage1"> |   <img src="https://lh6.googleusercontent.com/WSSZM-N1tpBvXui0ivLMaSJv5u-Jn8oUNXik40GOW7thMqmNdMPrjfO4-halmEZ80GuBBlI5ENm8TtDovjSOMRqHE6Z5w7F5yYxdplO643k3wfhyW4wT0IUT15Rv6kk_FAnST07-50NOOeXHjRfjh6dEBA=s2048" alt="MainPage2">  | 
+
+
 
 >하루의 기분을 글로 남기면, AI가 감정을 분석해 나에게 꼭 맞는 감정 키워드를 추천해줘요.
 마음에 드는 감정을 고르면, 지금의 나와 어울리는 음악까지 함께 추천해주는 감정 기반 일기 서비스, Feelody!

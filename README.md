@@ -19,7 +19,8 @@
 
 ## 🖥️ 서비스 소개
 | 메인홈 |
-| <img src="https://github.com/user-attachments/assets/af1cdb97-b801-4c38-9e50-7f53d0168f6a" width="100%"/> |
+|:------:|
+| ![메인홈](https://github.com/user-attachments/assets/af1cdb97-b801-4c38-9e50-7f53d0168f6a) |
 
 ---
 

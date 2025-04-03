@@ -19,62 +19,53 @@
 
 ## 🖥️ 서비스 소개
 | 메인홈 |
-|:------:|
-| ![메인홈](https://github.com/user-attachments/assets/af1cdb97-b801-4c38-9e50-7f53d0168f6a) |
+| <img src="https://github.com/user-attachments/assets/af1cdb97-b801-4c38-9e50-7f53d0168f6a" width="100%"/> |
 
 ---
 
-### 👤 사용자
+## 👤 사용자
 
 | 소개페이지 | 소셜로그인 |
 |:----------:|:----------:|
-| ![소개페이지](https://github.com/user-attachments/assets/920a3e07-f177-426b-b7bf-7036110510f4) | ![소셜로그인](https://github.com/user-attachments/assets/12a85b74-c9ec-405b-bcbe-18178faee3ec) |
+| <img src="https://github.com/user-attachments/assets/920a3e07-f177-426b-b7bf-7036110510f4" width="300"/> | <img src="https://github.com/user-attachments/assets/12a85b74-c9ec-405b-bcbe-18178faee3ec" width="300"/> |
 
 | 로그인 상태 처리 | 동일 이메일 처리 |
-|:----------------:|:----------------:|
-| ![로그인 상태 처리](https://github.com/user-attachments/assets/d3135966-28f0-4e40-8c00-807fa04a9f8c) | ![동일 이메일 처리](https://github.com/user-attachments/assets/f85bfa60-5d81-48b0-8a69-f285ad477cfe) |
+| <img src="https://github.com/user-attachments/assets/d3135966-28f0-4e40-8c00-807fa04a9f8c" width="300"/> | <img src="https://github.com/user-attachments/assets/f85bfa60-5d81-48b0-8a69-f285ad477cfe" width="300"/> |
 
 | 회원가입 | 프로필 |
-|:--------:|:----------:|
-| ![회원가입](https://github.com/user-attachments/assets/bfeb529d-c089-47eb-b0d6-a44fdc1d11ac) | ![프로필](https://github.com/user-attachments/assets/ff5811e6-6147-4b84-acd9-689caa657631) |
+| <img src="https://github.com/user-attachments/assets/bfeb529d-c089-47eb-b0d6-a44fdc1d11ac" width="300"/> | <img src="https://github.com/user-attachments/assets/ff5811e6-6147-4b84-acd9-689caa657631" width="300"/> |
 
 | 마이페이지 | 마이페이지 수정 |
-|:--------:|:----------:|
-| ![마이페이지](https://github.com/user-attachments/assets/8b7b772d-756c-43ea-aaeb-a9069aa4ae95) | ![마이페이지 수정](https://github.com/user-attachments/assets/702ffac0-8c8a-44e3-a464-25283fec9bd6) |
+| <img src="https://github.com/user-attachments/assets/8b7b772d-756c-43ea-aaeb-a9069aa4ae95" width="300"/> | <img src="https://github.com/user-attachments/assets/702ffac0-8c8a-44e3-a464-25283fec9bd6" width="300"/> |
 
 | 로그아웃 | 회원탈퇴 |
-|:--------:|:--------:|
-| ![로그아웃](https://github.com/user-attachments/assets/294cbfbc-497c-4004-bc79-3b0adfadd8f4) | ![회원탈퇴](https://github.com/user-attachments/assets/7ee3524d-8585-48e9-bc1d-a0ee2d44680f) |
+| <img src="https://github.com/user-attachments/assets/294cbfbc-497c-4004-bc79-3b0adfadd8f4" width="300"/> | <img src="https://github.com/user-attachments/assets/7ee3524d-8585-48e9-bc1d-a0ee2d44680f" width="300"/> |
 
 ---
 
-### 📒 일기
+## 📒 일기
 
 | 일기작성 - 감정분석 | 일기작성 - 분석실패 |
 |:------------------:|:-------------------:|
-| ![감정분석](https://github.com/user-attachments/assets/54c54b16-161f-4754-a64c-7f906b00ae50) | ![분석실패](https://github.com/user-attachments/assets/79073c94-0731-43e1-8681-5ed9db98c9db)
+| <img src="https://github.com/user-attachments/assets/54c54b16-161f-4754-a64c-7f906b00ae50" width="300"/> | <img src="https://github.com/user-attachments/assets/79073c94-0731-43e1-8681-5ed9db98c9db" width="300"/> |
 
 | 일기작성 - 기본감정 | 감정 선택 - 일기 프리뷰 |
-|:------------------:|:-----------------------:|
-| ![기본감정](https://github.com/user-attachments/assets/50f398ee-1304-4bfd-81dd-bda661ec95c3) | ![감정선택](https://github.com/user-attachments/assets/dc05b90d-9106-4ba6-adcd-8019e768e0cf) |
+| <img src="https://github.com/user-attachments/assets/50f398ee-1304-4bfd-81dd-bda661ec95c3" width="300"/> | <img src="https://github.com/user-attachments/assets/dc05b90d-9106-4ba6-adcd-8019e768e0cf" width="300"/> |
 
 | 음악추천 성공 - 일기저장 | 음악추천 실패 - 일기저장 |
-|:------------------------:|:-------------------------:|
-| ⛔ 준비 중입니다 | ![실패](https://github.com/user-attachments/assets/ed9704d0-9455-49b1-87aa-5bbd975f7f29) |
+| <img src="" width="300"/> | <img src="https://github.com/user-attachments/assets/ed9704d0-9455-49b1-87aa-5bbd975f7f29" width="300"/> |
 
-| 일기검색 | 일기삭제 |
-|:--------:|:--------:|
-| ![일기검색](https://github.com/user-attachments/assets/3ff653d9-4709-49e9-9a7a-86ed483fee99) | ![일기삭제](https://github.com/user-attachments/assets/7610f1d6-e844-4859-843b-fb010da4882c) |
+| 일기저장 | 일기삭제 |
+| <img src="https://github.com/user-attachments/assets/13d60e83-7f42-4e48-9444-82d9e8afe0a5" width="300"/> | <img src="https://github.com/user-attachments/assets/7610f1d6-e844-4859-843b-fb010da4882c" width="300"/> |
 
 | 일기검색 | 감정차트 |
-|:--------:|:--------:|
-| ![일기검색](https://github.com/user-attachments/assets/3ff653d9-4709-49e9-9a7a-86ed483fee99) | ![감정차트](https://github.com/user-attachments/assets/5f1334d4-3dca-403b-ad1c-5b402fa99aca) |
+| <img src="https://github.com/user-attachments/assets/3ff653d9-4709-49e9-9a7a-86ed483fee99" width="300"/> | <img src="https://github.com/user-attachments/assets/5f1334d4-3dca-403b-ad1c-5b402fa99aca" width="300"/> |
 
-| 탭이동 컨펌창 | 작성중단 컨펌창 |
-|:-------------:|:---------------:|
-| ![탭이동](https://github.com/user-attachments/assets/a52c283a-ab1a-4f58-a7d0-2296a45e6662) | ![작성중단](https://github.com/user-attachments/assets/de46b224-d78e-4d08-a9fb-b9174db539b5) |
+| 작성중단 컨펌창 | 탭이동 컨펌창 |
+| <img src="https://github.com/user-attachments/assets/de46b224-d78e-4d08-a9fb-b9174db539b5" width="300"/> | <img src="https://github.com/user-attachments/assets/a52c283a-ab1a-4f58-a7d0-2296a45e6662" width="300"/> |
 
 ---
+
 ## :link: 배포 링크
 
 > ### https://www.feelody.site/
